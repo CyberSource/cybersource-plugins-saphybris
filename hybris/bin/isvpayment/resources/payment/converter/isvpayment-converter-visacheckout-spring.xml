@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <alias name="isv.sap.payment.converter.visacheckout.defaultVoidRequestConverter" alias="isv.sap.payment.converter.visacheckout.voidRequestConverter"/>
+    <bean id="isv.sap.payment.converter.visacheckout.defaultVoidRequestConverter" class="isv.sap.payment.service.executor.request.converter.visacheckout.VoidRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.visacheckout.defaultGetRequestConverter" alias="isv.sap.payment.converter.visacheckout.getRequestConverter"/>
+    <bean id="isv.sap.payment.converter.visacheckout.defaultGetRequestConverter" class="isv.sap.payment.service.executor.request.converter.visacheckout.GetRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.visacheckout.defaultCaptureRequestConverter" alias="isv.sap.payment.converter.visacheckout.captureRequestConverter"/>
+    <bean id="isv.sap.payment.converter.visacheckout.defaultCaptureRequestConverter" class="isv.sap.payment.service.executor.request.converter.visacheckout.CaptureRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.visacheckout.defaultRefundRequestConverter" alias="isv.sap.payment.converter.visacheckout.refundRequestConverter"/>
+    <bean id="isv.sap.payment.converter.visacheckout.defaultRefundRequestConverter" class="isv.sap.payment.service.executor.request.converter.visacheckout.RefundRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.visacheckout.defaultAuthorizationRequestConverter" alias="isv.sap.payment.converter.visacheckout.authorizationRequestConverter"/>
+    <bean id="isv.sap.payment.converter.visacheckout.defaultAuthorizationRequestConverter" class="isv.sap.payment.service.executor.request.converter.visacheckout.AuthorizationRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.visacheckout.defaultAuthorizationReversalRequestConverter" alias="isv.sap.payment.converter.visacheckout.authorizationReversalRequestConverter"/>
+    <bean id="isv.sap.payment.converter.visacheckout.defaultAuthorizationReversalRequestConverter" class="isv.sap.payment.service.executor.request.converter.visacheckout.AuthorizationReversalRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.visacheckout.defaultEnrollmentRequestConverter" alias="isv.sap.payment.converter.visacheckout.enrollmentRequestConverter"/>
+    <bean id="isv.sap.payment.converter.visacheckout.defaultEnrollmentRequestConverter" class="isv.sap.payment.service.executor.request.converter.visacheckout.EnrollmentRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.visacheckout.defaultValidateRequestConverter" alias="isv.sap.payment.converter.visacheckout.validateRequestConverter"/>
+    <bean id="isv.sap.payment.converter.visacheckout.defaultValidateRequestConverter" class="isv.sap.payment.service.executor.request.converter.visacheckout.ValidateRequestConverter"/>
+
+</beans>

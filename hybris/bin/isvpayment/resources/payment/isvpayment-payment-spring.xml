@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <alias alias="isv.sap.payment.persistentPaymentTransactionCreator" name="isv.sap.payment.defaultPersistentPaymentTransactionCreator" />
+    <bean id="isv.sap.payment.defaultPersistentPaymentTransactionCreator" class="isv.sap.payment.service.transaction.PersistentPaymentTransactionCreator" />
+
+    <alias alias="isv.sap.payment.transientPaymentTransactionCreator" name="isv.sap.payment.defaultTransientPaymentTransactionCreator" />
+    <bean id="isv.sap.payment.defaultTransientPaymentTransactionCreator" class="isv.sap.payment.service.transaction.TransientPaymentTransactionCreator" />
+
+    <alias alias="isv.sap.payment.paymentTransactionCreatorContext" name="isv.sap.payment.defaultPaymentTransactionCreatorContext" />
+    <bean id="isv.sap.payment.defaultPaymentTransactionCreatorContext" class="isv.sap.payment.service.transaction.PaymentTransactionCreatorContext"/>
+
+</beans>

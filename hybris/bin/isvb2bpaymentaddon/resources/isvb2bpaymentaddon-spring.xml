@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+           
+    <context:annotation-config/> 
+
+	<bean id="isvb2bpaymentaddonCoreDataImportedEventListener" parent="abstractCoreDataImportedEventListener">
+		<property name="supportedChannels">
+			<list value-type="de.hybris.platform.commerceservices.enums.SiteChannel">
+				<value>B2C</value>
+				<!--<value>B2B</value>-->
+			</list>
+		</property>
+		<property name="addonExtensionMetadata">
+			<bean class="de.hybris.platform.addonsupport.data.AddonExtensionMetadata">
+				<property name="suffixChannel" value="false"/>
+				<property name="baseExtensionName" value="isvb2bpaymentaddon"/>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="isvb2bpaymentaddonSampleDataEventListener" parent="abstractGenericAddOnSampleDataEventListener"  >
+		<property name="extensionName" value="isvb2bpaymentaddon" />
+	</bean>
+
+    <alias alias="replenishmentInfoReversePopulator" name="defaultReplenishmentInfoReversePopulator"/>
+    <bean id="defaultReplenishmentInfoReversePopulator" class="isv.sap.payment.addon.b2b.populator.ReplenishmentInfoReversePopulator"/>
+
+    <alias alias="replenishmentInfoReverseConverter" name="defaultReplenishmentInfoReverseConverter"/>
+    <bean id="defaultReplenishmentInfoReverseConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="isv.sap.payment.addon.b2b.model.ReplenishmentInfoModel"/>
+        <property name="populators">
+            <list>
+                <ref bean="replenishmentInfoReversePopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <alias alias="replenishmentPlaceOrderPopulator" name="defaultReplenishmentPlaceOrderPopulator"/>
+    <bean id="defaultReplenishmentPlaceOrderPopulator" class="isv.sap.payment.addon.b2b.populator.ReplenishmentPlaceOrderPopulator"/>
+
+    <alias alias="replenishmentPlaceOrderConverter" name="defaultReplenishmentPlaceOrderConverter"/>
+    <bean id="defaultReplenishmentPlaceOrderConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="de.hybris.platform.b2bacceleratorfacades.checkout.data.PlaceOrderData"/>
+        <property name="populators">
+            <list>
+                <ref bean="replenishmentPlaceOrderPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <alias alias="replenishmentCheckoutFacade" name="defaultReplenishmentCheckoutFacade"/>
+    <bean id="defaultReplenishmentCheckoutFacade" class="isv.sap.payment.addon.b2b.facade.impl.DefaultReplenishmentCheckoutFacade"/>
+
+    <bean name="authorizePaymentAction" class="isv.sap.payment.addon.b2b.action.replenishment.IsvAuthorizePaymentAction"
+          parent="abstractAction">
+        <property name="commerceCheckoutService" ref="b2bCommerceCheckoutService"/>
+        <property name="impersonationService" ref="impersonationService"/>
+    </bean>
+
+    <!-- overrode an action from b2bAccOrderApproval process to support credit card and paypal as Credit Card payment -->
+    <bean id="checkCreditCardOrderAction"
+          class="isv.sap.payment.addon.b2b.action.approval.CheckPaymentIsNotAccountBasedAction"
+          parent="abstractSimpleB2BApproveOrderDecisionAction">
+    </bean>
+
+    <bean id="b2bPaymentTransactionService" class="isv.sap.payment.addon.b2b.service.DefaultB2bPaymentTransactionService"
+          parent="isv.sap.payment.paymentTransactionService"/>
+
+    <bean id="b2bPaymentAuthorizationHelper" class="isv.sap.payment.addon.b2b.helper.DefaultB2bPaymentAuthorizationHelper"/>
+
+    <alias name="isvBookingLineEntries" alias="setBookingLineEntries"/>
+    <bean id="isvBookingLineEntries" class="isv.sap.payment.addon.b2b.action.replenishment.IsvSetBookingLineEntriesAction"
+          parent="abstractSimpleB2BApproveOrderDecisionAction" />
+
+	<!-- override actions from isvfulfilmentprocess to skip payment related stuff for order paid with account payment type -->
+	<bean id="checkAuthorizeOrderPaymentAction" class="isv.sap.payment.addon.b2b.fulfilmentprocess.actions.B2BCheckAuthorizeOrderPaymentAction" parent="abstractAction"/>
+	<bean id="takePaymentAction" class="isv.sap.payment.addon.b2b.fulfilmentprocess.actions.B2BTakePaymentAction" parent="abstractAction">
+        <property name="alternativePaymentOrderStatusMap" ref="takePaymentAlternativePaymentOrderStatusMap" />
+        <property name="orderStatusTransitionMap" ref="takePaymentOrderStatusTransitionMap" />
+    </bean>
+
+	<alias name="b2bCheckOrderPaymentTypeAction" alias="checkOrderPaymentTypeAction"/>
+	<bean id="b2bCheckOrderPaymentTypeAction" class="isv.sap.payment.addon.b2b.fulfilmentprocess.actions.B2BCheckOrderPaymentTypeAction" parent="defaultCheckOrderPaymentTypeAction"/>
+
+</beans>

@@ -1,0 +1,7 @@
+INSERT_UPDATE IsvPaymentMode; code[unique = true]; paymentType(code)   ; paymentinfotype(code)     ; name[lang = en]; paymentSubType(code); active[default = true]
+                            ; 11_wechatpay       ; ALTERNATIVE_PAYMENT ; IsvAlternativePaymentInfo ; WeChat Pay     ; WQR                 ;
+                            ; 11_wechatpay_en    ; ALTERNATIVE_PAYMENT ; IsvAlternativePaymentInfo ; WeChat Pay     ; WQR                 ;
+
+UPDATE BaseStore; uid[unique = true]; allowedIsvPaymentModes(code)[mode = append]
+                ; apparel-uk        ; 11_wechatpay_en
+                ; apparel-de        ; 11_wechatpay

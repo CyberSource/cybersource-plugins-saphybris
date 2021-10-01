@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+    <extension abstractclassprefix="Generated" classprefix="Isvb2bpaymentaddon"
+               description="isvb2bpaymentaddon extension" managername="Isvb2bpaymentaddonManager"
+               managersuperclass="de.hybris.platform.jalo.extension.Extension" name="isvb2bpaymentaddon">
+
+        <requires-extension name="addonsupport"/>
+        <requires-extension name="b2bacceleratoraddon"/>
+        <requires-extension name="isvpaymentaddon"/>
+        <requires-extension name="isvfulfilmentprocess"/>
+        <requires-extension name="commerceservices"/>
+
+        <coremodule generated="true" manager="isv.sap.payment.addon.b2b.jalo.Isvb2bpaymentaddonManager"
+                    packageroot="isv.sap.payment.addon.b2b"/>
+
+        <meta key="classpathgen" value="false"/>
+
+    </extension>
+
+</extensioninfo>

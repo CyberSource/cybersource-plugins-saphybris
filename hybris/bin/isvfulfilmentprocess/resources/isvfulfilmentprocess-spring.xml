@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+           
+    <context:annotation-config/> 
+
+	<!-- Listeners -->
+	
+	<bean id="pickupConfirmationEventListener" class="isv.sap.payment.fulfilmentprocess.listeners.PickupConfirmationEventListener" parent="abstractEventListener">
+		<property name="businessProcessService" ref="businessProcessService"/>
+	</bean>
+	
+	<!-- Process Adapters -->
+
+	<alias name="mockProcess2WarehouseAdapter" alias="process2WarehouseAdapter"/>
+	<bean id="mockProcess2WarehouseAdapter" class="isv.sap.payment.fulfilmentprocess.warehouse.MockProcess2WarehouseAdapter" >
+		<property name="modelService" ref="modelService"/>
+		<property name="warehouse2ProcessAdapter" ref="warehouse2ProcessAdapter"/>
+		<property name="timeService" ref="timeService"/>
+	</bean>
+
+	<alias name="defaultWarehouse2ProcessAdapter" alias="warehouse2ProcessAdapter"/>
+	<bean id="defaultWarehouse2ProcessAdapter" class="isv.sap.payment.fulfilmentprocess.warehouse.DefaultWarehouse2ProcessAdapter" >
+		<property name="modelService" ref="modelService"/>
+		<property name="statusMap">
+			<map key-type="de.hybris.platform.warehouse.WarehouseConsignmentStatus" value-type="de.hybris.platform.commerceservices.enums.WarehouseConsignmentState">
+				<entry key="CANCEL" value="CANCEL"/>
+				<entry key="COMPLETE" value="COMPLETE"/>
+				<entry key="PARTIAL" value="PARTIAL"/>
+			</map>
+		</property>
+		<property name="businessProcessService" ref="businessProcessService"/>
+	</bean>
+	
+	<!-- Process Definitions -->
+
+	<bean id="orderProcessDefinitionResource" class="de.hybris.platform.processengine.definition.ProcessDefinitionResource" >
+		<property name="resource" value="classpath:/isvfulfilmentprocess/process/order-process.xml"/>
+	</bean>
+
+	<bean id="consignmentProcessDefinitionResource" class="de.hybris.platform.processengine.definition.ProcessDefinitionResource" >
+		<property name="resource" value="classpath:/isvfulfilmentprocess/process/consignment-process.xml"/>
+	</bean>
+
+	<bean id="returnProcessDefinitionResource" class="de.hybris.platform.processengine.definition.ProcessDefinitionResource" >
+		<property name="resource" value="classpath:/isvfulfilmentprocess/process/return-process.xml"/>
+	</bean>
+
+	<!-- Process Actions -->
+
+	<import resource="/isvfulfilmentprocess/process/order-process-spring.xml"/>
+	<import resource="/isvfulfilmentprocess/process/consignment-process-spring.xml"/>
+	<import resource="/isvfulfilmentprocess/process/return-process-spring.xml"/>
+
+	<!-- Order Check Service -->
+	<!-- Performs some basic validation for the order as part of the first stage of the process. -->
+
+	<alias name="defaultCheckOrderService" alias="checkOrderService"/>
+	<bean id="defaultCheckOrderService" class="isv.sap.payment.fulfilmentprocess.impl.DefaultCheckOrderService" />
+	
+	<!-- Order Splitting -->
+	<alias name="isvfulfilmentprocessOrderSplittingService" alias="orderSplittingService"/>
+	<bean id="isvfulfilmentprocessOrderSplittingService" parent="defaultOrderSplittingService" >
+		<property name="strategiesList">
+			<list>
+				<ref bean="splitByAvailableCount"/>
+				<ref bean="splitByDeliveryMode" />
+				<ref bean="splitByPoS" />
+				<ref bean="splitByNamedDeliveryDate" />
+				<ref bean="splitByEntryDeliveryAddress" />
+				<ref bean="splitByWarehouse" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Split Strategies -->
+	
+	<alias name="defaultSplitByPoS" alias="splitByPoS"/>
+	<bean id="defaultSplitByPoS" class="isv.sap.payment.fulfilmentprocess.strategy.impl.SplitByPoS" />
+	
+	<alias name="defaultSplitByEntryDeliveryAddress" alias="splitByEntryDeliveryAddress"/>
+	<bean id="defaultSplitByEntryDeliveryAddress" class="isv.sap.payment.fulfilmentprocess.strategy.impl.SplitByEntryDeliveryAddress"  />
+	
+	<alias name="defaultSplitByDeliveryMode" alias="splitByDeliveryMode"/>
+	<bean id="defaultSplitByDeliveryMode" class="isv.sap.payment.fulfilmentprocess.strategy.impl.SplitByDeliveryMode" >
+		<property name="pickupDeliveryModeDao" ref="pickupDeliveryModeDao"/>
+	</bean>
+	
+	<alias name="defaultSplitByAvailableCount" alias="splitByAvailableCount"/>
+	<bean id="defaultSplitByAvailableCount" class="isv.sap.payment.fulfilmentprocess.strategy.impl.SplitByAvailableCount" >
+		<property name="commerceStockService" ref="commerceStockService"/>
+	</bean>
+	
+	<alias name="defaultSplitByWarehouse" alias="splitByWarehouse"/>
+	<bean id="defaultSplitByWarehouse" class="isv.sap.payment.fulfilmentprocess.strategy.impl.SplitByWarehouse" />
+	
+	<!--  Jobs -->
+	
+	<bean id="cleanUpFraudOrderJob" class="isv.sap.payment.fulfilmentprocess.jobs.CleanUpFraudOrderJob"  >
+		<property name="modelService" ref="modelService"/>
+		<property name="flexibleSearchService" ref="flexibleSearchService"/>
+		<property name="businessProcessService" ref="businessProcessService"/>
+		<property name="sessionService" ref="sessionService"/>
+	</bean>
+
+    <!-- take payment strategies -->
+
+    <alias name="defaultVisaCheckoutTakePaymentStrategy" alias="visaCheckoutTakePaymentStrategy"/>
+    <bean id="defaultVisaCheckoutTakePaymentStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.VisaCheckoutTakePaymentStrategy"/>
+
+    <alias name="defaultKlarnaTakePaymentStrategy" alias="klarnaTakePaymentStrategy"/>
+    <bean id="defaultKlarnaTakePaymentStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.KlarnaTakePaymentStrategy"/>
+
+    <alias name="defaultCreditCardTakePaymentStrategy" alias="creditCardTakePaymentStrategy"/>
+    <bean id="defaultCreditCardTakePaymentStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.CreditCardTakePaymentStrategy"/>
+
+    <alias name="defaultPayPalTakePaymentStrategy" alias="payPalTakePaymentStrategy"/>
+    <bean id="defaultPayPalTakePaymentStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.PayPalTakePaymentStrategy"/>
+
+	<alias name="defaultApplePayTakePaymentStrategy" alias="applePayTakePaymentStrategy"/>
+	<bean id="defaultApplePayTakePaymentStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.ApplePayTakePaymentStrategy"/>
+
+	<alias name="defaultGooglePayTakePaymentStrategy" alias="googlePayTakePaymentStrategy"/>
+	<bean id="defaultGooglePayTakePaymentStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.GooglePayTakePaymentStrategy"/>
+
+	<alias name="defaultTakePaymentContext" alias="takePaymentContext"/>
+    <bean id="defaultTakePaymentContext" class="isv.sap.payment.fulfilmentprocess.strategy.context.PaymentOperationContext">
+        <property name="strategies">
+            <list>
+                <ref bean="visaCheckoutTakePaymentStrategy"/>
+                <ref bean="klarnaTakePaymentStrategy"/>
+                <ref bean="creditCardTakePaymentStrategy"/>
+                <ref bean="payPalTakePaymentStrategy"/>
+                <ref bean="applePayTakePaymentStrategy"/>
+                <ref bean="googlePayTakePaymentStrategy"/>
+            </list>
+        </property>
+    </bean>
+
+	<!-- Authorization reversal strategies -->
+	<alias name="defaultApplePayAuthorizationReversalStrategy" alias="applePayAuthorizationReversalStrategy"/>
+	<bean id="defaultApplePayAuthorizationReversalStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.authorizationreversal.ApplePayAuthorizationReversalStrategy"/>
+
+	<alias name="defaultGooglePayAuthorizationReversalStrategy" alias="googlePayAuthorizationReversalStrategy"/>
+	<bean id="defaultGooglePayAuthorizationReversalStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.authorizationreversal.GooglePayAuthorizationReversalStrategy"/>
+
+	<alias name="defaultAuthorizationReversalContext" alias="authorizationReversalContext"/>
+	<bean id="defaultAuthorizationReversalContext" class="isv.sap.payment.fulfilmentprocess.strategy.context.PaymentOperationContext">
+		<property name="strategies">
+			<list>
+				<ref bean="applePayAuthorizationReversalStrategy"/>
+				<ref bean="googlePayAuthorizationReversalStrategy"/>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Refund strategies -->
+	<alias name="defaultApplePayRefundStrategy" alias="applePayRefundStrategy"/>
+	<bean id="defaultApplePayRefundStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.refund.ApplePayRefundStrategy"/>
+
+	<alias name="defaultCreditCardRefundStrategy" alias="creditCardRefundStrategy"/>
+	<bean id="defaultCreditCardRefundStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.refund.CreditCardRefundStrategy"/>
+
+	<alias name="defaultGooglePayRefundStrategy" alias="googlePayRefundStrategy"/>
+	<bean id="defaultGooglePayRefundStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.refund.GooglePayRefundStrategy"/>
+
+	<alias name="defaultWeChatPayRefundStrategy" alias="weChatPayRefundStrategy"/>
+	<bean id="defaultWeChatPayRefundStrategy" class="isv.sap.payment.fulfilmentprocess.strategy.impl.refund.WeChatPayRefundStrategy"/>
+
+	<alias name="defaultRefundPaymentContext" alias="refundPaymentContext"/>
+	<bean id="defaultRefundPaymentContext" class="isv.sap.payment.fulfilmentprocess.strategy.context.PaymentOperationContext">
+		<property name="strategies">
+			<list>
+				<ref bean="applePayRefundStrategy"/>
+				<ref bean="creditCardRefundStrategy"/>
+				<ref bean="googlePayRefundStrategy"/>
+				<ref bean="weChatPayRefundStrategy"/>
+			</list>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<items 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="items.xsd">
+
+    <enumtypes>
+
+        <enumtype code="Recurrence" autocreate="true" generate="true">
+            <value code="DAILY"/>
+            <value code="WEEKLY"/>
+            <value code="MONTHLY"/>
+        </enumtype>
+
+    </enumtypes>
+
+    <itemtypes>
+
+        <itemtype code="ReplenishmentInfo" generate="true" autocreate="true" jaloclass="isv.sap.payment.addon.b2b.jalo.ReplenishmentInfo">
+            <deployment table="ReplenishmentInfo" typecode="11006"/>
+            <attributes>
+                <attribute qualifier="day" type="java.lang.Integer">
+                    <modifiers read="true" write="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="daysOfWeek" type="DayOfWeekList">
+                    <modifiers read="true" write="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="dayOfMonth" type="java.lang.Integer">
+                    <modifiers read="true" write="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="week" type="java.lang.Integer">
+                    <modifiers read="true" write="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="recurrence" type="Recurrence">
+                    <modifiers read="true" write="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="startDate" type="java.util.Date">
+                    <modifiers read="true" write="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="Cart" autocreate="false" generate="false">
+            <attributes>
+                <attribute qualifier="replenishmentInfo" type="ReplenishmentInfo">
+                    <persistence type="property"/>
+                    <modifiers read="true" write="true" optional="true"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+    </itemtypes>
+</items>

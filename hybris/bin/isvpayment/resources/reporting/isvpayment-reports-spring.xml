@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <alias alias="isv.sap.payment.processConversionReportListener" name="isv.sap.payment.defaultProcessConversionReportListener" />
+    <bean id="isv.sap.payment.defaultProcessConversionReportListener" class="isv.sap.payment.report.listener.conversion.ProcessConversionReportListener">
+        <property name="decisionStrategies">
+            <list>
+                <bean class="isv.sap.payment.report.listener.conversion.decision.AcceptDecisionStrategy" />
+                <bean class="isv.sap.payment.report.listener.conversion.decision.RejectDecisionStrategy" />
+            </list>
+        </property>
+    </bean>
+</beans>

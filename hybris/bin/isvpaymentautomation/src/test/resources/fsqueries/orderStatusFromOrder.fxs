@@ -1,0 +1,6 @@
+SELECT { orderstatus.code }
+    from {
+        orderstatus join order
+            on { order:status } = { orderstatus:pk }
+        }
+    where { order.code } = '$orderCode'

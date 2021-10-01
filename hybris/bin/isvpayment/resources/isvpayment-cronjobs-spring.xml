@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <util:list id="isv.sap.payment.dailyConversionReportListeners" value-type="isv.sap.payment.report.listener.ReportListener">
+        <ref bean="isv.sap.payment.processConversionReportListener" />
+    </util:list>
+
+    <util:list id="isv.sap.payment.onDemandConversionReportListeners" value-type="isv.sap.payment.report.listener.ReportListener">
+        <ref bean="isv.sap.payment.processConversionReportListener" />
+    </util:list>
+
+    <bean id="isv.sap.payment.dailyConversionReportPollingJob" class="isv.sap.payment.cronjob.DailyConversionReportPollingJob" parent="abstractJobPerformable">
+        <property name="listeners" ref="isv.sap.payment.dailyConversionReportListeners" />
+    </bean>
+
+    <bean id="isv.sap.payment.onDemandConversionReportPollingJob" class="isv.sap.payment.cronjob.OnDemandConversionReportPollingJob" parent="abstractJobPerformable">
+        <property name="listeners" ref="isv.sap.payment.onDemandConversionReportListeners" />
+     </bean>
+
+    <bean id="isv.sap.payment.updateAlternativePaymentOptionsJob" class="isv.sap.payment.cronjob.UpdateAlternativePaymentOptionsJob" parent="abstractJobPerformable"/>
+
+    <bean id="isv.sap.payment.updateAlternativePaymentOrderStatusJob" class="isv.sap.payment.cronjob.UpdateAlternativePaymentOrderStatusJob" parent="abstractJobPerformable"/>
+
+</beans>

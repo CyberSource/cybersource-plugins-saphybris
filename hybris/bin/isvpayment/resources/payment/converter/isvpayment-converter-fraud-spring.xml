@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <alias name="isv.sap.payment.converter.fraud.defaultAccountTakeoverProtectionRequestConverter" alias="isv.sap.payment.converter.fraud.accountTakeoverProtectionRequestConverter"/>
+    <bean id="isv.sap.payment.converter.fraud.defaultAccountTakeoverProtectionRequestConverter" class="isv.sap.payment.service.executor.request.converter.fraud.AccountTakeoverProtectionRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.fraud.defaultAdvancedFraudScreenRequestConverter" alias="isv.sap.payment.converter.fraud.advancedFraudScreenRequestConverter"/>
+    <bean id="isv.sap.payment.converter.fraud.defaultAdvancedFraudScreenRequestConverter" class="isv.sap.payment.service.executor.request.converter.fraud.AdvancedFraudScreenRequestConverter"/>
+
+</beans>

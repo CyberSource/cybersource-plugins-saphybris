@@ -1,0 +1,5 @@
+INSERT_UPDATE IsvPaymentMode; code[unique = true]; paymentType(code); paymentinfotype(code); name[lang = en]; paymentSubType(code); active[default = true]
+; 5_bancontact   ; ALTERNATIVE_PAYMENT ; IsvAlternativePaymentInfo  ; Bancontact    ; MCH
+
+UPDATE BaseStore; uid[unique = true]; allowedIsvPaymentModes(code)[mode=append]
+; apparel-de ; 5_bancontact

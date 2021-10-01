@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+    <extension abstractclassprefix="Generated" classprefix="Isvfulfilmentprocess"
+               managername="IsvfulfilmentprocessManager"
+               managersuperclass="de.hybris.platform.jalo.extension.Extension" name="isvfulfilmentprocess">
+
+        <requires-extension name="acceleratorservices"/>
+        <requires-extension name="ticketsystem"/>
+        <requires-extension name="isvpayment"/>
+
+        <coremodule generated="true"
+                    manager="isv.sap.payment.fulfilmentprocess.jalo.IsvfulfilmentprocessManager"
+                    packageroot="isv.sap.payment.fulfilmentprocess"/>
+
+        <meta key="modulegen-name" value="accelerator,b2baccelerator,chinaaccelerator"/>
+
+    </extension>
+
+</extensioninfo>

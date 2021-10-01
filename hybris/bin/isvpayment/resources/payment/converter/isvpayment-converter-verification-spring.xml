@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <alias name="isv.sap.payment.converter.verification.defaultDeliveryAddressVerificationRequestConverter" alias="isv.sap.payment.converter.verification.deliveryAddressVerificationRequestConverter"/>
+    <bean id="isv.sap.payment.converter.verification.defaultDeliveryAddressVerificationRequestConverter" class="isv.sap.payment.service.executor.request.converter.verification.DeliveryAddressVerificationRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.verification.defaultExportComplianceRequestConverter" alias="isv.sap.payment.converter.verification.exportComplianceRequestConverter"/>
+    <bean id="isv.sap.payment.converter.verification.defaultExportComplianceRequestConverter" class="isv.sap.payment.service.executor.request.converter.verification.ExportComplianceRequestConverter"/>
+    
+</beans>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+
+	<bean class="isv.sap.payment.addon.b2b.ReplenishmentInfoData">
+        <property name="day" type="Integer"/>
+        <property name="week" type="Integer"/>
+        <property name="dayOfMonth" type="Integer" />
+        <property name="startDate" type="String" />
+        <property name="daysOfWeek" type="java.util.List&lt;java.lang.String>"/>
+        <property name="recurrence" type="java.lang.String" />
+	</bean>
+
+</beans>
