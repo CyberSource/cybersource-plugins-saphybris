@@ -1,0 +1,162 @@
+apply plugin: 'installer-platform-plugin'
+apply plugin: 'installer-addon2-plugin'
+
+ext {
+    manualTestSuites = ['applepay',
+                        'common',
+                        'creditcard',
+                        'googlepay',
+                        'klarna',
+                        'onlinebanking',
+                        'paypal',
+                        'paypalso',
+                        'reporting',
+                        'visacheckout',
+                        'wechatpay']
+}
+
+def platform = platform {
+    localProperties {
+        property 'initialpassword.admin', 'nimda'
+        property 'googleApiKey', ''
+
+        property 'build.source', '1.8'
+        property 'build.target', '1.8'
+
+        property 'website.apparel-de.http', 'http://apparel-de.local:9001/yb2cacceleratorstorefront'
+        property 'website.apparel-de.https', 'https://apparel-de.local:9002/yb2cacceleratorstorefront'
+        property 'website.apparel-uk.http', 'http://apparel-uk.local:9001/yb2cacceleratorstorefront'
+        property 'website.apparel-uk.https', 'https://apparel-uk.local:9002/yb2cacceleratorstorefront'
+
+        property 'csrf.allowed.url.patterns', '.*$'
+
+        // defines a strategy for credit card payment (FLEX, HOP, SOP)
+        property 'site.pci.strategy', 'FLEX'
+    }
+
+    extensions {
+        extName 'commerceservicesbackoffice'
+        extName 'solrfacetsearchbackoffice'
+        extName 'solrserver'
+        extName 'yacceleratorcockpits'
+        extName 'yacceleratorinitialdata'
+        extName 'ycommercewebservices'
+
+        extName 'electronicsstore'
+        extName 'apparelstore'
+
+        extName 'acceleratorwebservicesaddon'
+        extName 'orderselfserviceaddon'
+
+        extName 'customersupportbackoffice'
+        extName 'customerticketingaddon'
+        extName 'commerceorgsamplesaddon'
+
+        extName 'rulebuilderbackoffice'
+        extName 'couponbackoffice'
+        extName 'droolsruleengineservices'
+        extName 'couponfacades'
+        extName 'promotionenginesamplesaddon'
+
+        extName 'cmswebservices'
+        extName 'smarteditwebservices'
+        extName 'permissionswebservices'
+        extName 'smarteditaddon'
+        extName 'cmssmartedit'
+
+        extName 'previewpersonalizationweb'
+        extName 'personalizationcmsweb'
+        extName 'personalizationsmartedit'
+        extName 'personalizationsampledataaddon'
+
+        extName 'textfieldconfiguratortemplatebackoffice'
+        extName 'textfieldconfiguratortemplateaddon'
+        extName 'assistedservicestorefront'
+
+        extName 'yb2cacceleratorstorefront'
+        extName 'isvpayment'
+        extName 'isvpaymentaddon'
+        extName 'isvb2cpaymentaddon'
+        extName 'isvfulfilmentprocess'
+        extName 'isvpaymentsampledata'
+    }
+
+    addons {
+        forStoreFronts('yb2cacceleratorstorefront') {
+            names "commerceorgsamplesaddon,promotionenginesamplesaddon,smarteditaddon,textfieldconfiguratortemplateaddon,assistedservicestorefront,customerticketingaddon,orderselfserviceaddon"
+            template "yacceleratorstorefront"
+        }
+
+        forStoreFronts('yb2cacceleratorstorefront') {
+            names "isvpaymentaddon"
+            template "yacceleratorstorefront"
+        }
+
+        forStoreFronts('yb2cacceleratorstorefront') {
+            names "isvb2cpaymentaddon"
+            template "yacceleratorstorefront"
+        }
+
+        forStoreFronts('ycommercewebservices') {
+            names "acceleratorwebservicesaddon"
+            template "ycommercewebservices"
+        }
+    }
+}
+
+task createStoreFrontExt {
+    doLast {
+        platform.createConfigDirIfNotExist()
+        platform.resetConfig()
+
+        platform.createExtension {
+            templateName 'yacceleratorstorefront'
+            extensionName 'yb2cacceleratorstorefront'
+            packageName 'de.hybris.platform.yb2cacceleratorstorefront'
+        }
+    }
+}
+
+task setup(dependsOn: createStoreFrontExt) {
+    doLast {
+        platform.setup()
+    }
+}
+
+task initialize(dependsOn: setup) {
+    doLast {
+        platform.build()
+        platform.initialize()
+    }
+}
+
+task start {
+    doLast {
+        platform.start()
+    }
+}
+
+task initializeTestSystem {
+    doLast {
+        platform.build()
+        platform.initializeTestSystem()
+    }
+}
+
+task manualtests {
+    description "Executes all manualtests of this extension"
+    group 'Testing'
+
+    // Usage: If override of default ant options is needed then use syntax:
+    // -PcustomOpts='-Dtestclasses.packages=isv.sap.* -Dtestclasses.reportdir=../../log/junit-manual'
+    doLast {
+        def packages = manualTestSuites
+                .collect { "isv.sap.payment.integration.$it.*" }
+                .join(',')
+
+        def customOpts = project.hasProperty('customOpts') ?
+                "${customOpts}" :
+                "-Dtestclasses.packages=$packages"
+        platform.executeAntTarget("manualtests ${customOpts}")
+    }
+}

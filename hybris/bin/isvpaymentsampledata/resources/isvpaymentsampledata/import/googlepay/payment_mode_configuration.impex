@@ -1,0 +1,6 @@
+INSERT_UPDATE IsvPaymentMode; code[unique = true]; paymentType(code); paymentinfotype(code); name[lang = en]; paymentSubType(code); active[default = true]
+; 10_googlepay   ; ALTERNATIVE_PAYMENT ; IsvAlternativePaymentInfo  ; Google Pay    ; GGP ;
+
+UPDATE BaseStore; uid[unique = true]; allowedIsvPaymentModes(code)[mode=append]
+; apparel-uk ; 10_googlepay
+; apparel-de ; 10_googlepay

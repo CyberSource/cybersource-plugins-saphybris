@@ -1,0 +1,53 @@
+import com.aoe.gebspockreports.GebReportingListener
+
+import isv.sap.payment.driver.DriverFactory
+
+reportingListener = new GebReportingListener()
+reportsDir = 'build/geb-spock-reports'
+
+def browser = System.properties.getProperty('geb.browser')
+
+waiting {
+    timeout = 60
+    retryInterval = 2
+    includeCauseInMessage = true
+}
+atCheckWaiting = true
+
+driver = {
+    new DriverFactory().createDriver(browser)
+}
+
+environments {
+    dev {
+        hac = 'https://apparel-uk.local:9002/'
+        ukSite = 'https://apparel-uk.local:9002/'
+        deSite = 'https://apparel-de.local:9002/'
+        b2bSite = 'https://powertools.local:9002/'
+    }
+
+    remote {
+        hac =
+        ukSite =
+        deSite =
+        b2bSite =
+    }
+}
+
+logins {
+    vco {
+        email = <Registered VCO email>
+        reject_email = <VCO email that should fail DM>
+        password = <Common password for both VCO accounts>
+        address = <Address Line 1 set up in VCO accounts>
+    }
+    paypal {
+        email = <Sandbox PayPal email>
+        password = <PayPal password>
+    }
+    google {
+        email = <Google account email>
+        password = <Google account password>
+    }
+}
+

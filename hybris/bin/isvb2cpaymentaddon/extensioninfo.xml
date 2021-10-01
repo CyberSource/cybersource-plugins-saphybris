@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+    <extension abstractclassprefix="Generated" classprefix="Isvb2cpaymentaddon"
+               description="isvb2cpaymentaddon extension" managername="Isvb2cpaymentaddonManager"
+               managersuperclass="de.hybris.platform.jalo.extension.Extension" name="isvb2cpaymentaddon">
+
+        <requires-extension name="addonsupport"/>
+        <requires-extension name="isvpaymentaddon"/>
+
+        <coremodule generated="true" manager="isv.sap.payment.addon.b2c.jalo.Isvb2cpaymentaddonManager"
+                    packageroot="isv.sap.payment.addon.b2c"/>
+
+        <meta key="classpathgen" value="false"/>
+
+    </extension>
+
+</extensioninfo>

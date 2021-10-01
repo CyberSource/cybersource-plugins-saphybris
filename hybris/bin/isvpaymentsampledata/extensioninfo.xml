@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+    <extension abstractclassprefix="Generated" classprefix="Isvpaymentsampledata"
+               managername="IsvpaymentsampledataManager"
+               managersuperclass="de.hybris.platform.jalo.extension.Extension" name="isvpaymentsampledata"
+               usemaven="false">
+
+        <requires-extension name="apparelstore"/>
+        <requires-extension name="powertoolsstore"/>
+        <requires-extension name="commerceservices"/>
+
+        <coremodule generated="true"
+                    manager="isv.sap.payment.sampledata.jalo.IsvpaymentsampledataManager"
+                    packageroot="isv.sap.payment.sampledata"/>
+
+    </extension>
+
+</extensioninfo>
