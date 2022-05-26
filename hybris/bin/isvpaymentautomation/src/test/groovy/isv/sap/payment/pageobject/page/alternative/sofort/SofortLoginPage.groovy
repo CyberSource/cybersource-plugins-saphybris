@@ -8,7 +8,7 @@ class SofortLoginPage extends Page
     static content = {
         account(wait: true) { $('#BackendFormLOGINNAMEUSERID') }
         pin { $('#BackendFormUSERPIN') }
-        next { $('form#WizardForm > div > button') }
+        next { $('form#WizardForm > button') }
     }
 
     SelectAccountPage loginToSofort(String login, String password)

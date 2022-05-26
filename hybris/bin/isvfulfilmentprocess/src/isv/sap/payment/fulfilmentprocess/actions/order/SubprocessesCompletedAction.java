@@ -9,20 +9,19 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentProcessModel;
 import de.hybris.platform.processengine.action.AbstractSimpleDecisionAction;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SubprocessesCompletedAction extends AbstractSimpleDecisionAction<OrderProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(SubprocessesCompletedAction.class);
-
-    private static final String PROCESS_MSG = "Process: ";
+    private static final Logger LOG = LoggerFactory.getLogger(SubprocessesCompletedAction.class);
 
     @Override
     public Transition executeAction(final OrderProcessModel process)
     {
-        LOG.info(PROCESS_MSG + process.getCode() + " in step " + getClass());
-        LOG.info(PROCESS_MSG + process.getCode() + " is checking for  " + process.getConsignmentProcesses().size()
-                + " subprocess results");
+        LOG.info("Process: {} in step {}", process.getCode(), getClass());
+        LOG.info("Process: {} is checking for {}  subprocess results", process.getCode(),
+                process.getConsignmentProcesses().size());
 
         final OrderModel order = process.getOrder();
         final Collection<ConsignmentProcessModel> consignmentProcesses = process.getConsignmentProcesses();
@@ -33,27 +32,27 @@ public class SubprocessesCompletedAction extends AbstractSimpleDecisionAction<Or
                     .filter(consProcess -> !consProcess.isDone())
                     .findFirst();
             final boolean allConsProcessNotDone = consignmentProcesses.stream()
-                    .allMatch(consProcess -> !consProcess.isDone());
+                    .noneMatch(ConsignmentProcessModel::isDone);
 
             if (allConsProcessNotDone)
             {
-                LOG.info(PROCESS_MSG + process.getCode() + " found all subprocesses incomplete");
+                LOG.info("Process: {} found all subprocesses incomplete", process.getCode());
                 order.setDeliveryStatus(DeliveryStatus.NOTSHIPPED);
                 save(order);
                 return Transition.NOK;
             }
             else if (atleastOneConsProcessNotDone.isPresent())
             {
-                LOG.info(PROCESS_MSG + process.getCode() + " found subprocess " + atleastOneConsProcessNotDone.get()
-                        .getCode()
-                        + " incomplete -> wait again!");
+                LOG.info("Process: {} found subprocess {} incomplete -> wait again!", process.getCode(),
+                        atleastOneConsProcessNotDone.get()
+                                .getCode());
                 order.setDeliveryStatus(DeliveryStatus.PARTSHIPPED);
                 save(order);
                 return Transition.NOK;
             }
         }
 
-        LOG.info(PROCESS_MSG + process.getCode() + " found all subprocesses complete");
+        LOG.info("Process: {} found all subprocesses complete", process.getCode());
         order.setDeliveryStatus(DeliveryStatus.SHIPPED);
         save(order);
         return Transition.OK;

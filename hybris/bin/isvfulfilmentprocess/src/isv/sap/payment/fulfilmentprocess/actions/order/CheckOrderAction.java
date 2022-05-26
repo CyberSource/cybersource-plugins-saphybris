@@ -4,7 +4,8 @@ import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractSimpleDecisionAction;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import isv.sap.payment.fulfilmentprocess.CheckOrderService;
@@ -18,7 +19,7 @@ import isv.sap.payment.fulfilmentprocess.CheckOrderService;
  */
 public class CheckOrderAction extends AbstractSimpleDecisionAction<OrderProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(CheckOrderAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CheckOrderAction.class);
 
     private CheckOrderService checkOrderService;
 

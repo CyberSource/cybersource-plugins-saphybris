@@ -12,7 +12,8 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.SopPaymentDetailsFo
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,7 +31,7 @@ import static de.hybris.platform.acceleratorstorefrontcommons.controllers.util.G
 @RequestMapping(value = "/checkout/multi/isv")
 public class PaymentResponseController extends PaymentMethodCheckoutStepController
 {
-    private static final Logger LOGGER = Logger.getLogger(PaymentResponseController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PaymentResponseController.class);
 
     @Resource(name = "sopPaymentDetailsFormValidator")
     private SopPaymentDetailsValidator sopPaymentDetailsValidator;
@@ -64,7 +65,7 @@ public class PaymentResponseController extends PaymentMethodCheckoutStepControll
 
         if (paymentSubscriptionResultData == null || !paymentSubscriptionResultData.isSuccess())
         {
-            LOGGER.error("Failed to create payment subscription.  Please check the log files for more information");
+            LOGGER.error("Failed to create payment subscription. Please check the log files for more information");
 
             return REDIRECT_URL_ERROR;
         }

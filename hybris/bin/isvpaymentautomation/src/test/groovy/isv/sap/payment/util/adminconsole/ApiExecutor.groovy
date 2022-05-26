@@ -23,7 +23,7 @@ import org.apache.http.util.EntityUtils
 class ApiExecutor
 {
     private static final CSRF_REGEX = '<meta name=\"_csrf\" content=\"([^\"]+)'
-    private static final LOGIN_URI = 'login.jsp'
+    private static final LOGIN_URI = 'login'
     private static final LOGIN = 'admin'
     private static final PASSWORD = 'nimda'
 

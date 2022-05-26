@@ -62,7 +62,7 @@ public class PaymentController extends AbstractCheckoutController
 
         if (StringUtils.isNotEmpty(orderNumber))
         {
-            final CartModel cart = getCart(orderNumber);
+            final CartModel cart = paymentCartService.getCartForGuid(orderNumber);
             if (cart != null)
             {
                 paymentCartService.executeWithCartLock(cart, () -> {
@@ -92,7 +92,7 @@ public class PaymentController extends AbstractCheckoutController
             return;
         }
 
-        final CartModel cart = getCart(orderNumber);
+        final CartModel cart = paymentCartService.getCartForGuid(orderNumber);
         if (cart != null)
         {
             paymentCartService.executeWithCartLock(cart, () -> doHandlePlaceOrder(paymentResponse, cart));
@@ -124,17 +124,6 @@ public class PaymentController extends AbstractCheckoutController
         }
 
         return referenceNumber;
-    }
-
-    private CartModel getCart(final String guid)
-    {
-        final CartModel cart = paymentCartService.getCartForGuid(guid);
-        if (cart == null)
-        {
-            LOG.warn("Cannot find cart for code: {}", LogUtils.encode(guid));
-        }
-
-        return cart;
     }
 
     private AbstractOrderData doHandlePlaceOrder(final Map<String, String> paymentResponse, final CartModel cart)

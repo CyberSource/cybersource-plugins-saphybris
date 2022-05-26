@@ -203,7 +203,7 @@ class IsvHybrisMerchantServiceSpec extends Specification
         service.allMerchants
 
         then:
-        1 * flexSearchService.search('SELECT {PK} FROM {' + IsvMerchantModel._TYPECODE + '}') >> searchResult
+        1 * flexSearchService.search('SELECT {' + IsvMerchantModel.PK + '} FROM {' + IsvMerchantModel._TYPECODE + '}') >> searchResult
     }
 
     @Test

@@ -29,6 +29,7 @@ public class SopController extends SecureAcceptanceController
     public static final String POST_URL = "isv.payment.secure.acceptance.sop.post.url";
 
     public static final String SOP_REQUEST = "addon:/isvpaymentaddon/pages/checkout/payment/sa/sopRequest";
+    private static final String CARD_TYPE_SELECTION_INDICATOR_VALUE = "1";
 
     @Resource(name = "isv.cjl.payment.security.service.SAService")
     private SAService sAService;
@@ -80,6 +81,7 @@ public class SopController extends SecureAcceptanceController
                 .addUnsignedField(CARD_CVN, EMPTY)
                 .addUnsignedField(MERCHANT_DEFINED_DATA_99, profile.getMerchant().getId())
                 .addUnsignedField(MERCHANT_DEFINED_DATA_100, SOP.getCode())
+                .addUnsignedField(CARD_TYPE_SELECTION_INDICATOR, CARD_TYPE_SELECTION_INDICATOR_VALUE)
                 .build(profile.getSecretKey(), sAService);
     }
 }

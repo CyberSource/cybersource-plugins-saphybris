@@ -2,8 +2,8 @@
 
 ## CJL - Core Java Library <!-- omit in toc -->
 
-**Version 3.0.0**
-May 2020
+**Version 3.0.2**
+March 2021
 
 ## Contents <!-- omit in toc -->
 
@@ -126,6 +126,7 @@ May 2020
 | February 2020 | - Added support for Google Pay operations |
 | March 2020    | - Added WeChat Pay |
 | May 2020      | - Repackaging with ISV package |
+| March 2021    | - Upgraded Cybersource Transaction Web Service to version 175 <br> - Added cardTypeSelectionIndicator field to  support Credit Mutuel-CIC transactions <br> - Upgraded cybersource-rest-client-java to version 0.0.30|
 
 ## About This Guide
 
@@ -343,7 +344,7 @@ compile 'commons-io:commons-io:2.6'
 compile 'cglib:cglib-nodep:3.1'
 compile 'joda-time:joda-time:2.9.9'
 compile 'com.squareup.okhttp3:okhttp:3.14.4'
-compile 'com.cybersource:cybersource-rest-client-java:0.0.16'
+compile 'com.cybersource:cybersource-rest-client-java:0.0.30'
 
 // tests related deps
 testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
@@ -2478,7 +2479,7 @@ CJL consumes HTTP REST APIs using [Java SDK](https://github.com/CyberSource/cybe
 Java SDK is included in CJL as a dependency:
 
 ```text
- compile 'com.cybersource:cybersource-rest-client-java:0.0.16'
+ compile 'com.cybersource:cybersource-rest-client-java:0.0.30'
 ```
 
 The dependency above brings in transitively two supporting libraries:
@@ -3401,9 +3402,9 @@ To run integration tests from command line use following command
 
 # Support
 
-For a support and bug fixes, please visit CyberSource support portal: <https://support.cybersource.com/>
+For a support and bug fixes, please visit Cybersource support portal: <https://support.cybersource.com/>
 
-CyberSource Corporation HQ
+Cybersource Corporation HQ
 
 P.O. Box 8999
 

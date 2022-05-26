@@ -13,7 +13,7 @@ public class SplitByEntryDeliveryAddress extends AbstractSplittingStrategy
     @Override
     public Object getGroupingObject(final AbstractOrderEntryModel orderEntry)
     {
-        AddressModel shippingAddress = null;
+        AddressModel shippingAddress;
 
         if (orderEntry.getDeliveryAddress() != null)
         {

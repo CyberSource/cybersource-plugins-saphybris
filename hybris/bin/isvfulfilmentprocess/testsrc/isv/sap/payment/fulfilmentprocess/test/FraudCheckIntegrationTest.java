@@ -1,7 +1,6 @@
 package isv.sap.payment.fulfilmentprocess.test;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Currency;
@@ -62,13 +61,14 @@ import de.hybris.platform.util.Config;
 import de.hybris.platform.util.Utilities;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -93,7 +93,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 
     protected static final String PARAM_NAME_FRAUD_SCORE_TOLERANCE = "isvfulfilmentprocess.fraud.scoreTolerance";
 
-    private static final Logger LOG = Logger.getLogger(FraudCheckIntegrationTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FraudCheckIntegrationTest.class);
 
     private static int codeNo = 1;
 
@@ -178,8 +178,9 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
         xmlReader.loadBeanDefinitions(new ClassPathResource(
                 "/isvfulfilmentprocess/test/isvfulfilmentprocess-spring-test-fraudcheck.xml"));
         final DefaultCommandFactoryRegistryImpl commandFactoryReg = appCtx
-                .getBean(DefaultCommandFactoryRegistryImpl.class);
-        commandFactoryReg.setCommandFactoryList(Arrays.asList((CommandFactory) appCtx.getBean("mockupCommandFactory")));
+                .getBean("commandFactoryRegistry", DefaultCommandFactoryRegistryImpl.class);
+        commandFactoryReg.setCommandFactoryList(
+                Collections.singletonList((CommandFactory) appCtx.getBean("mockupCommandFactory")));
     }
 
     /**
@@ -203,7 +204,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
         final Map<String, CommandFactory> commandFactoryList = applicationContext.getBeansOfType(CommandFactory.class);
         commandFactoryList.remove("mockupCommandFactory");
         final DefaultCommandFactoryRegistryImpl commandFactoryReg = appCtx
-                .getBean(DefaultCommandFactoryRegistryImpl.class);
+                .getBean("commandFactoryRegistry", DefaultCommandFactoryRegistryImpl.class);
         commandFactoryReg.setCommandFactoryList(commandFactoryList.values());
     }
 
@@ -748,7 +749,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
      */
     protected static abstract class AbstractAssertionLooper
     {
-        private final static Logger LOG = Logger.getLogger(AbstractAssertionLooper.class);
+        private final static Logger LOG = LoggerFactory.getLogger(AbstractAssertionLooper.class);
 
         private final static long ONE_SEC = 1000;
 
@@ -787,7 +788,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
                     }
                     catch (final InterruptedException e)
                     {
-                        LOG.debug(e);
+                        LOG.debug("Exception", e);
                     }
                     numberOfIteration++;
                 }

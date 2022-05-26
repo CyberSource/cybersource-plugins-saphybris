@@ -1,5 +1,6 @@
 package isv.sap.payment.fulfilmentprocess.test;
 
+import de.hybris.bootstrap.annotations.UnitTest;
 import de.hybris.platform.orderprocessing.events.FraudErrorEvent;
 import de.hybris.platform.orderprocessing.events.OrderCompletedEvent;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
@@ -15,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 
 import isv.sap.payment.fulfilmentprocess.actions.order.SendOrderCompletedNotificationAction;
 
+@UnitTest
 public class SendOrderCompletedNotificationTest
 {
     @InjectMocks

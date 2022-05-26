@@ -1,6 +1,7 @@
 package isv.sap.payment.pageobject.page.paypal
 
 import geb.Page
+import org.openqa.selenium.Keys
 
 import isv.sap.payment.data.Credentials
 import isv.sap.payment.pageobject.page.OrderConfirmationPage
@@ -30,7 +31,7 @@ class PayPalPage extends Page
         password(wait: true) { $('#password') }
         logInBtn { $('#btnLogin') }
 
-        cancel(wait: true) { $('.CancelLink_cancel-link_2uud4') }
+        cancel(wait: true) { $('a.CancelLink_cancel-link_2uud4') }
         continueBtn(required: false, wait: true) { $('#payment-submit-btn') }
         selectPaymentContinueBtn(required: false, wait: true) { $('button.continueButton') }
     }
@@ -74,14 +75,14 @@ class PayPalPage extends Page
     OrderConfirmationPage acceptPayment()
     {
         waitFor { shippingDetails.displayed }
-        continueBtn.click()
+        continueBtn << Keys.RETURN
 
         browser.at(OrderConfirmationPage)
     }
 
     B2cCheckoutPage cancelPayment()
     {
-        cancel.click()
+        cancel << Keys.RETURN
 
         browser.at(B2cCheckoutPage)
     }

@@ -221,6 +221,7 @@
 
         <enumtype code="CreditCardType" autocreate="false" generate="false">
             <value code="discover"/>
+            <value code="carte_bancaire"/>
         </enumtype>
     </enumtypes>
 
@@ -247,7 +248,7 @@
             <deployment table="IsvMerchantPaymentConf" typecode="11000"/>
             <attributes>
                 <attribute qualifier="merchant" type="IsvMerchant">
-                    <modifiers read="true" write="true" search="true" optional="false"/>
+                    <modifiers read="true" write="true" search="true" optional="false" initial="true"/>
                     <persistence type="property"/>
                 </attribute>
                 <attribute qualifier="site" type="BaseSite">
@@ -278,11 +279,11 @@
             <deployment table="IsvPaymentStatusConf" typecode="11005"/>
             <attributes>
                 <attribute qualifier="paymentMethod" type="AlternativePaymentMethod">
-                    <modifiers read="true" write="true" optional="false"/>
+                    <modifiers read="true" write="true" optional="false" initial="true"/>
                     <persistence type="property"/>
                 </attribute>
                 <attribute qualifier="statusMap" type="PaymentStatusMap">
-                    <modifiers read="true" write="true" optional="false"/>
+                    <modifiers read="true" write="true" optional="false" initial="true"/>
                     <persistence type="property"/>
                 </attribute>
             </attributes>
@@ -389,7 +390,7 @@
         <itemtype code="IsvPaymentTransaction" generate="true" autocreate="true" extends="PaymentTransaction">
             <attributes>
                 <attribute qualifier="merchantId" type="java.lang.String">
-                    <modifiers read="true" write="true" search="true" optional="false"/>
+                    <modifiers read="true" write="true" search="true" optional="false" initial="true"/>
                     <persistence type="property"/>
                 </attribute>
                 <attribute qualifier="alternativePaymentMethod" type="AlternativePaymentMethod">
@@ -441,11 +442,11 @@
             <deployment table="IsvAltPaymentOption" typecode="11004"/>
             <attributes>
                 <attribute qualifier="id" type="java.lang.String">
-                    <modifiers read="true" write="true" search="true" unique="true" optional="false"/>
+                    <modifiers read="true" write="true" search="true" unique="true" optional="false" initial="true"/>
                     <persistence type="property"/>
                 </attribute>
                 <attribute qualifier="name" type="java.lang.String">
-                    <modifiers read="true" write="true" search="true" optional="false"/>
+                    <modifiers read="true" write="true" search="true" optional="false" initial="true"/>
                     <persistence type="property"/>
                 </attribute>
             </attributes>
@@ -459,7 +460,7 @@
         <itemtype code="IsvAlternativePaymentOptionsCronJob" extends="CronJob" generate="true" autocreate="true">
             <attributes>
                 <attribute qualifier="merchant" type="IsvMerchant">
-                    <modifiers read="true" write="true" search="true" unique="true" optional="false"/>
+                    <modifiers read="true" write="true" search="true" unique="true" optional="false" initial="true"/>
                     <persistence type="property"/>
                 </attribute>
             </attributes>

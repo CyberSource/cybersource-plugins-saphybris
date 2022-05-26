@@ -7,7 +7,7 @@ class SelectAccountPage extends Page
     static at = { $('#SelectAccountPage') }
     static content = {
         firstAccount { $('#account-1') }
-        next { $('form#WizardForm > div > button') }
+        next { $('form#WizardForm > button') }
     }
 
     ProvideTanPage selectAccount()

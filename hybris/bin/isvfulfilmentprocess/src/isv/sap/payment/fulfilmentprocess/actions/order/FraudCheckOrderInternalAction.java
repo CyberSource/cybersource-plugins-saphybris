@@ -42,7 +42,7 @@ public class FraudCheckOrderInternalAction extends AbstractFraudCheckAction<Orde
     }
 
     @Override
-    public Transition executeAction(final OrderProcessModel process)//NOPMD
+    public Transition executeAction(final OrderProcessModel process)
     {
         ServicesUtil.validateParameterNotNull(process, "Process can not be null");
         ServicesUtil.validateParameterNotNull(process.getOrder(), "Order can not be null");

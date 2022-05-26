@@ -74,7 +74,7 @@ trait WithTestData implements WithCredentials
                                          postCode: DIGITAL_POSTCODE,
                                          product: PRODUCT_ID_B2B,)
 
-    private final vcoData = new TestData(firstName: english(LENGTH),
+    private final visaData = new TestData(firstName: english(LENGTH),
                                          lastName: english(LENGTH),
                                          address: english(LENGTH),
                                          postCode: UK_POSTCODE,
@@ -82,10 +82,10 @@ trait WithTestData implements WithCredentials
                                          phoneNumber: '7911 123456',
                                          email: "${english(LENGTH)}$EMAIL_HOST".toLowerCase(),)
 
-    private dataMap = ['uk' : ukData,
+    private final dataMap = ['uk' : ukData,
                        'de' : deData,
                        'b2b': b2bData,
-                       'vco': vcoData,]
+                       'vco': visaData,]
 
     TestData getData(String site)
     {

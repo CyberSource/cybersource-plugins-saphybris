@@ -38,18 +38,22 @@ public class PaymentSystemInfo
     private String clientLibraryVersion;
 
     @PostConstruct
-    public void init() throws ConfigurationException
+    public void init()
     {
         try
         {
-            final Configuration versionInfo = new PropertiesConfiguration(VERSION_INFO_FILE);
-
-            clientLibraryVersion = versionInfo.getString("build_version");
+            setClientLibraryVersion();
         }
         catch (final ConfigurationException e)
         {
             LOG.warn(e.getMessage(), e);
         }
+    }
+
+    protected void setClientLibraryVersion() throws ConfigurationException
+    {
+        final Configuration versionInfo = new PropertiesConfiguration(VERSION_INFO_FILE);
+        clientLibraryVersion = versionInfo.getString("build_version");
     }
 
     public String getPartnerSolutionID()

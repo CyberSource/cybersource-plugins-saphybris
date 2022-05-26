@@ -6,11 +6,12 @@ import de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.task.RetryLaterException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CheckPaymentIsNotAccountBasedAction extends AbstractSimpleB2BApproveOrderDecisionAction
 {
-    private static final Logger LOG = Logger.getLogger(CheckPaymentIsNotAccountBasedAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CheckPaymentIsNotAccountBasedAction.class);
 
     @Override
     public Transition executeAction(final B2BApprovalProcessModel process) throws RetryLaterException

@@ -154,6 +154,21 @@ class KlarnaPaymentFacadeImplSpec extends Specification
         sessionId == '123'
     }
 
+    @Test
+    def 'updateKlarnaSession: Should throw exception if create session transaction is not found'()
+    {
+        when:
+        facade.updateKlarnaSession(cart)
+
+        then:
+        1 * paymentTransactionService.getLatestTransaction(PaymentType.ALTERNATIVE_PAYMENT, cart) >> Optional.of(transaction)
+        1 * paymentTransactionService.getLatestAcceptedTransactionEntry(transaction, PaymentTransactionType.CREATE_SESSION) >> Optional.empty()
+
+        and:
+        def exception = thrown(IllegalStateException)
+        exception.message == "Unable to find Klarna create session transaction for order: ${cart.guid}"
+    }
+
     def verifyAndStubForCreateKlarnaSession()
     {
         1 * merchantService.getCurrentMerchant(ALTERNATIVE_PAYMENT) >> merchantModel

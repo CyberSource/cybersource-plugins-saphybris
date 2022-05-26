@@ -33,15 +33,14 @@ class AuthorizationRequestConverterSpec extends Specification
 
     def source = PaymentServiceRequest.create()
 
-    def converter = new AuthorizationRequestConverter()
-
     def requestFactory = Mock([useObjenesis: false], RequestFactory)
+
+    def converter = new AuthorizationRequestConverter(requestFactory: requestFactory)
 
     def paymentTransaction = new PaymentTransaction()
 
     def setup()
     {
-        converter.requestFactory = requestFactory
         requestFactory.request(AUTHORIZATION) >> paymentTransaction
 
         order.guid >> '123'
@@ -150,12 +149,15 @@ class AuthorizationRequestConverterSpec extends Specification
     {
         when:
         source.addParam('paRes', 'eNqdmElz6kg')
+        source.addParam('payerAuthValidateServiceAuthenticationTransactionID', 'agdnBshdgs')
+        source.addParam('payerAuthValidateServiceRun', true)
         def target = converter.convert(source)
         def requestFields = target.requestFields
 
         then:
         requestFields['payerAuthValidateServiceRun'] == true
         requestFields['payerAuthValidateServiceSignedPARes'] == 'eNqdmElz6kg'
+        requestFields['payerAuthValidateServiceAuthenticationTransactionID'] == 'agdnBshdgs'
     }
 
     @Test
@@ -178,7 +180,6 @@ class AuthorizationRequestConverterSpec extends Specification
         where:
         dmEnabled << [null, Boolean.FALSE, Boolean.TRUE]
     }
-
 
     @Test
     def 'should throw exception when no flex token or card info or subscription ID provided'()

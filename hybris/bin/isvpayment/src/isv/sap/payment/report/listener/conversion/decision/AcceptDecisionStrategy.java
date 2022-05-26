@@ -27,7 +27,7 @@ public class AcceptDecisionStrategy extends AbstractDecisionStrategy
         LOG.debug("Set order [{}] properties: status = [{}], fraudulent = [{}]", order.getCode(),
                 OrderStatus.FRAUD_CHECKED, Boolean.FALSE);
 
-        getModelsService().saveAll(fraudReport, historyEntry, order);
+        getModelService().saveAll(fraudReport, historyEntry, order);
     }
 
     @Override

@@ -1,13 +1,17 @@
 package isv.sap.payment.addon.facade.impl;
 
+import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Resource;
 
+import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.customer.CustomerEmailResolutionService;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.order.CartService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import isv.sap.payment.addon.facade.PaymentInfoFacade;
@@ -23,6 +27,12 @@ public class PaymentInfoFacadeImpl implements PaymentInfoFacade
 
     @Resource
     private ModelService modelService;
+
+    @Resource
+    private CartService cartService;
+
+    @Resource
+    private Converter<AddressModel, AddressData> addressConverter;
 
     public PaymentInfoModel resolvePaymentInfo(final CartModel sessionCart, final CustomerModel customer)
     {
@@ -61,6 +71,14 @@ public class PaymentInfoFacadeImpl implements PaymentInfoFacade
         paymentInfoModel.setSaved(saveInAccount);
 
         return paymentInfoModel;
+    }
+
+    @Override
+    public Optional<AddressData> fetchAddressFromPaymentInfo()
+    {
+        return Optional.ofNullable(cartService.getSessionCart().getPaymentInfo())
+            .map(PaymentInfoModel::getBillingAddress)
+            .map(billingAddress -> addressConverter.convert(billingAddress));
     }
 
     public void setCustomerEmailResolutionService(final CustomerEmailResolutionService customerEmailResolutionService)

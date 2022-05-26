@@ -1,9 +1,19 @@
 package isv.sap.payment.addon.b2b.facade.impl
 
+import java.time.DayOfWeek
 import java.time.Instant
 
 import de.hybris.bootstrap.annotations.UnitTest
+import de.hybris.platform.b2bacceleratorfacades.checkout.data.PlaceOrderData
+import de.hybris.platform.b2bacceleratorfacades.exception.EntityValidationException
+import de.hybris.platform.b2bacceleratorfacades.order.data.B2BPaymentTypeData
+import de.hybris.platform.b2bacceleratorfacades.order.data.B2BReplenishmentRecurrenceEnum
+import de.hybris.platform.b2bacceleratorfacades.order.data.ScheduledCartData
+import de.hybris.platform.b2bacceleratorfacades.order.data.TriggerData
+import de.hybris.platform.commercefacades.order.data.CartData
+import de.hybris.platform.commercefacades.order.data.DeliveryModeData
 import de.hybris.platform.commercefacades.order.data.OrderData
+import de.hybris.platform.commercefacades.user.data.AddressData
 import de.hybris.platform.core.model.order.CartModel
 import de.hybris.platform.core.model.order.OrderModel
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel
@@ -20,6 +30,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 import isv.sap.payment.addon.b2b.helper.B2bPaymentAuthorizationHelper
+import isv.sap.payment.addon.b2b.model.ReplenishmentInfoModel
 import isv.sap.payment.addon.b2b.service.B2bPaymentTransactionService
 import isv.sap.payment.enums.PaymentType
 
@@ -49,6 +60,8 @@ class IsvB2BAcceleratorCheckoutFacadeSpec extends Specification
 
     def orderConverter = Mock(Converter)
 
+    def replenishmentPlaceOrderConverter = Mock(Converter)
+
     def cartService = Mock(CartService)
 
     def modelService = Mock(ModelService)
@@ -57,16 +70,17 @@ class IsvB2BAcceleratorCheckoutFacadeSpec extends Specification
 
     def b2bPaymentTransactionService = Mock(B2bPaymentTransactionService)
 
-    def facade = Spy(IsvB2BAcceleratorCheckoutFacade)
+    def facade = Spy(new IsvB2BAcceleratorCheckoutFacade(
+            orderConverter: orderConverter,
+            cartService: cartService,
+            modelService: modelService,
+            b2bPaymentAuthorizationHelper: b2bPaymentAuthorizationHelper,
+            b2bPaymentTransactionService: b2bPaymentTransactionService,
+            replenishmentPlaceOrderConverter: replenishmentPlaceOrderConverter
+    ))
 
     def setup()
     {
-        facade.orderConverter = orderConverter
-        facade.cartService = cartService
-        facade.modelService = modelService
-        facade.b2bPaymentAuthorizationHelper = b2bPaymentAuthorizationHelper
-        facade.b2bPaymentTransactionService = b2bPaymentTransactionService
-
         orderConverter.convert(order) >> orderData
     }
 
@@ -102,6 +116,74 @@ class IsvB2BAcceleratorCheckoutFacadeSpec extends Specification
         1 * facade.beforePlaceOrder(cart) >> { }
         1 * facade.placeOrder(cart) >> order
         1 * facade.afterPlaceOrder(cart, _ as OrderModel) >> { }
+        resultData == orderData
+    }
+
+    @Test
+    def 'should place replenishment order and return replenishment order data object'()
+    {
+        given:
+        def replenishmentInfo = Mock(ReplenishmentInfoModel)
+        cart.replenishmentInfo >> replenishmentInfo
+        def placeOrderData = createPlaceOrderData()
+
+        and:
+        def cartData = createCartData()
+        facade.getCheckoutCart() >> cartData
+        def scheduleCartData = new ScheduledCartData()
+
+        when:
+        def resultData = facade.performPlaceOrder(cart)
+
+        then:
+        1 * facade.beforePlaceOrder(cart) >> { }
+        1 * replenishmentPlaceOrderConverter.convert(replenishmentInfo) >> placeOrderData
+        1 * facade.populateTriggerDataFromPlaceOrderData(placeOrderData, _ as TriggerData) >> { }
+        1 * facade.scheduleOrder(_ as TriggerData) >> scheduleCartData
+        resultData == scheduleCartData
+    }
+
+    @Test
+    def 'should throw exception when cart for replenishment is not valid'()
+    {
+        given:
+        def replenishmentInfo = Mock(ReplenishmentInfoModel)
+        cart.replenishmentInfo >> replenishmentInfo
+        def placeOrderData = createPlaceOrderData()
+
+        and:
+        def cartData = new CartData()
+        facade.getCheckoutCart() >> cartData
+
+        when:
+        facade.performPlaceOrder(cart)
+
+        then:
+        1 * facade.beforePlaceOrder(cart) >> { }
+        1 * replenishmentPlaceOrderConverter.convert(replenishmentInfo) >> placeOrderData
+        thrown(EntityValidationException)
+    }
+
+    @Test
+    def 'should place regular order when cart is not for replenishment'()
+    {
+        given:
+        def replenishmentInfo = Mock(ReplenishmentInfoModel)
+        cart.replenishmentInfo >> replenishmentInfo
+        def placeOrderData = createPlaceOrderData()
+        placeOrderData.replenishmentOrder = false
+
+        and:
+        def cartData = createCartData()
+        facade.getCheckoutCart() >> cartData
+
+        when:
+        def resultData = facade.performPlaceOrder(cart)
+
+        then:
+        1 * facade.beforePlaceOrder(cart) >> { }
+        1 * replenishmentPlaceOrderConverter.convert(replenishmentInfo) >> placeOrderData
+        1 * facade.placeOrder() >> orderData
         resultData == orderData
     }
 
@@ -198,5 +280,31 @@ class IsvB2BAcceleratorCheckoutFacadeSpec extends Specification
         transaction.entries >> [entry]
 
         transaction
+    }
+
+    def createCartData()
+    {
+        def cartData = new CartData()
+        cartData.calculated = true
+        def deliveryAddress = new AddressData()
+        cartData.deliveryAddress = deliveryAddress
+        def deliveryMode = new DeliveryModeData()
+        cartData.deliveryMode = deliveryMode
+        def paymentType = new B2BPaymentTypeData()
+        paymentType.code = 'CARD'
+        cartData.paymentType = paymentType
+
+        cartData
+    }
+
+    def createPlaceOrderData()
+    {
+        def placeOrderData = new PlaceOrderData()
+        placeOrderData.replenishmentRecurrence = B2BReplenishmentRecurrenceEnum.MONTHLY
+        placeOrderData.nDaysOfWeek = [DayOfWeek.MONDAY]
+        placeOrderData.replenishmentStartDate = new Date()
+        placeOrderData.termsCheck = true
+        placeOrderData.replenishmentOrder = true
+        placeOrderData
     }
 }

@@ -6,6 +6,7 @@ import isv.sap.payment.pageobject.page.checkout.B2cCheckoutPage
 
 class SelectBankPage extends Page
 {
+    static atCheckWaiting = true
     static at = { title.contains('ISV powered') }
     static content = {
         ingBank(to: PaymentPage) { $('button.grid-button-ideal-INGBNL2A') }

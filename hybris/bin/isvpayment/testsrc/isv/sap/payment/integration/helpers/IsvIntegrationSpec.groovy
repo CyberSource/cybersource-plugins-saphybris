@@ -2,7 +2,6 @@ package isv.sap.payment.integration.helpers
 
 import javax.annotation.Resource
 
-import com.anotherchrisberry.spock.extensions.retry.RetryOnFailure
 import de.hybris.bootstrap.config.ConfigUtil
 import de.hybris.platform.core.Registry
 import de.hybris.platform.core.enums.CreditCardType
@@ -20,6 +19,7 @@ import de.hybris.platform.payment.dto.CardInfo
 import de.hybris.platform.payment.enums.PaymentTransactionType
 import de.hybris.platform.servicelayer.model.ModelService
 import de.hybris.platform.task.impl.DefaultTaskService
+import spock.lang.Retry
 
 import isv.cjl.payment.enums.CardType
 import isv.cjl.payment.service.executor.PaymentServiceExecutor
@@ -42,7 +42,7 @@ import static io.qala.datagen.RandomShortApi.specialSymbols
 import static io.qala.datagen.RandomValue.length
 import static io.qala.datagen.StringModifier.Impls.spaces
 
-@RetryOnFailure
+@Retry(count = 1)
 @SuppressWarnings('MethodCount')
 class IsvIntegrationSpec extends HybrisIntegrationSpec
 {
@@ -180,6 +180,20 @@ class IsvIntegrationSpec extends HybrisIntegrationSpec
         cart
     }
 
+    def testCartDe(totalPrice = null)
+    {
+        def cart = testOrder(totalPrice)
+
+        cart.deliveryAddress >> DEAddress
+        cart.paymentAddress >> DEAddress
+        cart.deliveryMode >> deliveryMode()
+        cart.paymentInfo >> paymentInfo('DE')
+        cart.currency >> testCurrency('EUR')
+        cart.entries.first().order >> cart
+
+        cart
+    }
+
     def testCartForReview()
     {
         def cart = testOrder()
@@ -295,7 +309,7 @@ class IsvIntegrationSpec extends HybrisIntegrationSpec
         order.paymentAddress >> addressUs()
         order.deliveryAddress >> addressUs()
         order.deliveryMode >> deliveryMode()
-        order.paymentInfo >> paymentInfo(true)
+        order.paymentInfo >> paymentInfo('US')
         order.entries.first().order >> order
 
         order
@@ -629,7 +643,6 @@ class IsvIntegrationSpec extends HybrisIntegrationSpec
 
         address
     }
-
     private addressForReview()
     {
         def address = testAddress(true)
@@ -809,12 +822,22 @@ class IsvIntegrationSpec extends HybrisIntegrationSpec
         deliveryMode
     }
 
-    private paymentInfo(forUs = false)
+    private paymentInfo(locale = 'UK')
     {
         def paymentInfo = Mock([useObjenesis: false], PaymentInfoModel)
-
-        def address = forUs ? addressUs() : addressUk()
-
+        def address
+        switch (locale)
+        {
+            case 'DE':
+                address = DEAddress
+                break
+            case 'US':
+                address = addressUs()
+                break
+            default:
+                address = addressUk()
+                break
+        }
         paymentInfo.billingAddress >> address
 
         paymentInfo

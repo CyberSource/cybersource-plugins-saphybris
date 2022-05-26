@@ -2,11 +2,14 @@ package isv.sap.payment.service.executor.request.populator.processinglevel.l3
 
 import org.apache.commons.lang3.StringUtils
 import org.junit.Test
+import spock.lang.Unroll
 
+import isv.cjl.payment.configuration.transaction.PaymentTransaction
 import isv.cjl.payment.enums.CardType
 import isv.cjl.payment.service.request.RequestFactory
 import isv.sap.payment.constants.IsvPaymentConstants
 import isv.sap.payment.service.executor.request.populator.processinglevel.AbstractPopulatorSpec
+import isv.sap.payment.service.executor.request.populator.processinglevel.ProcessingLevelOperation
 
 import static isv.cjl.payment.constants.PaymentRequestParamConstants.MERCHANT_ID
 import static isv.cjl.payment.constants.PaymentRequestParamConstants.MERCHANT_REFERENCE_CODE
@@ -164,5 +167,24 @@ class AbstractOmniPayPopulatorSpec extends AbstractPopulatorSpec
         fields.purchaseTotalsTaxAmount == ZERO
         fields.purchaseTotalsDiscountAmount == ZERO
         fields.ccCaptureServicePurchasingLevel == null
+    }
+
+    @Test
+    @Unroll
+    def 'should populate purchasing level data for target'()
+    {
+        given:
+        def target = Mock(PaymentTransaction)
+
+        when:
+        populator.populatePurchasingLevelData(levelOperation, target)
+
+        then:
+        1 * target.addParam(paramName, '3')
+
+        where:
+        levelOperation                   | paramName
+        ProcessingLevelOperation.CAPTURE | 'ccCaptureServicePurchasingLevel'
+        ProcessingLevelOperation.CREDIT  | 'ccCreditServicePurchasingLevel'
     }
 }

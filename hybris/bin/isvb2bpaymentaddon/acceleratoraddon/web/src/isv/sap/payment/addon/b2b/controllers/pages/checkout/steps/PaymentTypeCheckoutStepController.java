@@ -70,18 +70,12 @@ public class PaymentTypeCheckoutStepController extends AbstractCheckoutStepContr
     @PreValidateQuoteCheckoutStep
     @PreValidateCheckoutStep(checkoutStep = PAYMENT_TYPE)
     public String enterStep(final Model model, final RedirectAttributes redirectAttributes)
-            throws CMSItemNotFoundException, CommerceCartModificationException
+        throws CMSItemNotFoundException, CommerceCartModificationException
     {
         final CartData cartData = getCheckoutFacade().getCheckoutCart();
         model.addAttribute("cartData", cartData);
         model.addAttribute("paymentTypeForm", preparePaymentTypeForm(cartData));
-        prepareDataForPage(model);
-        storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-        setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-        model.addAttribute(WebConstants.BREADCRUMBS_KEY,
-                getResourceBreadcrumbBuilder().getBreadcrumbs("checkout.multi.paymentType.breadcrumb"));
-        model.addAttribute(ThirdPartyConstants.SeoRobots.META_ROBOTS, ThirdPartyConstants.SeoRobots.NOINDEX_NOFOLLOW);
-        setCheckoutStepLinksForModel(model, getCheckoutStep());
+        prepareDataForChooseStep(model);
 
         return CHOOSE_PAYMENT_TYPE_PAGE;
     }
@@ -89,7 +83,7 @@ public class PaymentTypeCheckoutStepController extends AbstractCheckoutStepContr
     @RequestMapping(value = "/choose", method = RequestMethod.POST)
     @RequireHardLogIn
     public String choose(@ModelAttribute final PaymentTypeForm paymentTypeForm, final BindingResult bindingResult,
-            final Model model) throws CMSItemNotFoundException, CommerceCartModificationException
+        final Model model) throws CMSItemNotFoundException, CommerceCartModificationException
     {
         paymentTypeFormValidator.validate(paymentTypeForm, bindingResult);
 
@@ -97,14 +91,7 @@ public class PaymentTypeCheckoutStepController extends AbstractCheckoutStepContr
         {
             GlobalMessages.addErrorMessage(model, "checkout.error.paymenttype.formentry.invalid");
             model.addAttribute("paymentTypeForm", paymentTypeForm);
-            prepareDataForPage(model);
-            storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-            setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-            model.addAttribute(WebConstants.BREADCRUMBS_KEY,
-                    getResourceBreadcrumbBuilder().getBreadcrumbs("checkout.multi.paymentType.breadcrumb"));
-            model.addAttribute(ThirdPartyConstants.SeoRobots.META_ROBOTS,
-                    ThirdPartyConstants.SeoRobots.NOINDEX_NOFOLLOW);
-            setCheckoutStepLinksForModel(model, getCheckoutStep());
+            prepareDataForChooseStep(model);
 
             return CHOOSE_PAYMENT_TYPE_PAGE;
         }
@@ -185,7 +172,7 @@ public class PaymentTypeCheckoutStepController extends AbstractCheckoutStepContr
         if (CheckoutPaymentType.ACCOUNT.getCode().equals(paymentTypeForm.getPaymentType()))
         {
             final List<? extends AddressData> deliveryAddresses = getCheckoutFacade()
-                    .getSupportedDeliveryAddresses(true);
+                .getSupportedDeliveryAddresses(true);
             if (deliveryAddresses.size() == 1)
             {
                 getCheckoutFacade().setDeliveryAddress(deliveryAddresses.get(0));
@@ -196,5 +183,16 @@ public class PaymentTypeCheckoutStepController extends AbstractCheckoutStepContr
     protected CheckoutStep getCheckoutStep()
     {
         return getCheckoutStep(PAYMENT_TYPE);
+    }
+
+    protected void prepareDataForChooseStep(final Model model) throws CMSItemNotFoundException
+    {
+        prepareDataForPage(model);
+        storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+        setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+        model.addAttribute(WebConstants.BREADCRUMBS_KEY,
+            getResourceBreadcrumbBuilder().getBreadcrumbs("checkout.multi.paymentType.breadcrumb"));
+        model.addAttribute(ThirdPartyConstants.SeoRobots.META_ROBOTS, ThirdPartyConstants.SeoRobots.NOINDEX_NOFOLLOW);
+        setCheckoutStepLinksForModel(model, getCheckoutStep());
     }
 }

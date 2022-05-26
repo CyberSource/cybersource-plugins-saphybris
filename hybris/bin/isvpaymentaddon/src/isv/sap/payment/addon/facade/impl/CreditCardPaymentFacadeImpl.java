@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Resource;
 
@@ -19,9 +20,8 @@ import de.hybris.platform.acceleratorservices.payment.strategies.ClientReference
 import de.hybris.platform.acceleratorservices.payment.strategies.CreateSubscriptionRequestStrategy;
 import de.hybris.platform.acceleratorservices.payment.strategies.CreateSubscriptionResultValidationStrategy;
 import de.hybris.platform.acceleratorservices.payment.strategies.PaymentResponseInterpretationStrategy;
-import de.hybris.platform.commerceservices.customer.CustomerEmailResolutionService;
 import de.hybris.platform.commerceservices.enums.CustomerType;
-import de.hybris.platform.core.model.c2l.CountryModel;
+import de.hybris.platform.commerceservices.strategies.CustomerNameStrategy;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
@@ -29,10 +29,8 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
-import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import io.jsonwebtoken.Claims;
-import org.apache.commons.lang.StringUtils;
 
 import isv.cjl.payment.data.enrollment.OrderData;
 import isv.cjl.payment.enums.TransactionMode;
@@ -42,6 +40,7 @@ import isv.cjl.payment.service.jwt.JwtService;
 import isv.sap.payment.addon.facade.CreditCardPaymentFacade;
 import isv.sap.payment.addon.facade.PaymentInfoFacade;
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel;
+import isv.sap.payment.service.PaymentTransactionService;
 
 import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParameterNotNull;
 import static isv.cjl.payment.constants.PaymentConstants.CommonFields.ORDER;
@@ -81,20 +80,23 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
     @Resource
     private CartService cartService;
 
-    @Resource
-    private CustomerEmailResolutionService customerEmailResolutionService;
-
     @Resource(name = "extPaymentInfoFacade")
     private PaymentInfoFacade paymentInfoFacade;
-
-    @Resource
-    private CommonI18NService commonI18NService;
 
     @Resource(name = "isv.sap.payment.jwtService")
     private JwtService jwtService;
 
     @Resource
+    private CustomerNameStrategy customerNameStrategy;
+
+    @Resource
     private Converter<AbstractOrderModel, isv.cjl.payment.data.enrollment.OrderData> enrollmentPayloadConverter;
+
+    @Resource
+    private Converter<CustomerInfoData, AddressModel> creditCardReverseAddressConverter;
+
+    @Resource(name = "isv.sap.payment.paymentTransactionService")
+    private PaymentTransactionService paymentTransactionService;
 
     @Override
     public PaymentData beginCreatePayment(final String responseUrl)
@@ -121,16 +123,11 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
         final PaymentSubscriptionResultItem paymentSubscription = completeCreatePayment(customerModel,
                 saveInAccount, parameters);
 
-        if (paymentSubscription != null)
-        {
-            final CartModel cart = cartService.getSessionCart();
-            cart.setPaymentInfo(paymentSubscription.getStoredPayment());
-            modelService.save(cart);
+        final CartModel cart = cartService.getSessionCart();
+        cart.setPaymentInfo(paymentSubscription.getStoredPayment());
+        modelService.save(cart);
 
-            return getPaymentSubscriptionResultDataConverter().convert(paymentSubscription);
-        }
-
-        return null;
+        return getPaymentSubscriptionResultDataConverter().convert(paymentSubscription);
     }
 
     private PaymentSubscriptionResultItem completeCreatePayment(final CustomerModel customerModel,
@@ -168,23 +165,7 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
         validateParameterNotNull(customerInfoData, "customerInfoData cannot be null");
 
         final AddressModel billingAddress = modelService.create(AddressModel.class);
-        billingAddress.setFirstname(customerInfoData.getBillToFirstName());
-        billingAddress.setLastname(customerInfoData.getBillToLastName());
-        billingAddress.setLine1(customerInfoData.getBillToStreet1());
-        billingAddress.setLine2(customerInfoData.getBillToStreet2());
-        billingAddress.setTown(customerInfoData.getBillToCity());
-        billingAddress.setPostalcode(customerInfoData.getBillToPostalCode());
-
-        if (isNotBlank(customerInfoData.getBillToTitleCode()))
-        {
-            billingAddress.setTitle(getUserService().getTitleForCode(customerInfoData.getBillToTitleCode()));
-        }
-
-        setCountryToAddress(billingAddress, customerInfoData.getBillToCountry());
-        setRegionToAddress(billingAddress, customerInfoData.getBillToState());
-
-        final String email = customerEmailResolutionService.getEmailForCustomer(customerModel);
-        billingAddress.setEmail(email);
+        creditCardReverseAddressConverter.convert(customerInfoData, billingAddress);
 
         final PaymentInfoModel paymentInfoModel = paymentInfoFacade
                 .createPaymentInfo(billingAddress, customerModel, saveInAccount);
@@ -193,17 +174,9 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
 
         if (CustomerType.GUEST.equals(customerModel.getType()))
         {
-            final StringBuilder name = new StringBuilder();
-            if (!StringUtils.isBlank(customerInfoData.getBillToFirstName()))
-            {
-                name.append(customerInfoData.getBillToFirstName());
-                name.append(' ');
-            }
-            if (!StringUtils.isBlank(customerInfoData.getBillToLastName()))
-            {
-                name.append(customerInfoData.getBillToLastName());
-            }
-            customerModel.setName(name.toString());
+            final String name = customerNameStrategy
+                    .getName(customerInfoData.getBillToFirstName(), customerInfoData.getBillToLastName());
+            customerModel.setName(name);
             modelService.save(customerModel);
         }
 
@@ -224,7 +197,6 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
             modelService.save(paymentInfoModel);
             modelService.refresh(customerModel);
         }
-
         return paymentInfoModel;
     }
 
@@ -247,17 +219,21 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
                         .build()
         );
 
-        return (IsvPaymentTransactionEntryModel) authorizationResult.getData(TRANSACTION);
+        return authorizationResult.getData(TRANSACTION);
     }
 
     @Override
     public boolean authorizeFlexCreditCardPayment(final CartModel cart, final String flexToken,
             final IsvPaymentTransactionEntryModel enrollmentTransaction)
     {
-        final IsvPaymentTransactionEntryModel authorizationEntry = doFlexCreditCardAuthorization(cart, flexToken,
-                enrollmentTransaction);
+        checkEnrollReply(enrollmentTransaction, enrollmentTransaction.getProperties());
 
-        return isTransactionInState(authorizationEntry, ACCEPT, REVIEW);
+        //Authorize transaction was bundled with enrollment, no need to perform it again
+        return paymentTransactionService
+                .createAuthorizationTxEntryFromEnrollment(enrollmentTransaction)
+                .filter(IsvPaymentTransactionEntryModel.class::isInstance)
+                .map(IsvPaymentTransactionEntryModel.class::cast)
+                .map(txEntry -> isTransactionInState(txEntry, ACCEPT, REVIEW)).orElse(false);
     }
 
     @Override
@@ -275,7 +251,7 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
                 .map(payload -> (Integer) ((Map) payload).get("ErrorNumber"))
                 .orElse(null);
 
-        if (isNotBlank(transactionId) && 0 == errorNumber)
+        if (isNotBlank(transactionId) && Objects.equals(0, errorNumber))
         {
             final IsvPaymentTransactionEntryModel authorizationEntry = doFlexCreditCardAuthorizationWithValidation(
                     cart, flexToken, transactionId);
@@ -286,44 +262,15 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
         return false;
     }
 
-    private IsvPaymentTransactionEntryModel doFlexCreditCardAuthorization(final CartModel cart, final String flexToken,
-            final IsvPaymentTransactionEntryModel enrollmentTransaction)
-    {
-        final Map<String, String> properties = enrollmentTransaction.getProperties();
 
+    private void checkEnrollReply(final IsvPaymentTransactionEntryModel enrollmentTransactionEntry,
+            final Map<String, String> properties)
+    {
         if (ENROLLED_CODE.equals(properties.get("payerAuthEnrollReplyReasonCode")))
         {
             throw new PaymentException(
-                    String.format("Transaction [%s] requires validation.", enrollmentTransaction.getCode()));
+                    String.format("Transaction [%s] requires validation.", enrollmentTransactionEntry.getCode()));
         }
-
-        final String commerceIndicator = properties.get("payerAuthEnrollReplyCommerceIndicator");
-        final String collectionIndicator = properties.get("payerAuthEnrollReplyUcafCollectionIndicator");
-        final String veresEnrolled = properties.get("payerAuthEnrollReplyVeresEnrolled");
-        final String xid = properties.get("payerAuthEnrollReplyXid");
-        final String eci = properties.get("payerAuthEnrollReplyEci");
-        final String cavv = properties.get("payerAuthEnrollReplyCavv");
-        final String ucafAuthData = properties.get("payerAuthEnrollReplyUcafAuthenticationData");
-        final String authTransactionId = properties.get("payerAuthEnrollReplyAuthenticationTransactionID");
-
-        final PaymentServiceResult authorizationResult = executeRequest(
-                new isv.cjl.payment.service.executor.request.builder.creditcard.AuthorizationRequestBuilder()
-                        .setMerchantId(getMerchantService().getCurrentMerchant(CREDIT_CARD).getId())
-                        .setAuthServiceCommerceIndicator(commerceIndicator)
-                        .setUcafCollectionIndicator(collectionIndicator)
-                        .setAuthServiceVeresEnrolled(veresEnrolled)
-                        .setAuthValidateTransactionId(authTransactionId)
-                        .setAuthServiceXid(xid)
-                        .setAuthServiceEciRaw(eci)
-                        .setAuthServiceCavv(cavv)
-                        .setUcafAuthenticationData(ucafAuthData)
-                        .setAuthValidateServiceRun(false)
-                        .addParam(ORDER, cart)
-                        .addParam(FLEX_TOKEN, flexToken)
-                        .build()
-        );
-
-        return (IsvPaymentTransactionEntryModel) authorizationResult.getData(TRANSACTION);
     }
 
     private IsvPaymentTransactionEntryModel doFlexCreditCardAuthorizationWithValidation(final CartModel cart,
@@ -331,7 +278,7 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
     {
         final PaymentServiceResult authorizationResult = executeRequest(
                 new isv.cjl.payment.service.executor.request.builder.creditcard.AuthorizationRequestBuilder()
-                        .setMerchantId(getMerchantService().getCurrentMerchant(CREDIT_CARD).getId())
+                        .setMerchantId(getMerchantID(CREDIT_CARD))
                         .setAuthValidateTransactionId(authTransactionId)
                         .setAuthValidateServiceRun(true)
                         .addParam(ORDER, cart)
@@ -339,7 +286,7 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
                         .build()
         );
 
-        return (IsvPaymentTransactionEntryModel) authorizationResult.getData(TRANSACTION);
+        return authorizationResult.getData(TRANSACTION);
     }
 
     @Override
@@ -364,86 +311,12 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
                         .addParam(ORDER, cartService.getSessionCart())
                         .addParam(FLEX_TOKEN, transientToken)
                         .build());
-
         return enrollmentResult.getData(TRANSACTION);
     }
 
-    private void setCountryToAddress(final AddressModel address, final String billToCountry)
+    @Override
+    public boolean is3dsEnabled()
     {
-        final CountryModel country = commonI18NService.getCountry(billToCountry);
-        address.setCountry(country);
-    }
-
-    private void setRegionToAddress(final AddressModel address, final String state)
-    {
-        if (StringUtils.isNotEmpty(state))
-        {
-            address.setRegion(
-                    commonI18NService.getRegion(address.getCountry(), address.getCountry().getIsocode() + "-" + state));
-        }
-    }
-
-    public void setModelService(final ModelService modelService)
-    {
-        this.modelService = modelService;
-    }
-
-    public void setCartService(final CartService cartService)
-    {
-        this.cartService = cartService;
-    }
-
-    public void setCustomerEmailResolutionService(final CustomerEmailResolutionService customerEmailResolutionService)
-    {
-        this.customerEmailResolutionService = customerEmailResolutionService;
-    }
-
-    public void setPaymentDataConverter(final Converter<CreateSubscriptionRequest, PaymentData> paymentDataConverter)
-    {
-        this.paymentDataConverter = paymentDataConverter;
-    }
-
-    public void setCreateSubscriptionRequestStrategy(
-            final CreateSubscriptionRequestStrategy createSubscriptionRequestStrategy)
-    {
-        this.createSubscriptionRequestStrategy = createSubscriptionRequestStrategy;
-    }
-
-    public void setPaymentResponseInterpretationStrategy(
-            final PaymentResponseInterpretationStrategy paymentResponseInterpretationStrategy)
-    {
-        this.paymentResponseInterpretationStrategy = paymentResponseInterpretationStrategy;
-    }
-
-    public void setClientReferenceLookupStrategy(final ClientReferenceLookupStrategy clientReferenceLookupStrategy)
-    {
-        this.clientReferenceLookupStrategy = clientReferenceLookupStrategy;
-    }
-
-    public void setCreateSubscriptionResultValidationStrategy(
-            final CreateSubscriptionResultValidationStrategy createSubscriptionResultValidationStrategy)
-    {
-        this.createSubscriptionResultValidationStrategy = createSubscriptionResultValidationStrategy;
-    }
-
-    public void setJwtService(final JwtService jwtService)
-    {
-        this.jwtService = jwtService;
-    }
-
-    public void setEnrollmentPayloadConverter(
-            final Converter<AbstractOrderModel, isv.cjl.payment.data.enrollment.OrderData> enrollmentPayloadConverter)
-    {
-        this.enrollmentPayloadConverter = enrollmentPayloadConverter;
-    }
-
-    public void setCommonI18NService(final CommonI18NService commonI18NService)
-    {
-        this.commonI18NService = commonI18NService;
-    }
-
-    public void setPaymentInfoFacade(final PaymentInfoFacade paymentInfoFacade)
-    {
-        this.paymentInfoFacade = paymentInfoFacade;
+        return getMerchantService().is3dsEnabled();
     }
 }

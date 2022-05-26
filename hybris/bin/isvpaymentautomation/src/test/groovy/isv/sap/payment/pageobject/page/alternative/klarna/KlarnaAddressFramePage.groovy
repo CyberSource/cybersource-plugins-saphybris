@@ -11,17 +11,17 @@ class KlarnaAddressFramePage extends Page
     static content = {
         declinedMessage(wait: true) { $('#message-dialog__container') }
         changePaymentMethodButton(wait: true) { $('#message-dialog-button') }
-        email(wait: true) { $('#email') }
-        postCode(wait: true) { $('#postal_code') }
-        userTitle(wait: true) { $('div[data-cid="am.title"] input') }
-        firstName(wait: true) { $('#given_name') }
-        lastName(wait: true) { $('#family_name') }
-        addressLine(wait: true) { $('#street_address') }
-        addressLine2(wait: true) { $('#street_address2') }
-        city(wait: true) { $('#city') }
-        phone(wait: true) { $('#phone') }
-        dateOfBirth(wait: true) { $('#date_of_birth') }
-        continueBtn(wait: true, required: false) { $('button[clienttoken]>div') }
+        email(wait: true) { $('#billing-dialog-email') }
+        postCode(wait: true) { $('#billing-dialog-postal_code') }
+        userTitle(wait: true) { $('#billing-dialog-title') }
+        firstName(wait: true) { $('#billing-dialog-given_name') }
+        lastName(wait: true) { $('#billing-dialog-family_name') }
+        addressLine(wait: true) { $('#billing-dialog-street_address') }
+        addressLine2(wait: true) { $('#billing-dialog-street_address2') }
+        city(wait: true) { $('#billing-dialog-city') }
+        phone(wait: true) { $('#billing-dialog-phone') }
+        dateOfBirth(wait: true) { $('#billing-dialog-date_of_birth') }
+        continueBtn(wait: true, required: false) { $('#button-primary') }
         editAddressBtn(required: false) { $('a#preview__link') }
         confirmBtn(wait: true) { $('#identification-dialog__footer-button-wrapper button>div') }
     }
@@ -72,7 +72,7 @@ class KlarnaAddressFramePage extends Page
             sleep(1000)
         }
         continueBtn.click()
-        sleep(500)
+        sleep(1000)
         confirmBtn.click()
     }
 }

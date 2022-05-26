@@ -4,7 +4,8 @@ import de.hybris.platform.orderprocessing.events.OrderCompletedEvent;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import de.hybris.platform.servicelayer.event.EventService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Required;
  */
 public class SendOrderCompletedNotificationAction extends AbstractProceduralAction<OrderProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(SendOrderCompletedNotificationAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SendOrderCompletedNotificationAction.class);
 
     private EventService eventService;
 
@@ -20,10 +21,7 @@ public class SendOrderCompletedNotificationAction extends AbstractProceduralActi
     public void executeAction(final OrderProcessModel process)
     {
         getEventService().publishEvent(new OrderCompletedEvent(process));
-        if (LOG.isInfoEnabled())
-        {
-            LOG.info("Process: " + process.getCode() + " in step " + getClass());
-        }
+        LOG.info("Process: {} in step {}", process.getCode(), getClass());
     }
 
     protected EventService getEventService()

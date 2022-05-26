@@ -135,7 +135,7 @@ class RefundIntegrationSpec extends IsvIntegrationSpec
     'should receive reject for unpayed sof transaction'()
     {
         given:
-        def order = testCartUk()
+        def order = testCartDe()
 
         String firstOptionId = apTransactionCreator.firstOptionId
 

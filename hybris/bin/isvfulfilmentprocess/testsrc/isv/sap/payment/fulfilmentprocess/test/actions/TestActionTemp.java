@@ -7,11 +7,12 @@ import de.hybris.platform.core.Registry;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.processengine.action.AbstractAction;
 import de.hybris.platform.processengine.model.BusinessProcessModel;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestActionTemp<T extends BusinessProcessModel> extends AbstractAction<T>
 {
-    private static final Logger LOG = Logger.getLogger(TestActionTemp.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestActionTemp.class);
 
     private String result = "OK";
 

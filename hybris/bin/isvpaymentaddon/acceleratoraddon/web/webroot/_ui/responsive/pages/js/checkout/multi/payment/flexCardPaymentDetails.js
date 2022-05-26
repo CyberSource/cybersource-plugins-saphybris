@@ -9,10 +9,15 @@ if (typeof MICROFORM !== "undefined") {
     };
 
     MICROFORM.onGetOptions = function () {
-        return {
+        var cardOptions = {
             expirationMonth: $('#ExpiryMonth').val(),
             expirationYear: $('#ExpiryYear').val()
+        };
+
+        if (ACC.flexCardTypeSelection == 'true') {
+            cardOptions.type = $('#card_cardType').val();
         }
+        return cardOptions;
     };
 
     MICROFORM.onGetStyles = function () {

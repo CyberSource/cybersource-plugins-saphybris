@@ -23,16 +23,39 @@
 
             <div id="flexCardNumber-container"></div>
 
-            <label id="flexCardType-label" class="control-label"></label>
+            <c:if test="${not flexCardTypeSelection}">
+                <label id="flexCardType-label" class="control-label"></label>
+            </c:if>
 
             <div class="form-group">
                 <input type="hidden" id="card_accountNumber" name="card_accountNumber"/>
-                <div class="help-block">
+                <div class="cs-help-block">
                     <span id="card_accountNumber_errors" hidden="hidden">
                         <spring:theme code="checkout.card.number.error"/>
                     </span>
                 </div>
             </div>
+
+            <c:if test="${flexCardTypeSelection}">
+            <div class="form-group">
+                <fieldset id="cardType">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <formElement:formSelectBox idKey="card_cardType" selectCSSClass="form-control"
+                                                       labelKey="payment.cardType" path="card_cardType"
+                                                       mandatory="true" skipBlank="false"
+                                                       skipBlankMessageKey="payment.cardType.pleaseSelect"
+                                                       items="${sopCardTypes}" tabindex="1"/>
+                            <div class="cs-help-block col-xs-6">
+                                <span id="card_cardType_errors" hidden="hidden">
+                                    <spring:theme code="checkout.card.type.error"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            </c:if>
 
             <fieldset id="cardDate">
                 <label for="" class="control-label"><spring:theme code="payment.expiryDate"/></label>
@@ -70,7 +93,7 @@
 
             <div class="form-group">
                 <input type="hidden" id="card_cvNumber" name="card_cvNumber"/>
-                <div class="help-block">
+                <div class="cs-help-block">
                     <span id="card_cvNumber_errors" hidden="hidden">
                         <spring:theme code="checkout.card.cvn.error"/>
                     </span>

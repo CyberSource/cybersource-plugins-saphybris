@@ -11,12 +11,13 @@ import de.hybris.platform.servicelayer.time.TimeService;
 import de.hybris.platform.warehouse.Process2WarehouseAdapter;
 import de.hybris.platform.warehouse.Warehouse2ProcessAdapter;
 import de.hybris.platform.warehouse.WarehouseConsignmentStatus;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 public class MockProcess2WarehouseAdapter implements Process2WarehouseAdapter
 {
-    private static final Logger LOG = Logger.getLogger(MockProcess2WarehouseAdapter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MockProcess2WarehouseAdapter.class);
 
     private ModelService modelService;
 
@@ -44,7 +45,7 @@ public class MockProcess2WarehouseAdapter implements Process2WarehouseAdapter
         }
         catch (final InterruptedException e)
         {
-            LOG.error(e);
+            LOG.error("Exception", e);
             Thread.currentThread().interrupt();
         }
     }
@@ -73,10 +74,7 @@ public class MockProcess2WarehouseAdapter implements Process2WarehouseAdapter
                 getModelService().save(entry);
             }
             getModelService().save(consignment);
-            if (LOG.isInfoEnabled())
-            {
-                LOG.info("Consignment [" + consignment.getCode() + "] shipped");
-            }
+            LOG.info("Consignment [{}] shipped", consignment.getCode());
         }
     }
 

@@ -10,13 +10,13 @@ import com.google.common.collect.Maps;
  */
 public final class AjaxResponse
 {
-    private boolean success = false; // NOPMD
+    private final boolean successFlag;
 
     private final Map<String, Object> data = Maps.newHashMap();
 
     private AjaxResponse(final boolean success)
     {
-        this.success = success;
+        this.successFlag = success;
     }
 
     public static AjaxResponse success()
@@ -37,7 +37,7 @@ public final class AjaxResponse
 
     public boolean isSuccess()
     {
-        return success;
+        return successFlag;
     }
 
     public Map<String, Object> getData()

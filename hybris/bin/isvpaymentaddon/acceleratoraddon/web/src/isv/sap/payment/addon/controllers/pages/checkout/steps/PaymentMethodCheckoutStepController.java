@@ -21,12 +21,11 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.SopPaymentDetailsFo
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
-import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
-import de.hybris.platform.core.model.user.AddressModel;
-import de.hybris.platform.order.CartService;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import isv.sap.payment.addon.facade.CreditCardPaymentFacade;
+import isv.sap.payment.addon.facade.PaymentInfoFacade;
 
 import static de.hybris.platform.acceleratorservices.enums.CheckoutPciOptionEnum.FLEX;
 import static de.hybris.platform.acceleratorservices.enums.CheckoutPciOptionEnum.HOP;
@@ -51,10 +51,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
     private static final String CART_DATA_ATTR = "cartData";
 
-    private static final Logger LOGGER = Logger.getLogger(PaymentMethodCheckoutStepController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PaymentMethodCheckoutStepController.class);
 
     @Resource
-    private CartService cartService;
+    private PaymentInfoFacade paymentInfoFacade;
 
     @ModelAttribute("billingCountries")
     public Collection<CountryData> getBillingCountries()
@@ -120,25 +120,25 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
     private SopPaymentDetailsForm getSopPaymentDetailsForm(final Model model)
     {
-        final AddressModel billingAddress = Optional.ofNullable(cartService.getSessionCart().getPaymentInfo())
-                .map(PaymentInfoModel::getBillingAddress).orElse(null);
+        final Optional<AddressData> billingAddressOpt = paymentInfoFacade.fetchAddressFromPaymentInfo();
         if (model.containsAttribute("isvPaymentDetailsForm"))
         {
             return (SopPaymentDetailsForm) model.asMap().get("isvPaymentDetailsForm");
         }
-        else if (billingAddress != null)
+        else if (billingAddressOpt.isPresent())
         {
+            final AddressData billingAddress = billingAddressOpt.get();
             final SopPaymentDetailsForm sopPaymentDetailsForm = new SopPaymentDetailsForm();
             sopPaymentDetailsForm.setUseDeliveryAddress(false);
-            sopPaymentDetailsForm.setBillTo_firstName(billingAddress.getFirstname());
-            sopPaymentDetailsForm.setBillTo_lastName(billingAddress.getLastname());
+            sopPaymentDetailsForm.setBillTo_firstName(billingAddress.getFirstName());
+            sopPaymentDetailsForm.setBillTo_lastName(billingAddress.getLastName());
             sopPaymentDetailsForm.setBillTo_street1(billingAddress.getLine1());
             sopPaymentDetailsForm.setBillTo_street2(billingAddress.getLine2());
             sopPaymentDetailsForm.setBillTo_city(billingAddress.getTown());
-            sopPaymentDetailsForm.setBillTo_postalCode(billingAddress.getPostalcode());
-            sopPaymentDetailsForm.setBillTo_titleCode(billingAddress.getTitle().getCode());
+            sopPaymentDetailsForm.setBillTo_postalCode(billingAddress.getPostalCode());
+            sopPaymentDetailsForm.setBillTo_titleCode(billingAddress.getTitleCode());
             sopPaymentDetailsForm.setBillTo_country(billingAddress.getCountry().getIsocode());
-            sopPaymentDetailsForm.setBillTo_phoneNumber(billingAddress.getPhone1());
+            sopPaymentDetailsForm.setBillTo_phoneNumber(billingAddress.getPhone());
             return sopPaymentDetailsForm;
         }
         else
@@ -198,7 +198,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
     protected void setupAddPaymentPage(final Model model) throws CMSItemNotFoundException
     {
         model.addAttribute("metaRobots", "noindex,nofollow");
-        model.addAttribute("hasNoPaymentInfo", Boolean.valueOf(getCheckoutFlowFacade().hasNoPaymentInfo()));
+        model.addAttribute("hasNoPaymentInfo", getCheckoutFlowFacade().hasNoPaymentInfo());
         prepareDataForPage(model);
         model.addAttribute(BREADCRUMBS_KEY,
                 getResourceBreadcrumbBuilder().getBreadcrumbs("checkout.multi.paymentMethod.breadcrumb"));

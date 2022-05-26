@@ -10,7 +10,8 @@ import de.hybris.platform.processengine.model.BusinessProcessModel;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.SearchResult;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import isv.sap.payment.cronjob.AbstractAbortableJobPerformable;
@@ -21,7 +22,7 @@ import isv.sap.payment.fulfilmentprocess.constants.IsvfulfilmentprocessConstants
  */
 public class CleanUpFraudOrderJob extends AbstractAbortableJobPerformable<CronJobModel>
 {
-    private static final Logger LOG = Logger.getLogger(CleanUpFraudOrderJob.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CleanUpFraudOrderJob.class);
 
     private BusinessProcessService businessProcessService;
 
@@ -37,7 +38,7 @@ public class CleanUpFraudOrderJob extends AbstractAbortableJobPerformable<CronJo
         for (final BusinessProcessModel bpm : processes)
         {
             final String eventName = bpm.getCode() + eventNameSuffix;
-            businessProcessService.triggerEvent(eventName);
+            getBusinessProcessService().triggerEvent(eventName);
         }
 
         LOG.info("Cleanup fraud order job finished.");

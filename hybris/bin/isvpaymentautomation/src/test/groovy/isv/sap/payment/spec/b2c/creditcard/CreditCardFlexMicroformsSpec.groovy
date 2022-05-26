@@ -21,6 +21,7 @@ import static isv.sap.payment.data.constants.TransactionStatus.COMPLETED
 import static isv.sap.payment.data.constants.TransactionStatus.REJECT
 import static isv.sap.payment.data.constants.TransactionType.AUTHORIZATION
 import static isv.sap.payment.data.constants.TransactionType.CAPTURE
+import static isv.sap.payment.data.constants.TransactionType.ENROLLMENT
 
 @Category(CreditCard)
 class CreditCardFlexMicroformsSpec extends IsvGebSpec
@@ -56,6 +57,7 @@ class CreditCardFlexMicroformsSpec extends IsvGebSpec
 
         and: 'Transactions are created'
         api.getTransactionPaymentProvider(orderNumber) == CREDIT_CARD
+        api.getTransactionEntryStatus(orderNumber, ENROLLMENT) == ACCEPT
         api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT
 
         and: 'Order is completed'
@@ -95,6 +97,7 @@ class CreditCardFlexMicroformsSpec extends IsvGebSpec
 
         and: 'Transactions are created'
         api.getTransactionPaymentProvider(orderNumber) == CREDIT_CARD
+        api.getTransactionEntryStatus(orderNumber, ENROLLMENT) == REJECT
         api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT
 
         and: 'Order is completed'
@@ -126,22 +129,34 @@ class CreditCardFlexMicroformsSpec extends IsvGebSpec
                 .placeOrder()
 
         and: 'Populates wrong 3d secure 2'
-        at(Secure3D2PopUpPage)
-                .fill3dSecure2InFrame()
+        if (stepUp)
+        {
+            at(Secure3D2PopUpPage)
+                    .fill3dSecure2InFrame()
+        }
 
         then: 'Order is not created'
         at(B2cCheckoutPage)
                 .globalError.displayed
 
         and: 'Transaction is Declined'
-        api.getCartTransactionStatus(data.email) == REJECT
+        api.getCartTransactionStatus(data.email, ENROLLMENT) == REJECT
+        if (stepUp)
+        {
+            api.getCartTransactionStatus(data.email, AUTHORIZATION) == REJECT
+        }
 
         where: 'Following cards are used'
-        number                  | cvv
-        VISA_3DS2_INVALID       | PIN_3_DIGITS
-        MASTERCARD_3DS2_INVALID | PIN_3_DIGITS
-        AMEX_3DS2_INVALID       | PIN_4_DIGITS
-        DISCOVER_3DS2_INVALID   | PIN_3_DIGITS
+        number                           | cvv           |  stepUp
+        VISA_3DS2_INVALID                | PIN_3_DIGITS  |  true
+        MASTERCARD_3DS2_INVALID          | PIN_3_DIGITS  |  true
+        DISCOVER_3DS2_INVALID            | PIN_3_DIGITS  |  true
+        AMEX_3DS2_INVALID                | PIN_4_DIGITS  |  true
+
+        VISA_3DS2_NOSTEPUP_INVALID       | PIN_3_DIGITS  |  false
+        MASTERCARD_3DS2_NOSTEPUP_INVALID | PIN_3_DIGITS  |  false
+        DISCOVER_3DS2_NOSTEPUP_INVALID   | PIN_3_DIGITS  |  false
+        AMEX_3DS2_NOSTEPUP_INVALID       | PIN_4_DIGITS  |  false
     }
 
     @Regression
@@ -166,6 +181,7 @@ class CreditCardFlexMicroformsSpec extends IsvGebSpec
 
         and: 'Transactions are created'
         api.getTransactionPaymentProvider(orderNumber) == CREDIT_CARD
+        api.getTransactionEntryStatus(orderNumber, ENROLLMENT) == ACCEPT
         api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT
 
         and: 'Order is completed'
@@ -214,10 +230,52 @@ class CreditCardFlexMicroformsSpec extends IsvGebSpec
 
         and: 'Transactions are created'
         api.getTransactionPaymentProvider(orderNumber) == CREDIT_CARD
+        api.getTransactionEntryStatus(orderNumber, ENROLLMENT) == ACCEPT
         api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT
 
         and: 'Order is completed'
         waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
         waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+    }
+
+    @Regression
+    @Unroll
+    'should create order for Flexible Forms with 3d secure 2 regression'()
+    {
+        given: 'A cart with product and addresses'
+        api.importCart(data)
+        to(LoginPage)
+                .login(data.email, data.password)
+
+        when: 'User starts Payment'
+        to(B2cCheckoutPage)
+                .startPayment()
+                .paymentMode.selectCreditCard()
+                .fillFlexFormCard(number, cvv)
+                .placeOrder()
+
+        then: 'Order is created'
+        String orderNumber = at(OrderConfirmationPage).extractOrderNumber()
+
+        and: 'Transactions are created'
+        api.getTransactionPaymentProvider(orderNumber) == CREDIT_CARD
+        api.getTransactionEntryStatus(orderNumber, ENROLLMENT) == ACCEPT
+        api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT
+
+        and: 'Order is completed'
+        waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
+        waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+
+        where: 'Following cards are used'
+        number                         | cvv
+        VISA_3DS2_NOSTEPUP_VALID       | PIN_3_DIGITS
+        MASTERCARD_3DS2_NOSTEPUP_VALID | PIN_3_DIGITS
+        DISCOVER_3DS2_NOSTEPUP_VALID   | PIN_3_DIGITS
+        AMEX_3DS2_NOSTEPUP_VALID       | PIN_4_DIGITS
+
+        VISA_3DS2_TIMEOUT_VALID        | PIN_3_DIGITS
+        MASTERCARD_3DS2_TIMEOUT_VALID  | PIN_3_DIGITS
+        DISCOVER_3DS2_TIMEOUT_VALID    | PIN_3_DIGITS
+        AMEX_3DS2_TIMEOUT_VALID        | PIN_4_DIGITS
     }
 }

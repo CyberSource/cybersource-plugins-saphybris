@@ -1,6 +1,7 @@
 package isv.sap.payment.service.alternativepayment
 
 import de.hybris.bootstrap.annotations.UnitTest
+import de.hybris.platform.core.enums.OrderStatus
 import de.hybris.platform.core.model.order.AbstractOrderModel
 import de.hybris.platform.payment.enums.PaymentTransactionType
 import de.hybris.platform.servicelayer.model.ModelService
@@ -9,6 +10,7 @@ import spock.lang.Specification
 
 import isv.cjl.payment.service.alternativepayment.AlternativePaymentCheckStatusService
 import isv.sap.payment.configuration.service.PaymentConfigurationService
+import isv.sap.payment.enums.IsvAlternativePaymentStatus
 import isv.sap.payment.model.IsvCheckAlternativePaymentStatusConfigurationModel
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel
 import isv.sap.payment.model.IsvPaymentTransactionModel
@@ -22,6 +24,7 @@ import static de.hybris.platform.payment.enums.PaymentTransactionType.SALE
 import static isv.sap.payment.constants.IsvPaymentConstants.TransactionStatus.ACCEPT
 import static isv.sap.payment.constants.IsvPaymentConstants.TransactionStatus.ERROR
 import static isv.sap.payment.enums.AlternativePaymentMethod.APY
+import static isv.sap.payment.enums.IsvConfigurationType.ALTERNATIVE_PAYMENT_CONFIG
 import static isv.sap.payment.enums.PaymentType.ALTERNATIVE_PAYMENT
 import static isv.sap.payment.enums.PaymentType.PAY_PAL
 import static java.util.Optional.empty
@@ -156,6 +159,45 @@ class DefaultAlternativePaymentOrderStatusServiceSpec extends Specification
 
         then:
         thrown IllegalStateException
+    }
+
+    @Test
+    def 'should update order with payment status'()
+    {
+        given:
+        transaction.alternativePaymentMethod >> isv.sap.payment.enums.AlternativePaymentMethod.APY
+        paymentTransactionService.getLatestTransaction(ALTERNATIVE_PAYMENT, order) >> of(transaction)
+        paymentConfigurationService.getConfiguration(ALTERNATIVE_PAYMENT_CONFIG, _) >> configuration
+
+        and:
+        def statusMap = [(IsvAlternativePaymentStatus.SETTLED): OrderStatus.PAYMENT_CAPTURED]
+        configuration.statusMap >> statusMap
+
+        when:
+        service.updateOrderByPaymentStatus(order, IsvAlternativePaymentStatus.SETTLED)
+
+        then:
+        1 * order.setStatus(OrderStatus.PAYMENT_CAPTURED)
+        1 * modelService.save(order)
+    }
+
+    @Test
+    def 'should not update order with payment status when no mapping exists'()
+    {
+        given:
+        transaction.alternativePaymentMethod >> isv.sap.payment.enums.AlternativePaymentMethod.APY
+        paymentTransactionService.getLatestTransaction(ALTERNATIVE_PAYMENT, order) >> of(transaction)
+        paymentConfigurationService.getConfiguration(ALTERNATIVE_PAYMENT_CONFIG, _) >> configuration
+        configuration.statusMap >> [:]
+
+        when:
+        service.updateOrderByPaymentStatus(order, IsvAlternativePaymentStatus.SETTLED)
+
+        then:
+        def exception = thrown(IllegalArgumentException)
+        exception.message =~ 'No order status mapping exists for alternative payment status'
+        0 * order.setStatus(_)
+        0 * modelService.save(_)
     }
 
     def newTransactionEntry(PaymentTransactionType paymentTransactionType)

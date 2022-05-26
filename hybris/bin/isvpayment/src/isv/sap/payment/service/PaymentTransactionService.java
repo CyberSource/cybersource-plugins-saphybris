@@ -73,4 +73,12 @@ public interface PaymentTransactionService
      * @param entry transaction entry to add property for
      */
     void addProperty(final String name, String value, final IsvPaymentTransactionEntryModel entry);
+
+    /**
+     * Creates an authorization transaction entry from a bundled enrollment transaction
+     * @param enrollmentTransaction enrollment transaction
+     * @return authorization transaction
+     */
+    Optional<PaymentTransactionEntryModel> createAuthorizationTxEntryFromEnrollment(
+            final IsvPaymentTransactionEntryModel enrollmentTransaction);
 }

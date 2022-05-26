@@ -1,5 +1,7 @@
 package isv.sap.payment.service.executor.request.converter.creditcard;
 
+import java.math.BigDecimal;
+
 import de.hybris.platform.core.model.c2l.RegionModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -39,9 +41,13 @@ public class EnrollmentRequestConverter extends AbstractRequestConverter
                 .addParam(MERCHANT_ID, source.getRequiredParam(MERCHANT_ID))
                 .addParam(MERCHANT_REFERENCE_CODE, order.getGuid())
                 .addParam(PURCHASE_TOTALS_CURRENCY, order.getCurrency().getIsocode())
+                .addParam(PURCHASE_TOTALS_GRAND_TOTAL_AMOUNT, BigDecimal.valueOf(order.getTotalPrice()))
                 .addParam(PAYER_AUTH_ENROLL_SERVICE_RUN, true)
                 .addParam(PAYER_AUTH_ENROLL_SERVICE_REFERENCE_ID,
                         source.getRequiredParam(PAYER_AUTH_ENROLL_SERVICE_REFERENCE_ID))
+                .addParam(CC_AUTH_SERVICE_RUN, true)
+                .addParam(DEVICE_FINGERPRINT_ID, order.getFingerPrintSessionID())
+                .addParam(CC_AUTH_SERVICE_CARD_TYPE_SELECTION_INDICATOR, 1)
                 .addParam(PAYER_AUTH_ENROLL_SERVICE_TRANSACTION_MODE,
                         source.getRequiredParam(PAYER_AUTH_ENROLL_SERVICE_TRANSACTION_MODE));
 

@@ -8,6 +8,7 @@ import org.apache.commons.configuration.Configuration
 import org.apache.commons.lang3.StringUtils
 import org.junit.Test
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import isv.cjl.payment.configuration.service.ConfigurationService
 import isv.cjl.payment.configuration.transaction.PaymentTransaction
@@ -56,7 +57,7 @@ class AbstractPopulatorSpec extends Specification
         isProcessingLevelSupported == supported
 
         where:
-        isProcessingLevelSupported | level                                            | processor                                                                  | card
+        isProcessingLevelSupported | level              | processor                                    | card
         true                       | ProcessingLevel.L2 | PaymentProcessor.OMNIPAY_DIRECT              | CardType.VISA
         false                      | ProcessingLevel.L2 | PaymentProcessor.CHASE_PAYMENTECH_SOLUTIONS  | CardType.VISA
         false                      | ProcessingLevel.L2 | PaymentProcessor.CYBERSOURCE_THROUGH_VISANET | CardType.DINERS
@@ -86,11 +87,12 @@ class AbstractPopulatorSpec extends Specification
     }
 
     @Test
-    def 'Should populate into target successfully'()
+    @Unroll
+    def 'Should populate into target successfully when transaction type is capture or refund'()
     {
         given:
         def source = PaymentServiceRequest.create()
-        source.paymentTransactionType = PaymentTransactionType.CAPTURE
+        source.paymentTransactionType = transactionType
 
         def entry = Mock([useObjenesis: false], AbstractOrderEntryModel)
         def order = Mock([useObjenesis: false], AbstractOrderModel)
@@ -106,6 +108,32 @@ class AbstractPopulatorSpec extends Specification
         1 * populator.populateOrderData(order, target) >> null
         1 * populator.populateEntryData(entry, target) >> null
         1 * populator.populateShippingItem(order, target) >> null
+
+        where:
+        transactionType                          | _
+        PaymentTransactionType.CAPTURE           | _
+        PaymentTransactionType.REFUND            | _
+        PaymentTransactionType.REFUND_FOLLOW_ON  | _
+        PaymentTransactionType.REFUND_STANDALONE | _
+    }
+
+    @Test
+    def 'Should not populate into target when transaction type is not supported'()
+    {
+        given:
+        def source = PaymentServiceRequest.create()
+        source.paymentTransactionType = PaymentTransactionType.CANCEL
+        def target = new PaymentTransaction()
+
+        when:
+        populator.populate(source, target)
+
+        then:
+        def exception = thrown(IllegalArgumentException)
+        exception.message =~ 'Processing level data cannot be applied for service request type'
+        0 * populator.populateOrderData(_, _)
+        0 * populator.populateEntryData(_, _)
+        0 * populator.populateShippingItem(_, _)
     }
 
     @Test

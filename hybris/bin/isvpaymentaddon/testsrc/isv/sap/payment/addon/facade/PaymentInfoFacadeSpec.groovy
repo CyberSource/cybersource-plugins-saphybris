@@ -1,37 +1,49 @@
 package isv.sap.payment.addon.facade
 
+import isv.sap.payment.addon.facade.impl.PaymentInfoFacadeImpl
+import isv.sap.payment.model.IsvPaymentInfoModel
+import spock.lang.Specification
+import org.junit.Test
+
+import de.hybris.platform.commercefacades.user.data.AddressData
 import de.hybris.platform.commerceservices.customer.CustomerEmailResolutionService
 import de.hybris.platform.core.model.order.CartModel
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel
 import de.hybris.platform.core.model.user.AddressModel
 import de.hybris.platform.core.model.user.CustomerModel
+import de.hybris.platform.order.CartService
+import de.hybris.platform.servicelayer.dto.converter.Converter
 import de.hybris.platform.servicelayer.model.ModelService
-import org.junit.Test
-import spock.lang.Specification
-
-import isv.sap.payment.addon.facade.impl.PaymentInfoFacadeImpl
-import isv.sap.payment.model.IsvPaymentInfoModel
 
 class PaymentInfoFacadeSpec extends Specification
 {
-    CustomerEmailResolutionService customerEmailResolutionService = Mock()
+    def customerEmailResolutionService = Mock(CustomerEmailResolutionService)
 
-    ModelService modelService = Mock()
+    def modelService = Mock(ModelService)
 
-    def paymentInfoFacade = new PaymentInfoFacadeImpl()
+    def cartService = Mock(CartService)
 
-    CartModel cart = Mock()
+    def addressConverter = Mock(Converter)
 
-    AddressModel deliveryAddress = Mock()
-    AddressModel billingAddress = Mock()
-    PaymentInfoModel paymentInfo = Mock()
-    CustomerModel customer = Mock()
+    def paymentInfoFacade = new PaymentInfoFacadeImpl(
+            customerEmailResolutionService: customerEmailResolutionService,
+            cartService: cartService,
+            modelService: modelService,
+            addressConverter: addressConverter
+    )
+
+    def cart = Mock(CartModel)
+
+    def deliveryAddress = Mock(AddressModel)
+
+    def billingAddress = Mock(AddressModel)
+
+    def paymentInfo = Mock(PaymentInfoModel)
+
+    def customer = Mock(CustomerModel)
 
     def setup()
     {
-        paymentInfoFacade.modelService = modelService
-        paymentInfoFacade.customerEmailResolutionService = customerEmailResolutionService
-
         cart.deliveryAddress >> deliveryAddress
         cart.paymentInfo >> paymentInfo
         paymentInfo.billingAddress >> billingAddress
@@ -73,5 +85,23 @@ class PaymentInfoFacadeSpec extends Specification
         1 * cart.setDeliveryAddress(deliveryAddress)
         1 * cart.setPaymentInfo(isvPaymentInfo)
         1 * modelService.saveAll(isvPaymentInfo, billingAddress, cart)
+    }
+
+    @Test
+    def 'Should fetch billing address data from payment info of the cart in session'()
+    {
+        given:
+        cart.paymentInfo >> paymentInfo
+        def billingAddressData = Mock(AddressData)
+
+        when:
+        def addressDataOpt = paymentInfoFacade.fetchAddressFromPaymentInfo()
+
+        then:
+        1 * cartService.sessionCart >> cart
+        1 * addressConverter.convert(paymentInfo.billingAddress) >> billingAddressData
+        and:
+        addressDataOpt.isPresent()
+        addressDataOpt.get() == billingAddressData
     }
 }

@@ -10,14 +10,15 @@ import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.util.Config;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import isv.sap.payment.fulfilmentprocess.constants.IsvfulfilmentprocessConstants;
 
 public class FraudCheckOrderAction extends AbstractFraudCheckAction<OrderProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(FraudCheckOrderAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FraudCheckOrderAction.class);
 
     private FraudService fraudService;
 
@@ -48,7 +49,7 @@ public class FraudCheckOrderAction extends AbstractFraudCheckAction<OrderProcess
     @Override
     public Transition executeAction(final OrderProcessModel process)
     {
-        LOG.info("Process: " + process.getCode() + " in step " + getClass());
+        LOG.info("Process: {} in step {}", process.getCode(), getClass());
         ServicesUtil.validateParameterNotNull(process, "Process can not be null");
         ServicesUtil.validateParameterNotNull(process.getOrder(), "Order can not be null");
 

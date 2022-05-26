@@ -2,6 +2,7 @@ package isv.sap.payment.service.executor.request.converter.creditcard;
 
 import java.math.BigDecimal;
 
+import de.hybris.platform.core.model.c2l.RegionModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.payment.dto.CardInfo;
@@ -63,10 +64,11 @@ public class AuthorizationRequestConverter extends AbstractRequestConverter
                 .addParam(BILL_TO_CITY, billingAddress.getTown())
                 .addParam(BILL_TO_POSTAL_CODE, billingAddress.getPostalcode())
                 .addParam(BILL_TO_STATE,
-                        PaymentParamUtils.getValue(billingAddress.getRegion(), input -> input.getIsocodeShort()))
+                        PaymentParamUtils.getValue(billingAddress.getRegion(), RegionModel::getIsocodeShort))
                 .addParam(BILL_TO_STREET1, billingAddress.getLine1())
                 .addParam(BILL_TO_STREET2, billingAddress.getLine2())
                 .addParam(BILL_TO_PHONE_NUMBER, billingAddress.getPhone1())
+                .addParam(CC_AUTH_SERVICE_CARD_TYPE_SELECTION_INDICATOR, 1)
                 .addParam(DEVICE_FINGERPRINT_ID, order.getFingerPrintSessionID());
     }
 

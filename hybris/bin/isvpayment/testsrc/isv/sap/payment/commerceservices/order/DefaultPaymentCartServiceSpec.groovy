@@ -83,4 +83,28 @@ class DefaultPaymentCartServiceSpec extends Specification
         1 * modelService.lock(cart.pk)
         1 * runnable.run()
     }
+
+    @Test
+    def 'should execute given runnable without locking the cart if not supported'()
+    {
+        when:
+        service.executeWithCartLock(cart, runnable)
+
+        then:
+        1 * transactionTemplate.execute(_ as TransactionCallbackWithoutResult)
+        1 * modelService.lock(cart.pk) >> { throw new UnsupportedOperationException() }
+        1 * runnable.run()
+    }
+
+    @Test
+    def 'should not execute given runnable if an error occurs when getting the lock on cart'()
+    {
+        when:
+        service.executeWithCartLock(cart, runnable)
+
+        then:
+        1 * transactionTemplate.execute(_ as TransactionCallbackWithoutResult)
+        1 * modelService.lock(cart.pk) >> { throw new RuntimeException() }
+        0 * runnable.run()
+    }
 }

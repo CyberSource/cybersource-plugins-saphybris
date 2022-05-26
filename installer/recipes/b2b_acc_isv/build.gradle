@@ -21,14 +21,16 @@ def platform = platform {
 
         property 'googleApiKey', ''
 
-        property 'build.source', '1.8'
-        property 'build.target', '1.8'
+        property 'build.source', '11.0'
+        property 'build.target', '11.0'
 
         property 'website.powertools.http', 'http://powertools.local:9001/yb2bacceleratorstorefront'
         property 'website.powertools.https', 'https://powertools.local:9002/yb2bacceleratorstorefront'
 
         // defines a strategy for credit card payment (HOP, SOP)
         property 'site.pci.strategy', 'SOP'
+
+        property 'log4j.rootLogger.level', 'warn'
     }
 
     extensions {

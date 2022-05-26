@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,7 +27,7 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
-import org.apache.commons.lang.StringUtils;
+import de.hybris.platform.servicelayer.i18n.I18NService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,21 +48,10 @@ import static isv.cjl.payment.enums.PaymentType.GOOGLE_PAY;
 import static isv.sap.payment.enums.AlternativePaymentMethod.GGP;
 import static isv.sap.payment.enums.AlternativePaymentMethod.KLI;
 import static isv.sap.payment.enums.PaymentType.ALTERNATIVE_PAYMENT;
-import static java.lang.String.valueOf;
 
 @RequestMapping(value = "/checkout/multi/summary")
 public class SummaryCheckoutStepController extends AbstractCheckoutStepController
 {
-    @SuppressWarnings("all")
-    protected static final Map<String, String> ISV_SOP_CARD_TYPES = new HashMap<String, String>()
-    {{
-        put("visa", "001");
-        put("master", "002");
-        put("amex", "003");
-        put("diners", "005");
-        put("maestro", "024");
-    }};
-
     private static final String RESPONSE_ACTION = "responseAction";
 
     private static final String SUMMARY = "summary";
@@ -81,10 +69,16 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
     private FraudFacade fraudFacade;
 
     @Resource
+    private I18NService i18NService;
+
+    @Resource
     private VisaCheckoutPaymentDetailsFacade visaCheckoutPaymentDetailsFacade;
 
     @Resource
     private CreditCardPaymentFacade creditCardPaymentFacade;
+
+    @Resource(name = "isvCardTypes")
+    private Map<String, String> isvSopCardTypes;
 
     @Value("${isv.payment.visa.checkout.image.url}")
     private String visaCheckoutImageUrl;
@@ -97,6 +91,9 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
 
     @Value("${isv.payment.flex.microform.sdk.url}")
     private String flexSDKUrl;
+
+    @Value("${isv.payment.flex.card.type.selection}")
+    private boolean flexCardTypeSelection;
 
     @Value("${isv.payment.customer.3ds.songbird.url}")
     private String songbirdUrl;
@@ -114,8 +111,6 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
     @RequireHardLogIn
     @PreValidateCheckoutStep(checkoutStep = SUMMARY)
     public String enterStepWithPaymentError(final Model model, final RedirectAttributes redirectModel)
-            throws CMSItemNotFoundException, // NOSONAR
-            CommerceCartModificationException
     {
         GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
                 "checkout.place.order.payment.error");
@@ -127,8 +122,7 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
     @Override
     @PreValidateCheckoutStep(checkoutStep = SUMMARY)
     public String enterStep(final Model model, final RedirectAttributes redirectAttributes)
-            throws CMSItemNotFoundException, // NOSONAR
-            CommerceCartModificationException
+            throws CMSItemNotFoundException, CommerceCartModificationException
     {
         final CartData cartData = getCheckoutFacade().getCheckoutCart();
         if (cartData.getEntries() != null && !cartData.getEntries().isEmpty())
@@ -150,14 +144,14 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
         model.addAttribute("paymentInfo", cartData.getPaymentInfo());
         model.addAttribute("songbirdUrl", songbirdUrl);
 
-        final boolean is3dsEnabled = merchantService.is3dsEnabled();
+        final boolean is3dsEnabled = creditCardPaymentFacade.is3dsEnabled();
         model.addAttribute("is3dsEnabled", is3dsEnabled);
         if (is3dsEnabled && FLEX.equals(checkoutPciStrategy.getSubscriptionPciOption()))
         {
             model.addAttribute("jwt", creditCardPaymentFacade.createEnrollmentJwt());
         }
 
-        prepareVisaCheckoutData(model, visaCheckoutImageUrl, visaCheckoutSDKUrl);
+        prepareVisaCheckoutData(model);
 
         prepareKlarnaCheckoutData(model);
         prepareApplePayCheckoutData(model);
@@ -168,7 +162,7 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
 
         final boolean requestSecurityCode = CheckoutPciOptionEnum.DEFAULT.equals(getCheckoutFlowFacade()
                 .getSubscriptionPciOption());
-        model.addAttribute("requestSecurityCode", Boolean.valueOf(requestSecurityCode));
+        model.addAttribute("requestSecurityCode", requestSecurityCode);
 
         model.addAttribute(new PlaceOrderForm());
 
@@ -222,26 +216,24 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
         }
     }
 
-    protected void prepareVisaCheckoutData(final Model model, final String vcImageUrl,
-            final String vcSDKUrl)
+    protected void prepareVisaCheckoutData(final Model model)
     {
         final boolean visaCheckoutEnabled = paymentModeFacade.
                 isPaymentModeSupported(isv.sap.payment.enums.PaymentType.VISA_CHECKOUT, null);
         if (visaCheckoutEnabled)
         {
             model.addAttribute("visaCheckoutEnabled", true);
-            model.addAttribute("visaCheckoutImageUrl", vcImageUrl);
+            model.addAttribute("visaCheckoutImageUrl", visaCheckoutImageUrl);
             model.addAttribute("visaCheckoutAPIKey", merchantService.
                     getMerchantProfileForPaymentType(PaymentType.VISA_CHECKOUT,
                             MerchantProfileType.VCO).getAccessKey());
-            model.addAttribute("visaCheckoutSDKUrl", vcSDKUrl);
+            model.addAttribute("visaCheckoutSDKUrl", visaCheckoutSDKUrl);
+            model.addAttribute("locale", i18NService.getCurrentLocale().toString());
 
             final Optional<VisaCheckoutPaymentDetailsData> vcPaymentDetails = visaCheckoutPaymentDetailsFacade
                     .getVCPaymentDetails();
-            if (vcPaymentDetails.isPresent())
-            {
-                model.addAttribute("visaCheckoutPaymentDetails", vcPaymentDetails.get());
-            }
+            vcPaymentDetails.ifPresent(visaCheckoutPaymentDetailsData -> model
+                    .addAttribute("visaCheckoutPaymentDetails", visaCheckoutPaymentDetailsData));
         }
     }
 
@@ -250,6 +242,7 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
         if (checkoutPciStrategy.getSubscriptionPciOption().equals(FLEX))
         {
             model.addAttribute("flexSdkUrl", flexSDKUrl);
+            model.addAttribute("flexCardTypeSelection", flexCardTypeSelection);
         }
     }
 
@@ -276,7 +269,7 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
 
         for (int i = 1; i <= 12; i++)
         {
-            months.add(new SelectOption(valueOf(i), valueOf(i < 10 ? "0" + i : StringUtils.EMPTY + i)));
+            months.add(new SelectOption(String.valueOf(i), String.format("%02d", i)));
         }
         return months;
     }
@@ -300,9 +293,9 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
         final List<CardTypeData> supportedCardTypes = getCheckoutFacade().getSupportedCardTypes();
         for (final CardTypeData supportedCardType : supportedCardTypes)
         {
-            if (ISV_SOP_CARD_TYPES.containsKey(supportedCardType.getCode()))
+            if (isvSopCardTypes.containsKey(supportedCardType.getCode()))
             {
-                sopCardTypes.add(createCardTypeData(ISV_SOP_CARD_TYPES.get(supportedCardType.getCode()),
+                sopCardTypes.add(createCardTypeData(isvSopCardTypes.get(supportedCardType.getCode()),
                         supportedCardType.getName()));
             }
         }

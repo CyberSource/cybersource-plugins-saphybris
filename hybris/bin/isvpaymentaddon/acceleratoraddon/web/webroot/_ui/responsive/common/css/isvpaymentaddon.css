@@ -203,3 +203,27 @@
     text-align: justify;
     font-size: small;
 }
+
+.visaCheckoutBtnDiv {
+    text-align: center;
+}
+
+.click-to-pay-btn-wrapper {
+    width: 250px;
+    margin: auto;
+}
+
+.click-to-pay-link {
+    float: right;
+    margin-right: 25px;
+    margin-top: -5px
+}
+
+.click-to-pay-label {
+    font-size: 16px;
+    font-weight: 500;
+    vertical-align: middle;
+    margin-left: -5px;
+}
+
+

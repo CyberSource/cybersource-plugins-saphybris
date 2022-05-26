@@ -33,7 +33,8 @@ import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,7 +46,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(value = "/checkout")
 public class CheckoutController extends AbstractCheckoutController
 {
-    private static final Logger LOG = Logger.getLogger(CheckoutController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CheckoutController.class);
 
     private static final String ORDER_CODE_PATH_VARIABLE_PATTERN = "{orderCode:.*}";
 
@@ -148,7 +149,7 @@ public class CheckoutController extends AbstractCheckoutController
         }
         catch (final DuplicateUidException e)
         {
-            LOG.warn("guest registration failed: " + e);
+            LOG.warn("guest registration failed: ", e);
             model.addAttribute(new GuestRegisterForm());
             GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
                     "guest.checkout.existingaccount.register.error", new Object[]
@@ -181,7 +182,7 @@ public class CheckoutController extends AbstractCheckoutController
             return getCheckoutRedirectUrl();
         }
 
-        if (orderDetails.getEntries() != null && !orderDetails.getEntries().isEmpty())
+        if (CollectionUtils.isNotEmpty(orderDetails.getEntries()))
         {
             for (final OrderEntryData entry : orderDetails.getEntries())
             {
@@ -202,15 +203,12 @@ public class CheckoutController extends AbstractCheckoutController
 
         final Optional<PromotionResultData> optional = orderDetails.getAppliedOrderPromotions().stream()
                 .filter(data -> CollectionUtils.isNotEmpty(data.getGiveAwayCouponCodes())).findFirst();
-        if (optional.isPresent())
-        {
-            final PromotionResultData giveAwayCouponPromotion = optional.get();
-            final List<CouponData> giftCoupons = giveAwayCouponPromotion.getGiveAwayCouponCodes();
+        optional.ifPresent(promotionResultData -> {
+            final List<CouponData> giftCoupons = promotionResultData.getGiveAwayCouponCodes();
             model.addAttribute("giftCoupon", giftCoupons.get(0));
-
             orderDetails.getAppliedOrderPromotions()
                     .removeIf(data -> CollectionUtils.isNotEmpty(data.getGiveAwayCouponCodes()));
-        }
+        });
 
         processEmailAddress(model, orderDetails);
 

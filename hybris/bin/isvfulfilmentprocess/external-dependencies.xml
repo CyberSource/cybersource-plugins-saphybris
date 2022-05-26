@@ -14,7 +14,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>isv.sap.payment</groupId>
 	<artifactId>isvfulfilmentprocess</artifactId>
-	<version>1905.0</version>
+	<version>2011.0</version>
 
 	<packaging>jar</packaging>
 

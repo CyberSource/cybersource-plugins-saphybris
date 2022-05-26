@@ -4,12 +4,13 @@ import de.hybris.platform.orderprocessing.events.FraudErrorEvent;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import de.hybris.platform.servicelayer.event.EventService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 public class SendFraudErrorNotificationAction extends AbstractProceduralAction<OrderProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(SendFraudErrorNotificationAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SendFraudErrorNotificationAction.class);
 
     private EventService eventService;
 
@@ -17,7 +18,7 @@ public class SendFraudErrorNotificationAction extends AbstractProceduralAction<O
     public void executeAction(final OrderProcessModel process)
     {
         eventService.publishEvent(new FraudErrorEvent(process));
-        LOG.info("Process: " + process.getCode() + " in step " + getClass());
+        LOG.info("Process: {} in step {}", process.getCode(), getClass());
     }
 
     protected EventService getEventService()

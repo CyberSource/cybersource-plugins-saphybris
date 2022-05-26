@@ -9,12 +9,24 @@ class SelectCountryPage extends Page
         searchBank { $('#BankCodeSearch') }
         searchResults { $('#BankSearcherResultsContent') }
         bic { $('#MultipaysSessionSenderBankCode') }
-        next { $('form#WizardForm > div > button') }
+        selectCookiesBtn(required: false) { $('div#Modal #cookie-modal-basic button.cookie-modal-settings') }
+        saveCookiesBtn(required: false) { $('#Modal #cookie-modal-extended button.cookie-modal-save') }
+        next { $('form#WizardForm > button') }
         terminate(wait: true) { $('div.secondary-form-actions').find('a.abort') }
+    }
+
+    void acceptCookies()
+    {
+        if (selectCookiesBtn.isDisplayed())
+        {
+            selectCookiesBtn.click()
+            saveCookiesBtn.click()
+        }
     }
 
     SofortLoginPage inputBic(String bicNumber)
     {
+        acceptCookies()
         searchBank = bicNumber
         waitFor { searchResults.displayed }
         next.click()

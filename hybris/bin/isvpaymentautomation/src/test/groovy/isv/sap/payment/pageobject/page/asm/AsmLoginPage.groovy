@@ -7,6 +7,7 @@ import isv.sap.payment.pageobject.module.AsmLoginModule
 
 class AsmLoginPage extends Page
 {
+    static atCheckWaiting = true
     static url = '?asm=true'
     static at = { $('#_asm') }
     static content = {

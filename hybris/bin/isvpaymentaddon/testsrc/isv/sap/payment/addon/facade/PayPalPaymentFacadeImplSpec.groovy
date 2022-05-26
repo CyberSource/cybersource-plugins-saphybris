@@ -13,6 +13,7 @@ import org.junit.Test
 import spock.lang.Specification
 
 import isv.cjl.payment.constants.PaymentConstants
+import isv.cjl.payment.exception.PaymentException
 import isv.cjl.payment.model.Merchant
 import isv.cjl.payment.service.MerchantService
 import isv.cjl.payment.service.executor.PaymentServiceExecutor
@@ -96,6 +97,27 @@ class PayPalPaymentFacadeImplSpec extends Specification
     }
 
     @Test
+    def 'Should throw exception if paypal create session payment request is not successful'()
+    {
+        given:
+        transactionEntry.transactionStatus >> PaymentConstants.TransactionStatus.ERROR
+        facade.paypalRelativeCancelUrl = '/cancelURL'
+        facade.paypalRelativeReturnUrl = '/returnURL'
+
+        when:
+        facade.executePayPalExpressCheckoutCreateSessionRequest(cart)
+
+        then:
+        1 * siteBaseUrlResolutionService.getWebsiteUrlForSite(site, true, '/cancelURL') >> 'https://localhost:9001/cancelURL'
+        1 * siteBaseUrlResolutionService.getWebsiteUrlForSite(site, true, '/returnURL') >> 'https://localhost:9001/returnURL'
+        1 * paymentServiceExecutor.execute(_ as PaymentServiceRequest) >> paymentServiceResult
+
+        and:
+        def exception = thrown(PaymentException)
+        exception.message == "paypal Set action rejected with status [${transactionEntry.transactionStatus}]"
+    }
+
+    @Test
     def 'Fail when paypal set request has error status'()
     {
         given:
@@ -148,6 +170,77 @@ class PayPalPaymentFacadeImplSpec extends Specification
         1 * paymentServiceExecutor.execute {
             checkRequest(it, AUTHORIZATION, cart, txnOrderSetup)
         } >> PaymentServiceResult.create().addData(TRANSACTION, txnAuth)
+    }
+
+    @Test
+    def 'Should return false if check status transaction is not accepted'()
+    {
+        given:
+        IsvPaymentTransactionModel payPalTxn = new IsvPaymentTransactionModel()
+        payPalTxn.merchantId = 'test-isv'
+        payPalTxn.paymentProvider = PaymentType.PAY_PAL.name()
+
+        IsvPaymentTransactionEntryModel createSessionTxnEntry = new IsvPaymentTransactionEntryModel()
+        createSessionTxnEntry.type = PaymentTransactionType.CREATE_SESSION
+        createSessionTxnEntry.transactionStatus = PaymentConstants.TransactionStatus.ACCEPT
+        createSessionTxnEntry.properties = ['apSessionsReplyMerchantURL': 'xxx']
+        payPalTxn.entries = [createSessionTxnEntry]
+
+        IsvPaymentTransactionEntryModel txnCheckStatus = new IsvPaymentTransactionEntryModel()
+        txnCheckStatus.transactionStatus = PaymentConstants.TransactionStatus.ERROR
+
+        paymentTransactionService.getLatestAcceptedTransactionEntry(payPalTxn, PaymentTransactionType.CREATE_SESSION) >> Optional.of(createSessionTxnEntry)
+
+        when:
+        def result = facade.authorizePayPalPayment(cart, 'xxx')
+
+        then:
+        cart.paymentTransactions >> [payPalTxn]
+        1 * paymentServiceExecutor.execute {
+            checkRequest(it, CHECK_STATUS, cart, createSessionTxnEntry)
+        } >> PaymentServiceResult.create().addData(TRANSACTION, txnCheckStatus)
+
+        and:
+        !result
+    }
+
+    @Test
+    def 'Should return false if order setup transaction is not accepted'()
+    {
+        given:
+        IsvPaymentTransactionModel payPalTxn = new IsvPaymentTransactionModel()
+        payPalTxn.merchantId = 'test-isv'
+        payPalTxn.paymentProvider = PaymentType.PAY_PAL.name()
+
+        IsvPaymentTransactionEntryModel createSessionTxnEntry = new IsvPaymentTransactionEntryModel()
+        createSessionTxnEntry.type = PaymentTransactionType.CREATE_SESSION
+        createSessionTxnEntry.transactionStatus = PaymentConstants.TransactionStatus.ACCEPT
+        createSessionTxnEntry.properties = ['apSessionsReplyMerchantURL': 'xxx']
+        payPalTxn.entries = [createSessionTxnEntry]
+
+        IsvPaymentTransactionEntryModel txnCheckStatus = new IsvPaymentTransactionEntryModel()
+        txnCheckStatus.properties = ['apReplyPayerID': 'something']
+        setUpTxnEntry(txnCheckStatus, payPalTxn)
+        IsvPaymentTransactionEntryModel txnOrderSetup = new IsvPaymentTransactionEntryModel()
+        txnOrderSetup.transactionStatus = PaymentConstants.TransactionStatus.ERROR
+
+        paymentTransactionService.getLatestAcceptedTransactionEntry(payPalTxn, PaymentTransactionType.CREATE_SESSION) >> Optional.of(createSessionTxnEntry)
+
+        when:
+        def result = facade.authorizePayPalPayment(cart, 'xxx')
+
+        then:
+        cart.paymentTransactions >> [payPalTxn]
+        1 * paymentServiceExecutor.execute {
+            checkRequest(it, CHECK_STATUS, cart, createSessionTxnEntry)
+        } >> PaymentServiceResult.create().addData(TRANSACTION, txnCheckStatus)
+
+        1 * paymentServiceExecutor.execute {
+            checkRequest(it, ORDER_SETUP, cart, createSessionTxnEntry)
+        } >> PaymentServiceResult.create().addData(TRANSACTION, txnOrderSetup)
+
+        and:
+        !result
     }
 
     @Test

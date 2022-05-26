@@ -101,7 +101,9 @@
                     </div>
 
                     <c:if test="${visaCheckoutEnabled}">
-                        <visacheckout:vcButton imageUrl="${visaCheckoutImageUrl}"/>
+                        <div class="col-sm-4 col-md-6 pull-right">
+                            <visacheckout:vcButton imageUrl="${visaCheckoutImageUrl}" locale="${locale}"/>
+                        </div>
                     </c:if>
                 </div>
             </div>

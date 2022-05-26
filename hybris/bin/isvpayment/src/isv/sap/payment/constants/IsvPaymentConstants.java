@@ -164,6 +164,8 @@ public final class IsvPaymentConstants extends GeneratedIsvPaymentConstants //NO
 
         public static final String DEVICE_FINGERPRINT_ID = "device_fingerprint_id";
 
+        public static final String CARD_TYPE_SELECTION_INDICATOR = "card_type_selection_indicator";
+
         private SARequestFields()
         {
             //empty
@@ -282,6 +284,16 @@ public final class IsvPaymentConstants extends GeneratedIsvPaymentConstants //NO
         public static final String DEFAULT_PRODUCT_CODE = "isv.payment.customer.product.code.default";
 
         private ProductCodeProperties()
+        {
+            //empty
+        }
+    }
+
+    public static final class PaymentRequestPopulatorValues
+    {
+        public static final String ITEM_COMMODITY_CODE_VALUE = "45648997";
+
+        private PaymentRequestPopulatorValues()
         {
             //empty
         }

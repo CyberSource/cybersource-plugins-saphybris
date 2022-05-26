@@ -33,6 +33,11 @@
                         </c:when>
                         <c:otherwise>
                             <img src="${imagePath}/${paymentMode.getCode()}.png" alt="${paymentMode.getName()}" class="ccImage">
+                            <c:if test="${paymentMode.getPaymentType() == \"VISA_CHECKOUT\"}">
+                                <span class="click-to-pay-label">
+                                    <spring:theme code="checkout.summary.paymentMethod.clickToPay.title"/>
+                                </span>
+                            </c:if>
                             <c:if test="${paymentMode.getPaymentSubType() == \"KLI\"}">
                                 <div id="klarna_container" hidden="hidden">
                                     <img id="klarna_load_progress" src="${contextPath}/_ui/responsive/common/images/spinner.gif">

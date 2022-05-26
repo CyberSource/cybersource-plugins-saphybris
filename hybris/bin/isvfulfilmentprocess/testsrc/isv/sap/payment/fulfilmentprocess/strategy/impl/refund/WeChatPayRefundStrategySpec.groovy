@@ -29,6 +29,13 @@ class WeChatPayRefundStrategySpec extends Specification
     }
 
     @Test
+    def 'should return alternative payment method'()
+    {
+        expect:
+        strategy.paymentMethod == WQR
+    }
+
+    @Test
     def 'should create we chat pay refund request'()
     {
         given:

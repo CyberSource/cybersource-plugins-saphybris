@@ -3,12 +3,13 @@ package isv.sap.payment.fulfilmentprocess.actions.consignment;
 import de.hybris.platform.ordersplitting.model.ConsignmentProcessModel;
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import de.hybris.platform.warehouse.Process2WarehouseAdapter;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 public class SendConsignmentToWarehouseAction extends AbstractProceduralAction<ConsignmentProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(SendConsignmentToWarehouseAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SendConsignmentToWarehouseAction.class);
 
     private Process2WarehouseAdapter process2WarehouseAdapter;
 

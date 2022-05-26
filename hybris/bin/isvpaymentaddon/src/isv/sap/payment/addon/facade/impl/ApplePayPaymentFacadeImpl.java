@@ -57,9 +57,6 @@ public class ApplePayPaymentFacadeImpl extends AbstractPaymentFacade implements 
                 .setDisplayName(displayName)
                 .addParam("initiative", initiative)
                 .setInitiativeContext(initiativeContext)
-                // TODO Keystore location and password must be moved to the CJL config
-                //.setKeystoreLocation(keystoreLocation)
-                //.setKeystorePassword(keystorePassword)
                 .addParam("keystoreLocation", keystoreLocation)
                 .addParam("keystorePassword", keystorePassword)
                 .build());

@@ -27,7 +27,7 @@ public class RejectDecisionStrategy extends AbstractDecisionStrategy
         LOG.debug("Set order [{}] properties: status = [{}], fraudulent = [{}]", order.getCode(), OrderStatus.FRAUD,
                 Boolean.TRUE);
 
-        getModelsService().saveAll(fraudReport, historyEntry, order);
+        getModelService().saveAll(fraudReport, historyEntry, order);
     }
 
     @Override

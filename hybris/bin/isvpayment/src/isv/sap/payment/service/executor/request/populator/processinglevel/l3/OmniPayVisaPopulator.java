@@ -13,6 +13,7 @@ import static isv.cjl.payment.constants.PaymentRequestParamConstants.OTHER_TAX_N
 import static isv.cjl.payment.constants.PaymentRequestParamConstants.OTHER_TAX_NATIONAL_TAX_INDICATOR;
 import static isv.cjl.payment.constants.PaymentRequestParamConstants.OTHER_TAX_VAT_TAX_RATE;
 import static isv.cjl.payment.constants.PaymentRequestParamConstants.PURCHASE_TOTALS_FREIGHT_AMOUNT;
+import static isv.sap.payment.constants.IsvPaymentConstants.PaymentRequestPopulatorValues.ITEM_COMMODITY_CODE_VALUE;
 import static java.lang.String.format;
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
@@ -45,10 +46,9 @@ public class OmniPayVisaPopulator extends AbstractOmniPayPopulator
 
         final int index = entry.getEntryNumber();
 
-        // TODO: use parameters instead of literals
         target
                 .addParam(format(ITEM_ALTERNATE_TAX_RATE, index), ZERO)
-                .addParam(format(ITEM_COMMODITY_CODE, index), "45648997");
+                .addParam(format(ITEM_COMMODITY_CODE, index), ITEM_COMMODITY_CODE_VALUE);
     }
 
     @Override
@@ -58,10 +58,9 @@ public class OmniPayVisaPopulator extends AbstractOmniPayPopulator
 
         final int index = order.getEntries().size();
 
-        // TODO: use parameters instead of literals
         target
                 .addParam(format(ITEM_ALTERNATE_TAX_RATE, index), ZERO)
-                .addParam(format(ITEM_COMMODITY_CODE, index), "45648997");
+                .addParam(format(ITEM_COMMODITY_CODE, index), ITEM_COMMODITY_CODE_VALUE);
     }
 
     @Override

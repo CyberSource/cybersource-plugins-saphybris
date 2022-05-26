@@ -62,7 +62,7 @@ klarna.language.apparel-uk=en-GB
 
 # Visa Checkout
 isv.payment.visa.checkout.sdk.url=https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js
-isv.payment.visa.checkout.image.url=https://sandbox.secure.checkout.visa.com/wallet-services-web/xo/button.png
+isv.payment.visa.checkout.image.url=https://sandbox.secure.checkout.visa.com/wallet-services-web/xo/button.png?legacy=false
 isv.payment.ws.endpoint.address = https://ics2wstesta.ic3.com:443/commerce/1.x/transactionProcessor
 isv.payment.flex.microform.sdk.url = https://flex.cybersource.com/cybersource/assets/microform/0.11.0/flex-microform.min.js
 isv.payment.secure.acceptance.hop.post.url = https://testsecureacceptance.cybersource.com/pay
@@ -70,4 +70,5 @@ isv.payment.secure.acceptance.hop.subscription.create.post.url = https://testsec
 isv.payment.secure.acceptance.sop.post.url = https://testsecureacceptance.cybersource.com/silent/embedded/pay
 isv.payment.api.rest.runEnvironment = CyberSource.Environment.SANDBOX
 isv.payment.customer.flex.microform.api.env = SANDBOX
+isv.payment.flex.card.type.selection = false
 site.pci.strategy = FLEX

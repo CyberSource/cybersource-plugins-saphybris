@@ -7,4 +7,4 @@ SELECT { pte.TransactionStatus }
         JOIN PaymentTransactionType as ptt
         ON { pte:type } = { ptt:pk }
         }
-    WHERE { customer.uid } = '$userEmail' AND { ptt.code } = 'AUTHORIZATION'
+    WHERE { customer.uid } = '$userEmail' AND { ptt.code } = '$entryType'

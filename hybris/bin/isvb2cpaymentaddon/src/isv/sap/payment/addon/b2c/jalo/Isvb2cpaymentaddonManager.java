@@ -4,7 +4,8 @@ import java.util.Map;
 
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.util.JspContext;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import isv.sap.payment.addon.b2c.constants.Isvb2cpaymentaddonConstants;
 
@@ -13,13 +14,13 @@ import isv.sap.payment.addon.b2c.constants.Isvb2cpaymentaddonConstants;
  */
 public class Isvb2cpaymentaddonManager extends GeneratedIsvb2cpaymentaddonManager
 {
-    private static final Logger LOG = Logger.getLogger(Isvb2cpaymentaddonManager.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(Isvb2cpaymentaddonManager.class.getName());
 
     /**
      * Never call the constructor of any manager directly, call getInstance() You can place your business logic here -
      * like registering a jalo session listener. Each manager is created once for each tenant.
      */
-    public Isvb2cpaymentaddonManager() // NOPMD
+    public Isvb2cpaymentaddonManager()
     {
         if (LOG.isDebugEnabled())
         {
@@ -49,7 +50,7 @@ public class Isvb2cpaymentaddonManager extends GeneratedIsvb2cpaymentaddonManage
     {
         if (LOG.isDebugEnabled())
         {
-            LOG.debug("init() of Isvb2cpaymentaddonManager called. " + getTenant().getTenantID());
+            LOG.debug("init() of Isvb2cpaymentaddonManager called. {}", getTenant().getTenantID());
         }
     }
 
@@ -63,7 +64,7 @@ public class Isvb2cpaymentaddonManager extends GeneratedIsvb2cpaymentaddonManage
     {
         if (LOG.isDebugEnabled())
         {
-            LOG.debug("destroy() of Isvb2cpaymentaddonManager called, current tenant: " + getTenant()
+            LOG.debug("destroy() of Isvb2cpaymentaddonManager called, current tenant: {}", getTenant()
                     .getTenantID());
         }
     }

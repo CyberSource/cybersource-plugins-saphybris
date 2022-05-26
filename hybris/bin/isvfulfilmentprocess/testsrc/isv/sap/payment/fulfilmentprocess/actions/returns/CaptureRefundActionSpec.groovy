@@ -1,6 +1,7 @@
 package isv.sap.payment.fulfilmentprocess.actions.returns
 
 import de.hybris.platform.core.model.order.OrderModel
+import de.hybris.platform.returns.model.ReturnEntryModel
 import de.hybris.platform.returns.model.ReturnProcessModel
 import de.hybris.platform.returns.model.ReturnRequestModel
 import de.hybris.platform.servicelayer.model.ModelService
@@ -33,6 +34,7 @@ class CaptureRefundActionSpec extends Specification
     def order = Mock([useObjenesis: false], OrderModel)
     def returnRequest = Mock([useObjenesis: false], ReturnRequestModel)
     def transaction = Mock([useObjenesis: false], IsvPaymentTransactionModel)
+    def returnEntry = Mock(ReturnEntryModel)
 
     def action = new CaptureRefundAction()
 
@@ -41,7 +43,7 @@ class CaptureRefundActionSpec extends Specification
         process.order >> order
         process.returnRequest >> returnRequest
         returnRequest.getOrder() >> order
-        returnRequest.returnEntries >> []
+        returnRequest.returnEntries >> [returnEntry]
 
         context.strategy(_) >> refundStrategy
 
@@ -69,6 +71,7 @@ class CaptureRefundActionSpec extends Specification
         1 * refundStrategy.execute(order, transaction) >> refund
         1 * secondRefundStrategy.execute(order, transaction) >> refund
         1 * returnRequest.setStatus(PAYMENT_REVERSED)
+        1 * returnEntry.setStatus(PAYMENT_REVERSED)
         result == OK
     }
 

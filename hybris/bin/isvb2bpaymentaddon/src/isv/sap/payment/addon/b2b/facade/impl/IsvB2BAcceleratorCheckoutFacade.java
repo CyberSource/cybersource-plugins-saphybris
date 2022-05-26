@@ -4,14 +4,9 @@ import java.util.Optional;
 import javax.annotation.Resource;
 
 import com.google.common.base.Preconditions;
-import de.hybris.platform.b2b.services.B2BOrderService;
 import de.hybris.platform.b2bacceleratorfacades.checkout.data.PlaceOrderData;
-import de.hybris.platform.b2bacceleratorfacades.exception.EntityValidationException;
-import de.hybris.platform.b2bacceleratorfacades.order.data.B2BReplenishmentRecurrenceEnum;
-import de.hybris.platform.b2bacceleratorfacades.order.data.ScheduledCartData;
 import de.hybris.platform.b2bacceleratorfacades.order.data.TriggerData;
 import de.hybris.platform.b2bacceleratorfacades.order.impl.DefaultB2BAcceleratorCheckoutFacade;
-import de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType;
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.core.model.order.CartModel;
@@ -19,8 +14,8 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
-import org.apache.commons.collections.CollectionUtils;
 
+import isv.sap.payment.addon.b2b.facade.assertions.OrderAssertions;
 import isv.sap.payment.addon.b2b.helper.B2bPaymentAuthorizationHelper;
 import isv.sap.payment.addon.b2b.model.ReplenishmentInfoModel;
 import isv.sap.payment.addon.b2b.service.B2bPaymentTransactionService;
@@ -28,7 +23,6 @@ import isv.sap.payment.commercefacades.order.PaymentCheckoutFacade;
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel;
 
 import static de.hybris.platform.payment.enums.PaymentTransactionType.CREATE_SUBSCRIPTION;
-import static de.hybris.platform.util.localization.Localization.getLocalizedString;
 import static isv.sap.payment.enums.PaymentType.CREDIT_CARD;
 import static isv.sap.payment.utils.PaymentTransactionUtils.getTransactionWithTheLatestEntry;
 
@@ -40,10 +34,6 @@ import static isv.sap.payment.utils.PaymentTransactionUtils.getTransactionWithTh
 public class IsvB2BAcceleratorCheckoutFacade extends DefaultB2BAcceleratorCheckoutFacade implements
         PaymentCheckoutFacade
 {
-    @Resource
-    @SuppressWarnings("VisibilityModifier")
-    protected B2BOrderService b2bOrderService;
-
     @Resource
     private Converter<ReplenishmentInfoModel, PlaceOrderData> replenishmentPlaceOrderConverter;
 
@@ -64,16 +54,14 @@ public class IsvB2BAcceleratorCheckoutFacade extends DefaultB2BAcceleratorChecko
             {
                 return placeReplenishmentOrder(cart);
             }
-            else
+
+            final OrderModel order = placeOrder(cart);
+
+            afterPlaceOrder(cart, order);
+
+            if (order != null)
             {
-                final OrderModel order = placeOrder(cart);
-
-                afterPlaceOrder(cart, order);
-
-                if (order != null)
-                {
-                    return getOrderConverter().convert(order);
-                }
+                return getOrderConverter().convert(order);
             }
         }
 
@@ -136,26 +124,15 @@ public class IsvB2BAcceleratorCheckoutFacade extends DefaultB2BAcceleratorChecko
     @Override
     public <T extends AbstractOrderData> T placeOrder(final PlaceOrderData placeOrderData) throws InvalidCartException
     {
-        if (!placeOrderData.getTermsCheck().equals(Boolean.TRUE))
-        {
-            throw new EntityValidationException(getLocalizedString("cart.term.unchecked"));
-        }
+        OrderAssertions.assertOrderTermsChecked(placeOrderData);
 
         if (isValidCheckoutCart(placeOrderData))
         {
-            if (placeOrderData.getReplenishmentOrder() != null && placeOrderData.getReplenishmentOrder().equals(
-                    Boolean.TRUE))
+            if (Boolean.TRUE.equals(placeOrderData.getReplenishmentOrder()))
             {
-                if (placeOrderData.getReplenishmentStartDate() == null)
-                {
-                    throw new EntityValidationException(getLocalizedString("cart.replenishment.no.startdate"));
-                }
+                OrderAssertions.assertReplenishmentStartDateNotNull(placeOrderData);
 
-                if (placeOrderData.getReplenishmentRecurrence().equals(B2BReplenishmentRecurrenceEnum.WEEKLY)
-                        && CollectionUtils.isEmpty(placeOrderData.getNDaysOfWeek()))
-                {
-                    throw new EntityValidationException(getLocalizedString("cart.replenishment.no.frequency"));
-                }
+                OrderAssertions.assertReplenishmentRecurrenceSet(placeOrderData);
 
                 final TriggerData triggerData = new TriggerData();
                 populateTriggerDataFromPlaceOrderData(placeOrderData, triggerData);
@@ -163,7 +140,7 @@ public class IsvB2BAcceleratorCheckoutFacade extends DefaultB2BAcceleratorChecko
                 return (T) scheduleOrder(triggerData);
             }
 
-            return (T) super.placeOrder();
+            return (T) placeOrder();
         }
 
         return null;
@@ -174,52 +151,23 @@ public class IsvB2BAcceleratorCheckoutFacade extends DefaultB2BAcceleratorChecko
     {
         final CartData cartData = getCheckoutCart();
 
-        if (!cartData.isCalculated())
-        {
-            throw new EntityValidationException(getLocalizedString("cart.not.calculated"));
-        }
+        OrderAssertions.assertCartCalculated(cartData);
 
-        if (cartData.getDeliveryAddress() == null)
-        {
-            throw new EntityValidationException(getLocalizedString("cart.deliveryAddress.invalid"));
-        }
+        OrderAssertions.assertDeliveryAddressNotEmpty(cartData);
 
-        if (cartData.getDeliveryMode() == null)
-        {
-            throw new EntityValidationException(getLocalizedString("cart.deliveryMode.invalid"));
-        }
+        OrderAssertions.assertDeliveryModeNotEmpty(cartData);
 
-        if (!isSupportedPaymentType(cartData.getPaymentType().getCode()))
-        {
-            throw new EntityValidationException(getLocalizedString("cart.paymentInfo.empty"));
-        }
+        OrderAssertions.assertPaymentTypeSupported(cartData);
 
         return true;
     }
 
-    protected ScheduledCartData placeReplenishmentOrder(final CartModel cart) throws InvalidCartException
+    protected AbstractOrderData placeReplenishmentOrder(final CartModel cart) throws InvalidCartException
     {
         Preconditions.checkNotNull(cart.getReplenishmentInfo());
 
         final PlaceOrderData placeOrderData = replenishmentPlaceOrderConverter.convert(cart.getReplenishmentInfo());
 
         return this.placeOrder(placeOrderData);
-    }
-
-    private boolean isSupportedPaymentType(final String code)
-    {
-        return code.equals(CheckoutPaymentType.ACCOUNT.getCode()) || code.equals(CheckoutPaymentType.CARD.getCode());
-    }
-
-    public void setB2bPaymentTransactionService(
-            final B2bPaymentTransactionService b2bPaymentTransactionService)
-    {
-        this.b2bPaymentTransactionService = b2bPaymentTransactionService;
-    }
-
-    public void setB2bPaymentAuthorizationHelper(
-            final B2bPaymentAuthorizationHelper b2bPaymentAuthorizationHelper)
-    {
-        this.b2bPaymentAuthorizationHelper = b2bPaymentAuthorizationHelper;
     }
 }

@@ -27,14 +27,10 @@ class VisaCheckoutPaymentDetailsFacadeSpec extends Specification
     def getTransactionEntry = Mock(IsvPaymentTransactionEntryModel)
     def vcPaymentDetailsData = Mock(VisaCheckoutPaymentDetailsData)
 
-    VisaCheckoutPaymentDetailsFacade facade = new VisaCheckoutPaymentDetailsFacadeImpl()
-
-    def 'setup'()
-    {
-        facade.paymentDetailsConverter = paymentDetailsConverter
-        facade.cartService = cartService
-        facade.paymentTransactionService = paymentTransactionService
-    }
+    def facade =
+            new VisaCheckoutPaymentDetailsFacadeImpl(paymentDetailsConverter: paymentDetailsConverter,
+                                                     cartService: cartService,
+                                                     paymentTransactionService: paymentTransactionService)
 
     @Test
     def 'should return visa checkout payment details data'()

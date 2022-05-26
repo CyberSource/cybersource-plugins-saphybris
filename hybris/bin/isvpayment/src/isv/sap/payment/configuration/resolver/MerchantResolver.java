@@ -10,7 +10,7 @@ import isv.sap.payment.model.IsvMerchantModel;
 public class MerchantResolver extends AbstractPaymentConfigurationResolver<IsvMerchantModel>
 {
     private static final String FIND_MERCHANT_BY_ID =
-            "SELECT {pk} FROM {" + IsvMerchantModel._TYPECODE + "} WHERE {id} = ?id";
+            "SELECT {" + IsvMerchantModel.PK + "} FROM {" + IsvMerchantModel._TYPECODE + "} WHERE {id} = ?id";
 
     @Override
     public String getSearchQuery(final Map<String, Object> params)

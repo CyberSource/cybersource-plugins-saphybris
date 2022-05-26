@@ -6,6 +6,7 @@ import isv.sap.payment.pageobject.module.AddToCartDialog
 
 class ProductDescriptionPage extends Page
 {
+    static atCheckWaiting = true
     static url = 'p'
     static at = { $('body.page-productDetails') }
     static content = {

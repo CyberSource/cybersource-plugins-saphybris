@@ -22,7 +22,7 @@ public class CheckAlternativePaymentAction extends AbstractAction<OrderProcessMo
     private Map<OrderStatus, Transition> transitionMap;
 
     @Override
-    public String execute(final OrderProcessModel process) throws IllegalStateException
+    public String execute(final OrderProcessModel process)
     {
         final OrderModel order = process.getOrder();
         final Transition transition = transitionMap.get(order.getStatus());

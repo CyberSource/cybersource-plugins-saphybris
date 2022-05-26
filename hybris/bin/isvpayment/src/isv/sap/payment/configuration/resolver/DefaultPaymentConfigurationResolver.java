@@ -2,6 +2,7 @@ package isv.sap.payment.configuration.resolver;
 
 import java.util.Map;
 
+import isv.sap.payment.jalo.IsvPaymentConfiguration;
 import isv.sap.payment.model.IsvPaymentConfigurationModel;
 
 /**
@@ -10,7 +11,8 @@ import isv.sap.payment.model.IsvPaymentConfigurationModel;
 public class DefaultPaymentConfigurationResolver
         extends AbstractPaymentConfigurationResolver<IsvPaymentConfigurationModel>
 {
-    public static final String QUERY_TEMPLATE = "SELECT {pk} FROM {IsvPaymentConfiguration} WHERE {key}=?key";
+    public static final String QUERY_TEMPLATE =
+            "SELECT {" + IsvPaymentConfiguration.PK + "} FROM {IsvPaymentConfiguration} WHERE {key}=?key";
 
     @Override
     public String getSearchQuery(final Map<String, Object> params)

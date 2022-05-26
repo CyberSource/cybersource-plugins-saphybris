@@ -10,7 +10,6 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
-import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import isv.cjl.payment.data.enrollment.AddressData;
 import isv.cjl.payment.data.enrollment.CartItemData;
@@ -21,7 +20,7 @@ import isv.cjl.payment.data.enrollment.OrderDetailsData;
 public class EnrollmentPayloadPopulator implements Populator<AbstractOrderModel, OrderData>
 {
     @Resource
-    private Converter<AddressModel, AddressData> enrollmentAddressConverter;
+    private Populator<AddressModel, AddressData> enrollmentAddressPopulator;
 
     @Resource
     private CustomerEmailResolutionService customerEmailResolutionService;
@@ -61,12 +60,16 @@ public class EnrollmentPayloadPopulator implements Populator<AbstractOrderModel,
 
         if (source.getDeliveryAddress() != null)
         {
-            consumer.setShippingAddress(enrollmentAddressConverter.convert(source.getDeliveryAddress()));
+            final AddressData shippingAddress = new AddressData();
+            enrollmentAddressPopulator.populate(source.getDeliveryAddress(), shippingAddress);
+            consumer.setShippingAddress(shippingAddress);
         }
 
         if (source.getPaymentAddress() != null)
         {
-            consumer.setBillingAddress(enrollmentAddressConverter.convert(source.getPaymentAddress()));
+            final AddressData billingAddress = new AddressData();
+            enrollmentAddressPopulator.populate(source.getPaymentAddress(), billingAddress);
+            consumer.setBillingAddress(billingAddress);
         }
 
         target.setConsumer(consumer);

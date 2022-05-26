@@ -14,11 +14,10 @@ import de.hybris.platform.acceleratorservices.payment.strategies.CreateSubscript
 import de.hybris.platform.acceleratorservices.payment.strategies.PaymentResponseInterpretationStrategy
 import de.hybris.platform.acceleratorservices.urlresolver.SiteBaseUrlResolutionService
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel
-import de.hybris.platform.commerceservices.customer.CustomerEmailResolutionService
 import de.hybris.platform.commerceservices.enums.CustomerType
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy
+import de.hybris.platform.commerceservices.strategies.CustomerNameStrategy
 import de.hybris.platform.core.model.c2l.CountryModel
-import de.hybris.platform.core.model.c2l.RegionModel
 import de.hybris.platform.core.model.order.AbstractOrderModel
 import de.hybris.platform.core.model.order.CartModel
 import de.hybris.platform.core.model.user.AddressModel
@@ -26,17 +25,19 @@ import de.hybris.platform.core.model.user.CustomerModel
 import de.hybris.platform.order.CartService
 import de.hybris.platform.payment.model.PaymentTransactionModel
 import de.hybris.platform.servicelayer.dto.converter.Converter
-import de.hybris.platform.servicelayer.i18n.CommonI18NService
 import de.hybris.platform.servicelayer.model.ModelService
 import de.hybris.platform.site.BaseSiteService
 import io.jsonwebtoken.Claims
 import org.junit.Test
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import isv.cjl.payment.constants.PaymentConstants
 import isv.cjl.payment.data.enrollment.OrderData
 import isv.cjl.payment.enums.PaymentTransactionType
 import isv.cjl.payment.enums.PaymentType
+import isv.cjl.payment.enums.TransactionMode
+import isv.cjl.payment.exception.PaymentException
 import isv.cjl.payment.model.Merchant
 import isv.cjl.payment.service.MerchantService
 import isv.cjl.payment.service.executor.PaymentServiceExecutor
@@ -46,8 +47,10 @@ import isv.cjl.payment.service.jwt.JwtService
 import isv.sap.payment.addon.facade.impl.CreditCardPaymentFacadeImpl
 import isv.sap.payment.model.IsvPaymentInfoModel
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel
+import isv.sap.payment.service.PaymentTransactionService
 
 import static isv.cjl.payment.constants.PaymentConstants.CommonFields.TRANSACTION
+import static isv.sap.payment.constants.IsvPaymentConstants.ReasonCode.NOT_ENROLLED_CODE
 
 @UnitTest
 class CreditCardPaymentFacadeSpec extends Specification
@@ -55,7 +58,6 @@ class CreditCardPaymentFacadeSpec extends Specification
     PaymentServiceExecutor paymentServiceExecutor = Mock()
     CreateSubscriptionRequestStrategy createSubscriptionRequestStrategy = Mock()
     PaymentResponseInterpretationStrategy paymentResponseInterpretationStrategy = Mock()
-    ClientReferenceLookupStrategy clientReferenceLookupStrategy = Mock()
     CreateSubscriptionResultValidationStrategy createSubscriptionResultValidationStrategy = Mock()
     SiteConfigService siteConfigService = Mock()
     JwtService jwtService = Mock()
@@ -65,16 +67,37 @@ class CreditCardPaymentFacadeSpec extends Specification
     BaseSiteService baseSiteService = Mock()
     CartService cartService = Mock()
     ModelService modelService = Mock()
-    CommonI18NService commonI18NService = Mock()
     CheckoutCustomerStrategy checkoutCustomerStrategy = Mock()
-    CustomerEmailResolutionService customerEmailResolutionService = Mock()
     PaymentInfoFacade paymentInfoFacade = Mock()
-
-    def facade = new CreditCardPaymentFacadeImpl()
-
+    Converter<CustomerInfoData, AddressModel> creditCardReverseAddressConverter = Mock()
     Converter<CreateSubscriptionRequest, PaymentData> paymentDataConverter = Mock()
     Converter<PaymentSubscriptionResultItem, PaymentSubscriptionResultData> paymentSubscriptionResultDataConverter = Mock()
     Converter<AbstractOrderModel, OrderData> enrollmentPayloadConverter = Mock()
+    def customerNameStrategy = Mock(CustomerNameStrategy)
+    def clientReferenceLookupStrategy = Mock(ClientReferenceLookupStrategy)
+    def paymentTransactionService = Mock(PaymentTransactionService)
+
+    def facade = new CreditCardPaymentFacadeImpl(paymentServiceExecutor: paymentServiceExecutor,
+                                                 merchantService: merchantService,
+                                                 siteBaseUrlResolutionService: siteBaseUrlResolutionService,
+                                                 baseSiteService: baseSiteService,
+                                                 cartService: cartService,
+                                                 modelService: modelService,
+                                                 siteConfigService: siteConfigService,
+                                                 jwtService: jwtService,
+                                                 paymentDataConverter: paymentDataConverter,
+                                                 paymentSubscriptionResultDataConverter: paymentSubscriptionResultDataConverter,
+                                                 checkoutCustomerStrategy: checkoutCustomerStrategy,
+                                                 customerNameStrategy: customerNameStrategy,
+                                                 creditCardReverseAddressConverter: creditCardReverseAddressConverter,
+                                                 enrollmentPayloadConverter: enrollmentPayloadConverter,
+                                                 createSubscriptionRequestStrategy: createSubscriptionRequestStrategy,
+                                                 paymentResponseInterpretationStrategy: paymentResponseInterpretationStrategy,
+                                                 clientReferenceLookupStrategy: clientReferenceLookupStrategy,
+                                                 createSubscriptionResultValidationStrategy: createSubscriptionResultValidationStrategy,
+                                                 paymentInfoFacade: paymentInfoFacade,
+                                                 paymentTransactionService:  paymentTransactionService
+    )
 
     CartModel cart = Mock()
     Merchant merchantModel = Mock()
@@ -87,29 +110,10 @@ class CreditCardPaymentFacadeSpec extends Specification
     AddressModel billingAddress = Mock()
     IsvPaymentInfoModel paymentInfo = Mock()
     CountryModel country = Mock()
-    RegionModel region = Mock()
 
     def setup()
     {
-        facade.paymentServiceExecutor = paymentServiceExecutor
-        facade.merchantService = merchantService
-        facade.siteBaseUrlResolutionService = siteBaseUrlResolutionService
-        facade.baseSiteService = baseSiteService
-        facade.cartService = cartService
-        facade.modelService = modelService
-        facade.commonI18NService = commonI18NService
-        facade.siteConfigService = siteConfigService
-        facade.jwtService = jwtService
-        facade.paymentDataConverter = paymentDataConverter
-        facade.paymentSubscriptionResultDataConverter = paymentSubscriptionResultDataConverter
         facade.setCheckoutCustomerStrategy(checkoutCustomerStrategy)
-        facade.paymentResponseInterpretationStrategy = paymentResponseInterpretationStrategy
-        facade.clientReferenceLookupStrategy = clientReferenceLookupStrategy
-        facade.createSubscriptionResultValidationStrategy = createSubscriptionResultValidationStrategy
-        facade.enrollmentPayloadConverter = enrollmentPayloadConverter
-        facade.customerEmailResolutionService = customerEmailResolutionService
-        facade.createSubscriptionRequestStrategy = createSubscriptionRequestStrategy
-        facade.paymentInfoFacade = paymentInfoFacade
 
         checkoutCustomerStrategy.currentUserForCheckout >> customer
 
@@ -125,39 +129,53 @@ class CreditCardPaymentFacadeSpec extends Specification
         country.isocode >> 'US'
         deliveryAddress.country >> country
         billingAddress.country >> country
-        commonI18NService.getCountry('US') >> country
-        commonI18NService.getRegion(country, 'US-NY') >> region
 
         cartService.sessionCart >> cart
     }
 
     @Test
-    def 'authorizeFlexCreditCardPayment: Should successfully perform the operation if authorization succeded'(ccAuthorizationTransactionStatus)
+    @Unroll
+    def 'authorizeFlexCreditCardPayment: Should successfully perform the operation if authorization succeeded'(ccAuthorizationTransactionStatus)
     {
         given:
-        transactionEntry.transactionStatus >> ccAuthorizationTransactionStatus
         def enrollTransaction = Mock(IsvPaymentTransactionEntryModel)
-        enrollTransaction.properties >> [:]
+        enrollTransaction.properties >> [payerAuthEnrollReplyReasonCode: NOT_ENROLLED_CODE]
+
+        and:
+        def authTransaction = Mock(IsvPaymentTransactionEntryModel)
+        authTransaction.transactionStatus >> ccAuthorizationTransactionStatus
+        paymentTransactionService.createAuthorizationTxEntryFromEnrollment(enrollTransaction) >> Optional.of(authTransaction)
 
         when:
         def result = facade.authorizeFlexCreditCardPayment(cart, '123456', enrollTransaction)
 
         then:
-        1 * merchantService.getCurrentMerchant(PaymentType.CREDIT_CARD) >> merchantModel
-        1 * paymentServiceExecutor.execute {
-            checkFlexAuthCCRequest(it, cart, '123456')
-        } >> PaymentServiceResult.create().addData(TRANSACTION, transactionEntry)
-
         result
 
         where:
-        ccAuthorizationTransactionStatus                     | _
+        ccAuthorizationTransactionStatus          | _
         PaymentConstants.TransactionStatus.ACCEPT | _
         PaymentConstants.TransactionStatus.REVIEW | _
     }
 
     @Test
-    def 'authorizeFlexCreditCardPayment: Should return return false if authorization failed'(ccAuthorizationTransactionStatus)
+    def 'authorizeFlexCreditCardPayment: Should throw exception when transaction requires validation'()
+    {
+        given:
+        transactionEntry.transactionStatus >> PaymentConstants.TransactionStatus.ACCEPT
+        def enrollTransaction = Mock(IsvPaymentTransactionEntryModel)
+        enrollTransaction.properties >> ['payerAuthEnrollReplyReasonCode': '475']
+
+        when:
+        facade.authorizeFlexCreditCardPayment(cart, '123456', enrollTransaction)
+
+        then:
+        thrown(PaymentException)
+    }
+
+    @Test
+    @Unroll
+    def 'authorizeFlexCreditCardPayment: Should successfully perform the operation for cart and flex token'(ccAuthorizationTransactionStatus)
     {
         given:
         transactionEntry.transactionStatus >> ccAuthorizationTransactionStatus
@@ -165,7 +183,7 @@ class CreditCardPaymentFacadeSpec extends Specification
         enrollTransaction.properties >> [:]
 
         when:
-        def result = facade.authorizeFlexCreditCardPayment(cart, '123456', enrollTransaction)
+        def result = facade.authorizeFlexCreditCardPayment(cart, '123456')
 
         then:
         1 * merchantService.getCurrentMerchant(PaymentType.CREDIT_CARD) >> merchantModel
@@ -173,12 +191,38 @@ class CreditCardPaymentFacadeSpec extends Specification
             checkFlexAuthCCRequest(it, cart, '123456')
         } >> PaymentServiceResult.create().addData(TRANSACTION, transactionEntry)
 
+        and:
+        result
+
+        where:
+        ccAuthorizationTransactionStatus          | _
+        PaymentConstants.TransactionStatus.ACCEPT | _
+        PaymentConstants.TransactionStatus.REVIEW | _
+    }
+
+    @Test
+    @Unroll
+    def 'authorizeFlexCreditCardPayment: Should return return false if authorization failed'(ccAuthorizationTransactionStatus)
+    {
+        given:
+        def enrollTransaction = Mock(IsvPaymentTransactionEntryModel)
+        enrollTransaction.properties >> [payerAuthEnrollReplyReasonCode: NOT_ENROLLED_CODE]
+
+        and:
+        def authTransaction = Mock(IsvPaymentTransactionEntryModel)
+        authTransaction.transactionStatus >> ccAuthorizationTransactionStatus
+        paymentTransactionService.createAuthorizationTxEntryFromEnrollment(enrollTransaction) >> Optional.of(authTransaction)
+
+        when:
+        def result = facade.authorizeFlexCreditCardPayment(cart, '123456', enrollTransaction)
+
+        then:
         !result
 
         0 * modelService.save(transactionEntry)
 
         where:
-        ccAuthorizationTransactionStatus                     | _
+        ccAuthorizationTransactionStatus          | _
         PaymentConstants.TransactionStatus.REJECT | _
         PaymentConstants.TransactionStatus.ERROR  | _
     }
@@ -204,6 +248,7 @@ class CreditCardPaymentFacadeSpec extends Specification
     }
 
     @Test
+    @Unroll
     def 'authorizeFlexCreditCardPayment: Should return return transaction result if jwt is valid'(ccAuthorizationTransactionStatus, expected)
     {
         given:
@@ -223,7 +268,7 @@ class CreditCardPaymentFacadeSpec extends Specification
         result == expected
 
         where:
-        ccAuthorizationTransactionStatus                     | expected
+        ccAuthorizationTransactionStatus          | expected
         PaymentConstants.TransactionStatus.ACCEPT | true
         PaymentConstants.TransactionStatus.REVIEW | true
         PaymentConstants.TransactionStatus.REJECT | false
@@ -279,16 +324,43 @@ class CreditCardPaymentFacadeSpec extends Specification
         given:
         customer.paymentInfos >> []
         customer.type >> CustomerType.GUEST
+        def subscriptionResult = new CreateSubscriptionResult(customerInfoData: new CustomerInfoData())
+        def expectedSubscriptionResultData = new PaymentSubscriptionResultData()
+
+        and:
+        modelService.create(AddressModel) >> billingAddress
 
         when:
-        facade.completeCreatePayment([:], true)
+        def subscriptionResultData = facade.completeCreatePayment([:], true)
 
         then:
-        1 * paymentResponseInterpretationStrategy.interpretResponse(_, _, _) >> new CreateSubscriptionResult(customerInfoData: new CustomerInfoData())
-        1 * paymentSubscriptionResultDataConverter.convert(_)
+        1 * paymentResponseInterpretationStrategy.interpretResponse(_, _, _) >> subscriptionResult
         1 * createSubscriptionResultValidationStrategy.validateCreateSubscriptionResult(_, _) >> [:]
-        1 * modelService.create(AddressModel) >> billingAddress
+        1 * creditCardReverseAddressConverter.convert(subscriptionResult.customerInfoData, billingAddress)
         1 * paymentInfoFacade.createPaymentInfo(billingAddress, customer, true) >> paymentInfo
+        1 * paymentSubscriptionResultDataConverter.convert(_) >> expectedSubscriptionResultData
+
+        and:
+        subscriptionResultData == expectedSubscriptionResultData
+    }
+
+    @Test
+    @Unroll
+    def 'Should return true or false indicating that 3ds is enabled or not'()
+    {
+        given:
+        merchantService.is3dsEnabled() >> is3dsEnabledParam
+
+        when:
+        def enabled = facade.is3dsEnabled()
+
+        then:
+        enabled == is3dsEnabledParam
+
+        where:
+        is3dsEnabledParam | _
+        true              | _
+        false             | _
     }
 
     def checkFlexAuthCCRequest(PaymentServiceRequest request, cart, flexToken)
@@ -298,5 +370,35 @@ class CreditCardPaymentFacadeSpec extends Specification
                 request.getParam('order').is(cart) &&
                 request.getParam('merchantId') == 'test_merchant' &&
                 request.getParam('flexToken') == flexToken
+    }
+
+    @Test
+    def 'enrollCreditCard: Should successfully process credit card enrollment'()
+    {
+        given:
+        def referenceId = 'reference12345'
+        def transientToken = 'transient12345'
+
+        when:
+        def result = facade.enrollCreditCard(referenceId, transientToken)
+
+        then:
+        1 * merchantService.getCurrentMerchant(PaymentType.CREDIT_CARD) >> merchantModel
+        1 * paymentServiceExecutor.execute {
+            checkEnrollmentCCRequest(it, cart, referenceId, transientToken)
+        } >> PaymentServiceResult.create().addData(TRANSACTION, transactionEntry)
+
+        result == transactionEntry
+    }
+
+    def checkEnrollmentCCRequest(PaymentServiceRequest request, cart, referenceId, transientToken)
+    {
+        request.paymentType == PaymentType.CREDIT_CARD &&
+                request.paymentTransactionType == PaymentTransactionType.ENROLLMENT &&
+                request.getParam('payerAuthEnrollServiceTransactionMode') == TransactionMode.ECOMMERCE &&
+                request.getParam('order').is(cart) &&
+                request.getParam('merchantId') == 'test_merchant' &&
+                request.getParam('flexToken') == transientToken &&
+                request.getParam('payerAuthEnrollServiceReferenceID') == referenceId
     }
 }

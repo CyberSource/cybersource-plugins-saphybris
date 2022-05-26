@@ -16,6 +16,7 @@ import de.hybris.platform.core.model.user.AddressModel
 import de.hybris.platform.core.model.user.CustomerModel
 import de.hybris.platform.order.CartService
 import de.hybris.platform.payment.model.PaymentTransactionModel
+import de.hybris.platform.servicelayer.dto.converter.Converter
 import de.hybris.platform.servicelayer.i18n.CommonI18NService
 import de.hybris.platform.servicelayer.model.ModelService
 import de.hybris.platform.site.BaseSiteService
@@ -53,8 +54,23 @@ class VisaCheckoutPaymentFacadeImplSpec extends Specification
     SiteConfigService siteConfigService = Mock()
     AcceleratorCheckoutFacade checkoutFacade = Mock()
     PaymentInfoFacade paymentInfoFacade = Mock()
+    Converter<Map<String, String>, AddressModel> visaCheckoutBillingAddressReverseConverter = Mock()
+    Converter<Map<String, String>, AddressModel> visaCheckoutDeliveryAddressReverseConverter = Mock()
 
-    VisaCheckoutPaymentFacadeImpl facade = Spy()
+    VisaCheckoutPaymentFacadeImpl facade = Spy(new VisaCheckoutPaymentFacadeImpl(
+            merchantService: merchantService,
+            paymentServiceExecutor: paymentServiceExecutor,
+            paymentTransactionService: paymentTransactionService,
+            siteBaseUrlResolutionService: siteBaseUrlResolutionService,
+            siteConfigService: siteConfigService,
+            baseSiteService: baseSiteService,
+            modelService: modelService,
+            checkoutFacade: checkoutFacade,
+            paymentInfoFacade: paymentInfoFacade,
+            checkoutCustomerStrategy: checkoutCustomerStrategy,
+            visaCheckoutBillingAddressReverseConverter: visaCheckoutBillingAddressReverseConverter,
+            visaCheckoutDeliveryAddressReverseConverter: visaCheckoutDeliveryAddressReverseConverter
+    ))
 
     PaymentTransactionModel transaction = Mock()
 
@@ -72,18 +88,6 @@ class VisaCheckoutPaymentFacadeImplSpec extends Specification
 
     def setup()
     {
-        facade.merchantService = merchantService
-        facade.paymentServiceExecutor = paymentServiceExecutor
-        facade.paymentTransactionService = paymentTransactionService
-        facade.siteBaseUrlResolutionService = siteBaseUrlResolutionService
-        facade.siteConfigService = siteConfigService
-        facade.baseSiteService = baseSiteService
-        facade.modelService = modelService
-        facade.checkoutFacade = checkoutFacade
-        facade.paymentInfoFacade = paymentInfoFacade
-        facade.commonI18NService = commonI18NService
-        facade.checkoutCustomerStrategy = checkoutCustomerStrategy
-
         checkoutCustomerStrategy.currentUserForCheckout >> customer
         paymentInfoFacade.resolvePaymentInfo(cart, customer) >> paymentInfo
 
@@ -182,7 +186,7 @@ class VisaCheckoutPaymentFacadeImplSpec extends Specification
 
         def vcGetTransactionEntry = Mock(IsvPaymentTransactionEntryModel)
         vcGetTransactionEntry.transactionStatus >> PaymentConstants.TransactionStatus.ACCEPT
-        vcGetTransactionEntry.properties >> createGetVCTransactionProperties()
+        vcGetTransactionEntry.properties >> [:]
 
         when:
         def result = facade.updateCartAddressesWithVCGetData(cart, '123456')
@@ -192,18 +196,16 @@ class VisaCheckoutPaymentFacadeImplSpec extends Specification
         1 * paymentServiceExecutor.execute {
             checkVCRequest(it, GET, cart)
         } >> PaymentServiceResult.create().addData(TRANSACTION, vcGetTransactionEntry)
+        1 * visaCheckoutDeliveryAddressReverseConverter.convert(vcGetTransactionEntry.properties, deliveryAddress)
+        1 * visaCheckoutBillingAddressReverseConverter.convert(vcGetTransactionEntry.properties, billingAddress)
         1 * facade.setDeliveryModeIfNecessary(cart) >> null
-
-        result
-
         1 * modelService.saveAll(deliveryAddress, billingAddress)
 
-        interaction {
-            assertOrderUpdates()
-        }
+        and:
+        result
 
         where:
-        vcGetTransactionStatus                               | _
+        vcGetTransactionStatus                    | _
         PaymentConstants.TransactionStatus.ACCEPT | _
         PaymentConstants.TransactionStatus.REVIEW | _
     }
@@ -214,7 +216,7 @@ class VisaCheckoutPaymentFacadeImplSpec extends Specification
         given:
         def vcGetTransactionEntry = Mock(IsvPaymentTransactionEntryModel)
         vcGetTransactionEntry.transactionStatus >> vcGetTransactionStatus
-        vcGetTransactionEntry.properties >> createGetVCTransactionProperties()
+        vcGetTransactionEntry.properties >> [:]
 
         when:
         def result = facade.updateCartAddressesWithVCGetData(cart, '123456')
@@ -275,49 +277,5 @@ class VisaCheckoutPaymentFacadeImplSpec extends Specification
                 request.getParam('order').is(cart) &&
                 request.getParam('merchantId') == 'test_merchant' &&
                 request.getParam('vcOrderId') == '123456'
-    }
-
-    def createGetVCTransactionProperties()
-    {
-        [shipToCity       : 'New York',
-         shipToCountry    : 'US',
-         shipToState      : 'NY',
-         shipToPhoneNumber: '123456789',
-         shipToPostalCode : '1234',
-         shipToStreet1    : 'ship to street line 1',
-         shipToStreet2    : 'ship to street line 2',
-         shipToName       : 'John Doe',
-
-         billToCity       : 'New York',
-         billToCountry    : 'US',
-         billToState      : 'NY',
-         billToPhoneNumber: '987654321',
-         billToPostalCode : '4321',
-         billToStreet1    : 'bill to street line 1',
-         billToStreet2    : 'bill to street line 2',
-         billToName       : 'James Clark']
-    }
-
-    def assertOrderUpdates()
-    {
-        1 * deliveryAddress.setTown('New York')
-        1 * deliveryAddress.setCountry(country)
-        1 * deliveryAddress.setRegion(region)
-        1 * deliveryAddress.setFirstname('John')
-        1 * deliveryAddress.setLastname('Doe')
-        1 * deliveryAddress.setPhone1('123456789')
-        1 * deliveryAddress.setPostalcode('1234')
-        1 * deliveryAddress.setLine1('ship to street line 1')
-        1 * deliveryAddress.setLine2('ship to street line 2')
-
-        1 * billingAddress.setTown('New York')
-        1 * billingAddress.setCountry(country)
-        1 * billingAddress.setRegion(region)
-        1 * billingAddress.setFirstname('James')
-        1 * billingAddress.setLastname('Clark')
-        1 * billingAddress.setPhone1('987654321')
-        1 * billingAddress.setPostalcode('4321')
-        1 * billingAddress.setLine1('bill to street line 1')
-        1 * billingAddress.setLine2('bill to street line 2')
     }
 }

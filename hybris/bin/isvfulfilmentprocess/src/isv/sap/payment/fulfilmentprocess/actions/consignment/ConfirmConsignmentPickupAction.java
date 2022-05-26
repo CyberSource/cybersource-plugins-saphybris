@@ -7,11 +7,12 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentProcessModel;
 import de.hybris.platform.processengine.action.AbstractAction;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConfirmConsignmentPickupAction extends AbstractAction<ConsignmentProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(ConfirmConsignmentPickupAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfirmConsignmentPickupAction.class);
 
     @Override
     public String execute(final ConsignmentProcessModel process)
@@ -39,7 +40,7 @@ public class ConfirmConsignmentPickupAction extends AbstractAction<ConsignmentPr
 
         public static Set<String> getStringValues()
         {
-            final Set<String> res = new HashSet<String>();
+            final Set<String> res = new HashSet<>();
 
             for (final Transition transition : Transition.values())
             {

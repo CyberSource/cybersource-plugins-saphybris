@@ -32,7 +32,8 @@ import static isv.cjl.payment.enums.PaymentType.CREDIT_CARD;
  */
 public class IsvHybrisMerchantService extends DefaultMerchantService
 {
-    private static final String SELECT_ALL_MERCHANTS_QUERY = "SELECT {PK} FROM {" + IsvMerchantModel._TYPECODE + "}";
+    private static final String SELECT_ALL_MERCHANTS_QUERY =
+            "SELECT {" + IsvMerchantModel.PK + "} FROM {" + IsvMerchantModel._TYPECODE + "}";
 
     @Resource(name = "baseSiteService")
     private BaseSiteService baseSiteService;
@@ -59,13 +60,13 @@ public class IsvHybrisMerchantService extends DefaultMerchantService
                 .getConfiguration(
                         IsvConfigurationType.MERCHANT_CONFIG,
                         ImmutableMap.of(
-                                IsvMerchantPaymentConfigurationModel.SITE, baseSiteService.getCurrentBaseSite(),
+                                IsvMerchantPaymentConfigurationModel.SITE, getBaseSiteService().getCurrentBaseSite(),
                                 IsvMerchantPaymentConfigurationModel.PAYMENTTYPE,
-                                enumerationService.getEnumerationValue(
+                                getEnumerationService().getEnumerationValue(
                                         isv.sap.payment.enums.PaymentType.class,
                                         paymentType.getCode()),
                                 IsvMerchantPaymentConfigurationModel.PAYMENTCHANNEL, IsvPaymentChannel.WEB,
-                                IsvMerchantPaymentConfigurationModel.CURRENCY, commonI18NService.getCurrentCurrency()
+                                IsvMerchantPaymentConfigurationModel.CURRENCY, getCommonI18NService().getCurrentCurrency()
                         )
                 );
 
@@ -78,7 +79,7 @@ public class IsvHybrisMerchantService extends DefaultMerchantService
         validateParameterNotNull(merchantId, "merchant id must not be null");
 
         return createMerchant(
-                (IsvMerchantModel) paymentConfigurationService.getConfiguration(IsvConfigurationType.MERCHANT,
+                (IsvMerchantModel) getPaymentConfigurationService().getConfiguration(IsvConfigurationType.MERCHANT,
                         ImmutableMap.of(IsvMerchantModel.ID, merchantId)));
     }
 
@@ -100,7 +101,7 @@ public class IsvHybrisMerchantService extends DefaultMerchantService
     @Override
     public List<Merchant> getAllMerchants()
     {
-        return flexibleSearchService
+        return getFlexibleSearchService()
                 .<IsvMerchantModel>search(SELECT_ALL_MERCHANTS_QUERY)
                 .getResult().stream().map(this::createMerchant).collect(Collectors.toList());
     }

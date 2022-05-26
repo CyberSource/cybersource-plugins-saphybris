@@ -2,15 +2,16 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:util="http://www.springframework.org/schema/util"
 	   xmlns:context="http://www.springframework.org/schema/context"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans.xsd
+	   		http://www.springframework.org/schema/beans/spring-beans.xsd
+	   		http://www.springframework.org/schema/util
+           	http://www.springframework.org/schema/util/spring-util.xsd
+           	http://www.springframework.org/schema/context
+           	http://www.springframework.org/schema/context/spring-context.xsd">
 
-
-           http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context.xsd">
-           
-    <context:annotation-config/> 
+    <context:annotation-config/>
 
 	<bean id="isvpaymentaddonCoreDataImportedEventListener" parent="abstractCoreDataImportedEventListener">
 		<property name="supportedChannels">
@@ -133,13 +134,65 @@
 	<alias alias="enrollmentAddressPopulator" name="defaultEnrollmentAddressPopulator" />
 	<bean id="defaultEnrollmentAddressPopulator" class="isv.sap.payment.addon.address.converters.populator.EnrollmentAddressPopulator"/>
 
-	<alias name="defaultEnrollmentAddressConverter" alias="enrollmentAddressConverter"/>
-	<bean id="defaultEnrollmentAddressConverter" parent="abstractPopulatingConverter">
-		<property name="targetClass" value="isv.cjl.payment.data.enrollment.AddressData"/>
+	<alias name="defaultCreditCardReverseAddressConverter" alias="creditCardReverseAddressConverter"/>
+	<bean id="defaultCreditCardReverseAddressConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.core.model.user.AddressModel"/>
 		<property name="populators">
 			<list>
-				<ref bean="enrollmentAddressPopulator"/>
+				<ref bean="creditCardReverseAddressPopulator"/>
 			</list>
 		</property>
 	</bean>
+
+	<alias name="defaultCreditCardReverseAddressPopulator" alias="creditCardReverseAddressPopulator"/>
+	<bean id="defaultCreditCardReverseAddressPopulator"
+		  class="isv.sap.payment.addon.address.converters.populator.CreditCardReverseAddressPopulator"/>
+
+	<alias name="defaultVisaCheckoutBillingAddressReverseConverter" alias="visaCheckoutBillingAddressReverseConverter"/>
+	<bean id="defaultVisaCheckoutBillingAddressReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.core.model.user.AddressModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="visaCheckoutBillingAddressReversePopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultVisaCheckoutBillingAddressReversePopulator" alias="visaCheckoutBillingAddressReversePopulator"/>
+	<bean id="defaultVisaCheckoutBillingAddressReversePopulator"
+		  class="isv.sap.payment.addon.address.converters.populator.VisaCheckoutBillingAddressReversePopulator"
+		  parent="baseVisaCheckoutAddressReversePopulator"/>
+
+	<alias name="defaultVisaCheckoutDeliveryAddressReverseConverter" alias="visaCheckoutDeliveryAddressReverseConverter"/>
+	<bean id="defaultVisaCheckoutDeliveryAddressReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.core.model.user.AddressModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="visaCheckoutDeliveryAddressReversePopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultVisaCheckoutDeliveryAddressReversePopulator"
+		   alias="visaCheckoutDeliveryAddressReversePopulator"/>
+	<bean id="defaultVisaCheckoutDeliveryAddressReversePopulator"
+		  class="isv.sap.payment.addon.address.converters.populator.VisaCheckoutDeliveryAddressReversePopulator"
+		  parent="baseVisaCheckoutAddressReversePopulator"/>
+
+
+	<bean id="baseVisaCheckoutAddressReversePopulator"
+		  class="isv.sap.payment.addon.address.converters.populator.AbstractVisaCheckoutAddressReversePopulator"
+		  abstract="true"/>
+
+	<alias alias="isvCardTypes" name="defaultIsvCardTypes"/>
+	<util:map id="defaultIsvCardTypes">
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).VISA.code}" value="001"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).MASTER.code}" value="002"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).AMEX.code}" value="003"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).DISCOVER.code}" value="004"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).DINERS.code}" value="005"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).MAESTRO.code}" value="024"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).CARTE_BANCAIRE.code}" value="036"/>
+	</util:map>
+
 </beans>

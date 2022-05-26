@@ -5,11 +5,12 @@ import java.util.Set;
 
 import de.hybris.platform.ordersplitting.model.ConsignmentProcessModel;
 import de.hybris.platform.processengine.action.AbstractAction;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReceiveConsignmentStatusAction extends AbstractAction<ConsignmentProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(ReceiveConsignmentStatusAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ReceiveConsignmentStatusAction.class);
 
     @Override
     public String execute(final ConsignmentProcessModel process)
@@ -31,7 +32,7 @@ public class ReceiveConsignmentStatusAction extends AbstractAction<ConsignmentPr
                     result = Transition.OK;
                     break;
                 default:
-                    LOG.error("Unexpected warehouse consignment state: " + process.getWarehouseConsignmentState());
+                    LOG.error("Unexpected warehouse consignment state: {}", process.getWarehouseConsignmentState());
                     result = Transition.ERROR;
             }
         }
@@ -52,7 +53,7 @@ public class ReceiveConsignmentStatusAction extends AbstractAction<ConsignmentPr
 
         public static Set<String> getStringValues()
         {
-            final Set<String> res = new HashSet<String>();
+            final Set<String> res = new HashSet<>();
 
             for (final Transition transition : Transition.values())
             {

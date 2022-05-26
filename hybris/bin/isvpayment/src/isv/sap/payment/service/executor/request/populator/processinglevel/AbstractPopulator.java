@@ -178,7 +178,6 @@ public abstract class AbstractPopulator implements ProcessingLevelPopulator
      *
      * @return
      */
-    @SuppressWarnings("squid:S1172") // parameter to be used in actual implementation
     protected String getItemProductCode()
     {
         return configurationService.getRequiredString(DEFAULT_PRODUCT_CODE);
@@ -190,7 +189,6 @@ public abstract class AbstractPopulator implements ProcessingLevelPopulator
      *
      * @return
      */
-    @SuppressWarnings("squid:S1172") // parameter to be used in actual implementation
     protected String getShippingProductCode()
     {
         return configurationService.getRequiredString(SHIPPING_PRODUCT_CODE);

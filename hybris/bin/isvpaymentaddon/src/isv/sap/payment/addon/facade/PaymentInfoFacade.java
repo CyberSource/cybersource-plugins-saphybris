@@ -1,5 +1,8 @@
 package isv.sap.payment.addon.facade;
 
+import java.util.Optional;
+
+import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -13,4 +16,6 @@ public interface PaymentInfoFacade
 
     IsvPaymentInfoModel createPaymentInfo(AddressModel billingAddress, CustomerModel customerModel,
             boolean saveInAccount);
+
+    Optional<AddressData> fetchAddressFromPaymentInfo();
 }

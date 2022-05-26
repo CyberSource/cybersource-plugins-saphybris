@@ -3,8 +3,8 @@
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 3.0.0**
-December 2020
+**Version 3.2.0**
+March 2021
 
 ## Contents <!-- omit in toc -->
 <!-- TOC -->
@@ -22,7 +22,7 @@ December 2020
       - [Data conversion](#data-conversion)
     - [Applicability and limitations](#applicability-and-limitations)
   - [Token Management Service](#token-management-service)
-  - [VisaCheckout](#visacheckout)
+  - [Visa Secure Remote Commerce](#visa-secure-remote-commerce)
     - [Description](#description-1)
     - [Implementation details](#implementation-details-1)
       - [UI Integration](#ui-integration)
@@ -156,6 +156,9 @@ December 2020
 | January 2020  | 2.4.0                        | - Added integration support for the REST API using Java Client SDK <br>- Migrated Reporting and Transaction Search from Servlet to REST APIs |
 | March 2020    | 2.5.0                        | - Added support for Google Pay <br>- Added support for WeChat payments <br>- SAP Commerce upgrade to 19.0.5 |
 | May 2020      | 3.0.0                        | - Re-packaging under ISV package |
+| March 2021    | 3.0.2                        | - The payer authentication and card authorization services are requested at the same time for Flex <br>- Added support for Credit Mutuel-CIC transactions|
+| March 2021    | 3.1.0                        | - SAP Commerce upgrade to 2005 |
+| March 2021    | 3.2.0                        | - SAP Commerce upgrade to 2011 |
 
 ### Audience and Purpose
 
@@ -209,7 +212,7 @@ Ecommerce Platform plugin comes with Core Java library documentation which is th
 - [Business Center Help](https://developer.cybersource.com/library/documentation/dev_guides/Business_Center/html/index.html)
 - Secure Acceptance Checkout API Integration Guide ([HTML](https://developer.cybersource.com/library/documentation/dev_guides/Secure_Acceptance_Checkout_API/html/index.html))
 - Secure Acceptance Hosted Checkout Integration Guide ([HTML](https://developer.cybersource.com/library/documentation/dev_guides/Secure_Acceptance_Hosted_Checkout/html/index.html))
-- Visa Checkout Using the Simple Order API ([HTML](http://apps.cybersource.com/library/documentation/dev_guides/VCO_SO_API/html/) |[PDF](http://apps.cybersource.com/library/documentation/dev_guides/VCO_SO_API/Visa_Checkout_SO_API.pdf) )
+- Visa Secure Remote Commerce Using the Simple Order API ([HTML](https://developer.cybersource.com/library/documentation/dev_guides/Visa_SRC_SO_API/html/index.html) |[PDF](https://developer.cybersource.com/library/documentation/dev_guides/Visa_SRC_SO_API/Visa_SRC_SO_API.pdf) )
 - Credit Card Services Using the Simple Order API ([PDF](http://apps.cybersource.com/library/documentation/dev_guides/CC_Svcs_SO_API/Credit_Cards_SO_API.pdf) )
 - Flex Microform Implementation Guide ( [HTML](https://developer.cybersource.com/api/developer-guides/dita-flex/SAFlexibleToken/FlexMicroform.html))
 - Level II and Level III Processing Using the Simple Order API ([HTML](http://apps.cybersource.com/library/documentation/dev_guides/Level_2_3_SO_API/html) |[PDF](http://apps.cybersource.com/library/documentation/dev_guides/Level_2_3_SO_API/Level_II_III_SO_API.pdf) )
@@ -228,7 +231,7 @@ Ecommerce Platform plugin comes with Core Java library documentation which is th
 
 ## Customer Support
 
-For support information about any CyberSource service, visit the Support Center:
+For support information about any Cybersource service, visit the Support Center:
 
 [http://www.cybersource.com/support](http://www.cybersource.com/support/)
 
@@ -240,11 +243,11 @@ The plugin consists of a set of SAP Commerce platforms extensions that cover bac
 
 Frontend extensions are built on top of Spring MVC (Model View Controller) framework as part of SAP Commerce Platform. It uses standard SAP Commerce B2C and B2B Accelerators which are part of SAP commerce deployed on premise or in the SAP Cloud.
 
-More details on SAP Commerce accelerators: <https://help.sap.com/viewer/4c33bf189ab9409e84e589295c36d96e/1905/en-US/8adca7a186691014bd31f1d2d96624f5.html>
+More details on SAP Commerce accelerators: <https://help.sap.com/viewer/4c33bf189ab9409e84e589295c36d96e/2011/en-US/8adca7a186691014bd31f1d2d96624f5.html>
 
 As part of reference functionality, the following features are supported:
 
-| Feature                                     | CJL 3.0.0 | SAP B2C | SAP B2B | Description                                         |
+| Feature                                     | CJL 3.0.2 | SAP B2C | SAP B2B | Description                                         |
 |---------------------------------------------|-----------|---------|---------|-----------------------------------------------------|
 | SA SOP                                      | Y         | Y       | Y       | Secure Acceptance Silent Order Post                 |
 | Flex Microform v.0.11                       | Y         | Y       | N       | Secure field - PCI compliant                        |
@@ -256,7 +259,7 @@ As part of reference functionality, the following features are supported:
 | Saved card token                            | Y         | Y       | N       | Saved as part of SOP and HOP checkout flow          |
 | Recurring order                             | Y         | N       | Y       | B2B subscription order as part of checkout          |
 | Alipay                                      | Y         | Y       | N       | Alipay Wallet integration                           |
-| VCO                                         | Y         | Y       | N       | Visa Checkout Classic & Express (early processing)  |
+| Visa Secure Remote Commerce                 | Y         | Y       | N       | Visa SRC Classic and Express (click to pay)         |
 | Bank Transfers (iDeal, Sofort, Bankcontact) | Y         | Y       | N       | Bank payments, can be extended                      |
 | Klarna                                      | Y         | Y       | N       | Latest Klarna API including GDPR updates            |
 | Tax Calculation                             | Y         | N       | N       | CJL level only - Tax Calculation service            |
@@ -295,7 +298,7 @@ SAP Commerce Payment Extension is based on the following package structure:
 
 # Installation and Upgrade
 
-This section summarises the installation process of SAP Commerce payment extension into SAP Commerce release v19.0.5.
+This section summarises the installation process of SAP Commerce payment extension into SAP Commerce release v2011.
 
 There are two types of installation: using step by step approach or by using a custom recipe that will manage most of the work.
 
@@ -305,8 +308,8 @@ All technical installation concepts in this document are initial draft provided 
 
 The following components are required:
 
-1. SAP Commerce platform release v1905
-2. sap-commerce-payment-plugin-3.0.0.zip
+1. SAP Commerce platform release v2011
+2. sap-commerce-payment-plugin-3.2.0.zip
 3. Java 11
 4. Required Dependencies installed in maven repository
 
@@ -316,27 +319,25 @@ The following components are required:
 
 #### Description <!-- omit in toc -->
 
-The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-3.0.0.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
+The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-3.0.2.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
 
 Following errors will be thrown during SAP Commerce build:
 
 ```text
-[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:1905.0: The following artifacts could not be resolved: com.anotherchrisberry:spock-retry:jar:0.6.1, isv.payment.cjl:isv-payment-api:jar:3.0.0: Could not find artifact com.anotherchrisberry:spock-retry:jar:0.6.1 in central (https://repo.maven.apache.org/maven2) -> [Help 1]
-
-[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:1905.0: Could not find artifact isv.payment.cjl:isv-payment-api:jar:3.0.0 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
+[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:3.0.2: Could not find artifact isv.payment.cjl:isv-payment-api:jar:3.0.2 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
 ```
 
 #### Solution <!-- omit in toc -->
 
-The "isvpayment" extension comes with all the library binaries included in "hybris/bin/isvpayment/lib" so that you are able to build the extension without Maven. For that you will need to disable Maven dependency resolution for the extension (please see the documentation here <https://help.sap.com/viewer/d0224eca81e249cb821f2cdf45a82ace/1905/en-US/120f6d7b89a745018cb28b5e34318fa4.html>). 
+The "isvpayment" extension comes with all the library binaries included in "hybris/bin/isvpayment/lib" so that you are able to build the extension without Maven. For that you will need to disable Maven dependency resolution for the extension (please see the documentation here <https://help.sap.com/viewer/d0224eca81e249cb821f2cdf45a82ace/2011/en-US/120f6d7b89a745018cb28b5e34318fa4.html>). 
 
 As a quick local build solution the dependency can be installed in local maven repository and retrieved as a cached dependency as per <https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html>.
 
 ```text
-$mvn install:install-file -Dfile=isv-payment-api-3.0.0.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=3.0.0 -Dpackaging=jar
+$mvn install:install-file -Dfile=isv-payment-api-3.0.2.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=3.0.2 -Dpackaging=jar
 ```
 
-Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.0.jar".
+Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.2.jar".
 
 > ![Note](images/note.jpg) According to SAP documentation:  The ant updateMavenDependencies task deletes all *.jar files from the lib folder by default. Only libraries listed in unmanaged-dependencies.txt files are not deleted.
 
@@ -346,16 +347,16 @@ SAP Commerce payment extension installation process is based on OOTB build appro
 
 #### SAP Commerce recipe installation - automated (gradle) approach <!-- omit in toc -->
 
-1. Obtain SAP Commerce Suite 19.05 release package and unzip it into appropriate location
+1. Obtain SAP Commerce Suite 2011 release package and unzip it into appropriate location
 
     ```text
-    $unzip sap-commerce-suite-19.05.zip -d sap-commerce-suite-1905
+    $unzip sap-commerce-suite-2011.zip -d sap-commerce-suite-2011
     ```
 
 2. Copy the payment extensions to SAP Commerce release, following default folder structure
 
     ```text
-    $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-1905
+    $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-2011
     ```
 
 3. Configure the merchant data
@@ -363,7 +364,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     Please update the configuration files by providing your payment merchant configuration. To do this please find the configuration template files having extension ".tpl", rename them to "\*.impex" and edit them by adding merchant details.
 
     ```text
-    $cd sap-commerce-suite-1905/hybris/bin/isvpaymentsampledata/
+    $cd sap-commerce-suite-2011/hybris/bin/isvpaymentsampledata/
     $cd /resources/isvpaymentsampledata/import
     ```
 
@@ -400,7 +401,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     isv.payment.api.rest.<merchant_id>.keysDirectory = isvpayment/keys
     ```
 
-    > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the isv.payment.api.rest.runEnvironment property to CyberSource.Environment.PRODUCTION on production environments.
+    > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `CyberSource.Environment.PRODUCTION` on production environments.
 
 4. SAP Commerce provides an OOTB installer tool that allows you to install, initialize and run the platform using a recipe feature. SAP Commerce payment extension package provides two recipes: they allow installation either in B2C or B2B storefronts which are generated from `yacceleratorstorefront` template; configures which extensions are required; adds minimal required properties for using the extension.
 
@@ -409,7 +410,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     Installation for b2c storefront:
 
     ```text
-    $cd sap-commerce-suite-1905/installer
+    $cd sap-commerce-suite-2011/installer
     $./install.sh -r b2c_acc_isv
     $./install.sh -r b2c_acc_isv initialize
     ```
@@ -417,7 +418,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     Installation for b2b storefront:
 
     ```text
-    $cd sap-commerce-suite-1905/installer
+    $cd sap-commerce-suite-2011/installer
     $./install.sh -r b2b_acc_isv
     $./install.sh -r b2b_acc_isv initialize
     ```
@@ -468,16 +469,16 @@ SAP Commerce payment extension installation process is based on OOTB build appro
 
 #### Step by Step installation - manual approach <!-- omit in toc -->
 
-1. Obtain SAP Commerce suite 1905 release package and unzip it into appropriate location
+1. Obtain SAP Commerce suite 2011 release package and unzip it into appropriate location
 
     ```text
-     $unzip sap-commerce-suite-1905.zip -d sap-commerce-suite-19.0.5
+     $unzip sap-commerce-suite-2011.zip -d sap-commerce-suite-2011
     ```
 
 2. Install B2C components with accelerator storefront, that includes apparel store as sample data
 
     ```text
-    $cd sap-commerce-suite-1905/installer
+    $cd sap-commerce-suite-2011/installer
     $./install.sh -r b2c_acc
     $cd ..
     ```
@@ -503,7 +504,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
 4. Copy payment extensions to SAP Commerce suite, following default folder structure
 
     ```text
-     $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-1905
+     $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-2011
     ```
 
 5. In order to use payment extensions, they need to be added and configured into localextensions.xml file. This file contains all extensions, which are used by the platform on startup.
@@ -541,7 +542,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     <extension name='yacceleratorstorefront' />
     ```
 
-6. Payment extensions are built using Java 1.8, containing the latest java features and fixes. Also in order to customize credentials, related to commands or reporting, merchant specific properties should be added into `local.properties` file
+6. Payment extensions are built using Java 11, containing the latest java features and fixes. Also in order to customize credentials, related to commands or reporting, merchant specific properties should be added into `local.properties` file
 
     ```text
     $vim ../../config/local.properties
@@ -550,8 +551,8 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     Add following properties at the end of property file
 
     ```text
-    build.source=1.8
-    build.target=1.8
+    build.source=11.0
+    build.target=11.0
 
     site.pci.strategy=FLEX
 
@@ -577,7 +578,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
 
     ```
 
-    > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the isv.payment.api.rest.runEnvironment property to CyberSource.Environment.PRODUCTION on production environments.
+    > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `CyberSource.Environment.PRODUCTION` on production environments.
 
 7. In order to keep provided accelerator storefront clean as is, but with payment functionality included, payment add-ons should be installed
 
@@ -788,9 +789,9 @@ The following diagram describes the flow and actors/components involved for Secu
 
 With Secure Acceptance Silent Order POST (SOP), the form to collect credit card details is displayed at the merchant storefront and then is submitted directly to the payment provider by using the customer browser (instead of redirecting the user to a payment provider page to collect payment information).
 
-For more details, please refer to [CyberSource Secure Acceptance Checkout API](https://developer.cybersource.com/library/documentation/dev_guides/Secure_Acceptance_Checkout_API/Secure_Acceptance_Checkout_API.pdf) guide.
+For more details, please refer to [Cybersource Secure Acceptance Checkout API](https://developer.cybersource.com/library/documentation/dev_guides/Secure_Acceptance_Checkout_API/Secure_Acceptance_Checkout_API.pdf) guide.
 
-> ![Note](images/note.jpg) Please make sure to have Hosted Checkout profile created in EBC portal, refer to [CyberSource Secure Acceptance Checkout API](https://developer.cybersource.com/library/documentation/dev_guides/Secure_Acceptance_Checkout_API/Secure_Acceptance_Checkout_API.pdf), section "Create a Checkout API Profile".
+> ![Note](images/note.jpg) Please make sure to have Hosted Checkout profile created in EBC portal, refer to [Cybersource Secure Acceptance Checkout API](https://developer.cybersource.com/library/documentation/dev_guides/Secure_Acceptance_Checkout_API/Secure_Acceptance_Checkout_API.pdf), section "Create a Checkout API Profile".
 
 The following controllers are provided as part of SOP reference implementation:
 
@@ -851,6 +852,7 @@ For Flex Microform, the following configuration properties are defined:
 | isv.payment.customer.flex.microform.api.key.id  | Customer specific Flex API key ID obtained from your payment provider |
 | isv.payment.customer.flex.microform.shared.secret | Shared secret for Flex API key |
 | isv.payment.customer.flex.microform.api.env | Flex API environment: `SANDBOX` - to use the FLEX API test environment,  `PRODUCTION` - to use the FLEX API live environment. Additional properties can be used to change the host and URI path of the Flex API service, e.g for `SANDBOX` environment use `isv.payment.customer.flex.microform.api.SANDBOX.host` for host location (host and port) and `isv.payment.customer.flex.microform.api.SANDBOX.path` for URI path (`/flex/v1/keys`). Usually only `isv.payment.customer.flex.microform.api.env` property should be configured. |
+| isv.payment.flex.card.type.selection | Possible values true/false. Indicates if the card type selection dropdown in the payment form will be enabled. This is useful when processing payments with cards that are co-branded (e.g. Carte Bancaire), so the user is able to select the card type from the list in the dropdown. |
 
 For Secure Acceptance, the following configuration properties are defined:
 
@@ -943,13 +945,13 @@ CJL implements the following Token Management Service operations:
 
 For more details on aforementioned functionality, please check CJL documentation.
 
-## VisaCheckout
+## Visa Secure Remote Commerce
 
 ### Description
 
-Visa Checkout is a digital payment service that simplifies online shopping experience with a single account and lets the customer speed through checkout with just a username and password - no need to fill out shipping and payment details every time. For more details, please refer to [Visa Checkout](http://apps.cybersource.com/library/documentation/dev_guides/VCO_SO_API/Visa_Checkout_SO_API.pdf) and [Using the Simple Order API](http://apps.cybersource.com/library/documentation/dev_guides/VCO_SO_API/Visa_Checkout_SO_API.pdf) implementation guide.
+Visa Secure Remote Commerce (Visa SRC) is Visa’s solution for e-commerce payments based upon the EMV® Secure Remote Commerce (EMV SRC) standards and specifications. Visa SRC simplifies online shopping experience with a single account and lets the customer speed through checkout with just a username and password - no need to fill out shipping and payment details every time. For more details, please refer to [Visa SRC](https://developer.cybersource.com/library/documentation/dev_guides/Visa_SRC_Getting_Started/Visa_SRC_Getting_Started.pdf) and [Using the Simple Order API](https://developer.cybersource.com/library/documentation/dev_guides/Visa_SRC_SO_API/Visa_SRC_SO_API.pdf) implementation guide.
 
-The implementation of Visa Checkout payment service for SAP Commerce extension includes:
+The implementation of Visa SRC payment service for SAP Commerce extension includes:
 
 - Implementation of payment operations:
   - Get Data
@@ -965,16 +967,16 @@ The implementation of Visa Checkout payment service for SAP Commerce extension i
 
 ### Implementation details
 
-The following configuration properties related to VisaCheckout payment service are defined in the `project.properties` file of `isvpaymentaddon` :
+The following configuration properties related to Visa SRC payment service are defined in the `project.properties` file of `isvpaymentaddon` :
 
 | **Configuration property** | **Description** |
 | --- | --- |
-| isv.payment.visa.checkout.sdk.url | Visa Checkout JavaScript SDK URL |
-| isv.payment.visa.checkout.image.url | Visa Checkout button image URL |
+| isv.payment.visa.checkout.sdk.url     | Visa SRC JavaScript SDK URL   |
+| isv.payment.visa.checkout.image.url   | Visa SRC button image URL     |
 
 #### UI Integration
 
-The Visa Checkout widget components for both Express and Traditional checkout share most of the UI components. The following JSP tags were created to demonstrate the integration of VCO widget into the sample storefront:
+The Visa SRC widget components for both Express and Traditional checkout share most of the UI components. The following JSP tags were created to demonstrate the integration of Visa SRC widget into the sample storefront:
 
 ```text
 /isvpaymentaddon/acceleratoraddon/web/webroot/WEB-INF/tags/responsive/payment/visacheckout/vcInit.tag
@@ -983,7 +985,7 @@ The Visa Checkout widget components for both Express and Traditional checkout sh
 /isvpaymentaddon/acceleratoraddon/web/webroot/WEB-INF/views/responsive/pages/checkout/multi/payment/vcCardPaymentDetails.jsp
 ```
 
-Each Visa Checkout payment operation is based on a common CJL abstraction that encapsulates all required data:
+Each Visa SRC payment operation is based on a common CJL abstraction that encapsulates all required data:
 
 ```text
  isv.cjl.payment.service.executor.request.PaymentServiceRequest
@@ -1019,7 +1021,7 @@ The table below summarises the credit card payment operations and the correspond
 
 #### Conversion layer
 
-The conversion from payment service request to a request object specific to visa checkout payment operation is implemented by:
+The conversion from payment service request to a request object specific to visa SRC payment operation is implemented by:
 
 | **Payment operation** | Payment service request converter implementation |
 | --- | --- |
@@ -2084,7 +2086,7 @@ There is currently no reference implementation in SAP Commerce extension for Ver
 
 ### Description
 
-Identity protection is based on Payer Authentication services for credit card (and Visa Checkout). Payer authentication provides the following services:
+Identity protection is based on Payer Authentication services for credit card (and Visa SRC). Payer authentication provides the following services:
 
 - Check Enrollment - determines whether the customer is enrolled in one of the card authentication programs.
 - Validate Authentication - ensures that the authentication that you receive from the issuing bank is valid
@@ -2097,7 +2099,7 @@ Each Payer Authentication operation is based on a common CJL abstraction that en
  isv.cjl.payment.service.executor.request.PaymentServiceRequest
 ```
 
-In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided by CJL for each payment operation. These builders are defined for Credit Card and Visa Checkout payment services:
+In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided by CJL for each payment operation. These builders are defined for Credit Card and Visa SRC payment services:
 
 | **Payment Operation** | **Request builder implementation\*** |
 | --- | --- |
@@ -2109,7 +2111,7 @@ In order to simplify creation and setup of a payment service request, a dedicate
 ```text
 //for Credit Card payment service
 isv.cjl.payment.service.executor.request.builder.creditcard
-//for Visa Checkout payment service
+//for Visa SRC payment service
 isv.cjl.payment.service.executor.request.builder.visacheckout |
 ```
 
@@ -2125,7 +2127,7 @@ The conversion from payment service request to a request object specific to cred
 ```text
 //for Credit Card payment service
 isv.sap.payment.service.executor.request.converter.creditcard
-//for Visa Checkout payment service
+//for Visa SRC payment service
 isv.sap.payment.service.executor.request.converter.visacheckout
 ```
 
@@ -2167,7 +2169,7 @@ The following configurations are required:
 
 | **Key** | **Description** | **EBC platform**|
 | --- | --- | --- |
-| isv.payment.customer.3ds.<MERCAHNT_ID>.enabled | Possible values true/false  Indicates is 3DS is enabled for the merchant provided in <MERCHANT_ID> | |
+| isv.payment.customer.3ds.<MERCAHNT_ID>.enabled | Possible values true/false  Indicates if 3DS is enabled for the merchant provided in <MERCHANT_ID> | |
 | `isv.payment.customer.3ds.jwt.api.id` | Cardinal API ID (provided by the payment provider) | Payment configuration->Payer Authentication Configuration : `API IdentifierAPI Identifier` |
 | `isv.payment.customer.3ds.jwt.api.key` | Cardinal API key (provided by the payment provider) | Payment configuration->Payer Authentication Configuration : `API Key`|
 | `isv.payment.customer.3ds.jwt.api.orgUnitId` | Cardinal OrgUnitID (provided by the payment provider) |Payment configuration->Payer Authentication Configuration : `Org Unit ID`|
@@ -2421,9 +2423,11 @@ With following fields:
 | --- | --- |
 | profileType | Type of merchant configuration profile (e.g. SOP/HOP/VCO) |
 | profileId | Merchant profile identifier |
-| accessKey | Merchant access key (in case of VCO - Visa Checkout API key) |
+| accessKey | Merchant access key (in case of VCO - Visa SRC API key) |
 | secretKey | Merchant secret key (is not used in case of VCO) |
 | merchant | Merchant instance this profile belongs to |
+
+> ![Note](images/note.jpg) Merchant configuration for Visa SRC will fall under the profileType VCO
 
 The merchant configuration properties can be retrieved through the following component:
 
@@ -2553,7 +2557,7 @@ The payment extension is integrated with SAP Commerce through B2B (powertools) a
 
 Each addon encapsulates changes for a specific storefront (B2B and B2C) and a common payment addon that groups common logic, used across both storefronts:
 
-- Payment controllers - there are dedicated controllers per supported payment types (eg. PayPal, Alternative Payments, Visa Checkout). These components encapsulate payment logic along with response handling.
+- Payment controllers - there are dedicated controllers per supported payment types (eg. PayPal, Alternative Payments, Visa SRC). These components encapsulate payment logic along with response handling.
 - Secure acceptance - both PCI strategies (SOP and HOP) are supported through dedicated controllers which operate either through authorization or subscription.
 
 ## Business Process
@@ -2592,7 +2596,7 @@ For more information please refer to [http://apps.cybersource.com/library/docume
 
 _Note : Please contact Support if there are any problems on performing Recurring Payment operations._
 
-Credit card, PayPal, Visa Checkout, Klarna capture is integrated into order process through the following action, as per diagram below:
+Credit card, PayPal, Visa SRC, Klarna capture is integrated into order process through the following action, as per diagram below:
 
 ```text
 isv.sap.payment.fulfilmentprocess.actions.order.TakePaymentAction
@@ -3016,7 +3020,7 @@ Tests are written using [Selenium Webdriver](https://www.seleniumhq.org/projects
 - **Gradle 4.2** - open source build automation system. Used to resolve dependencies, build and run tests
 - **jFairy 0.5.8** - Java fake data generator that creates human readable data packed in POJOs
 - **Geb-spock-reports 0.2.0** - Customizable reports with Geb screenshots
-- **Google-api-client 1.23.0** - access to gmail via API. Introduced to test for getting one time password for VCO
+- **Google-api-client 1.23.0** - access to gmail via API. Introduced to test for getting one time password for Visa SRC
 
 > ![Note](images/note.jpg) UI tests are provided in module _isvpaymentautomation_. Which is a separate gradle project.
 
@@ -3063,15 +3067,15 @@ The GebConfig template contains 2 predefined environments: Local dev and Remote.
 
 SI can add as many environments as required by providing url for admin console (hac) and storefronts.
 
-To use VCO and PayPal please also provide credentials of created accounts:
+To use SRC and PayPal please also provide credentials of created accounts:
 
 ```text
  logins {
      vco {
-         email = <Registered VCO Email>
-         reject_email = <VCO email that should fail DM>
-         password = <Common password for both VCO accounts>
-         address = <Address Line 1 set up in VCO accounts>
+         email = <Registered SRC Email>
+         reject_email = <SRC email that should fail DM>
+         password = <Common password for both SRC accounts>
+         address = <Address Line 1 set up in SRC accounts>
      }
      paypal {
          email = <Sandbox PayPal email>
@@ -3080,11 +3084,11 @@ To use VCO and PayPal please also provide credentials of created accounts:
  }
 ```
 
-> ![Note](images/note.jpg) If 2 factor Authentication is turned on for VCO the account should have a valid google email with api access.
+> ![Note](images/note.jpg) If 2 factor Authentication is turned on for SRC the account should have a valid google email with api access.
 
 #### Gmail API
 
-To get One Time password for VCO using UI test:
+To get One Time password for SRC using UI test:
 
 1. During development, register the application in the [Google API Console](https://console.developers.google.com/?authuser=2).
 2. When the app launches, request that the user grant access to data in their Google account.
@@ -3399,9 +3403,9 @@ To make the transaction persist on the cart use the following switch:
 
 # Support
 
-For a support and bug fixes, please visit CyberSource support portal: [https://support.cybersource.com/](https://support.cybersource.com/)
+For a support and bug fixes, please visit Cybersource support portal: [https://support.cybersource.com/](https://support.cybersource.com/)
 
-CyberSource Corporation HQ
+Cybersource Corporation HQ
 
 P.O. Box 8999
 

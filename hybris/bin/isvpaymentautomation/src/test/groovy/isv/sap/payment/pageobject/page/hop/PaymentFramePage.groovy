@@ -20,11 +20,11 @@ class PaymentFramePage extends Page
         expirationMonth { $('select#card_expiry_month') }
         expirationYear { $('select#card_expiry_year') }
 
-        nextBtn { $('input.right') }
+        nextBtn(wait: true) { $('input.right') }
         finishBtn(to: [OrderConfirmationPage, ReplenishmentConfirmationPage]) { nextBtn }
         completeBtn(wait: true) { $('input.complete') }
 
-        cancelBtn { $('a.cancelbutton') }
+        cancelBtn { $('button.cancelbutton') }
         confirmBtn(wait: true, to: B2cCheckoutPage) { $('button', text: 'Yes') }
     }
 

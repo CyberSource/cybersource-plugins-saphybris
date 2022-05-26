@@ -9,12 +9,13 @@ import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentProcessModel;
 import de.hybris.platform.processengine.action.AbstractAction;
 import de.hybris.platform.warehouse.Process2WarehouseAdapter;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 public class AllowShipmentAction extends AbstractAction<ConsignmentProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(AllowShipmentAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AllowShipmentAction.class);
 
     private Process2WarehouseAdapter process2WarehouseAdapter;
 
@@ -39,10 +40,7 @@ public class AllowShipmentAction extends AbstractAction<ConsignmentProcessModel>
             }
             catch (final Exception e)
             {
-                if (LOG.isDebugEnabled())
-                {
-                    LOG.debug(e);
-                }
+                LOG.debug("Exception", e);
                 return Transition.ERROR.toString();
             }
         }

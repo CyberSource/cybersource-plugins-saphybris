@@ -34,7 +34,7 @@ public class HopController extends SecureAcceptanceController
     private SAService sAService;
 
     @RequestMapping(value = "/hop", method = RequestMethod.POST)
-    public String sendPaymentRequest(final Model model) throws Exception // NOPMD
+    public String sendPaymentRequest(final Model model)
     {
         model.addAttribute("cartGuid", getCartService().getSessionCart().getGuid());
         model.addAttribute("postUrl", hopSecureAcceptanceUrlProvider.getURL());

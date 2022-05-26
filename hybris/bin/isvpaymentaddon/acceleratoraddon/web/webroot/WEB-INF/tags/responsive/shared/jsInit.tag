@@ -9,6 +9,7 @@
 
     ACC.expressVisaCheckout = '${requestScope.expressVisaCheckout}';
     ACC.vcCallId = '${requestScope.callId}';
+    ACC.flexCardTypeSelection = '${requestScope.flexCardTypeSelection}';
 
     /*]]>*/
 </script>

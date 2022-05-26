@@ -9,13 +9,14 @@ import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.processengine.enums.ProcessState;
 import de.hybris.platform.processengine.model.BusinessProcessModel;
 import de.hybris.platform.processengine.model.BusinessProcessParameterModel;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import isv.sap.payment.fulfilmentprocess.constants.IsvfulfilmentprocessConstants;
 
 public class SplitOrder extends TestActionTemp
 {
-    private static final Logger LOG = Logger.getLogger(SplitOrder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SplitOrder.class);
 
     private int subprocessCount = 1;
 

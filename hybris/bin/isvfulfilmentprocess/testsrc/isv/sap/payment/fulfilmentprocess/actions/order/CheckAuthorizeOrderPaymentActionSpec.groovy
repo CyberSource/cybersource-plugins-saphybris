@@ -7,6 +7,7 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel
 import de.hybris.platform.payment.enums.PaymentTransactionType
 import de.hybris.platform.processengine.action.AbstractSimpleDecisionAction
 import de.hybris.platform.servicelayer.model.ModelService
+import org.junit.Test
 import spock.lang.Specification
 
 import isv.sap.payment.constants.IsvPaymentConstants
@@ -40,6 +41,7 @@ class CheckAuthorizeOrderPaymentActionSpec extends Specification
         order.paymentTransactions >> [transaction]
     }
 
+    @Test
     def 'should return OK transaction if order has an ACCEPTED authorization'()
     {
         given:
@@ -58,6 +60,7 @@ class CheckAuthorizeOrderPaymentActionSpec extends Specification
         transition == AbstractSimpleDecisionAction.Transition.OK
     }
 
+    @Test
     def 'should return NOK transaction if order has no ACCEPTED authorizations'()
     {
         given:

@@ -82,10 +82,11 @@ class AdminApi
         responce[0]?.P_TRANSACTIONSTATUS
     }
 
-    Object getCartTransactionStatus(String userEmail)
+    Object getCartTransactionStatus(String userEmail, String entryType = 'AUTHORIZATION')
     {
         List<Map> responce = adminConsole.runFlexibleSearch().fromTemplate(TRANSACTION_FROM_CART_FXS, [
                 userEmail: userEmail,
+                entryType: entryType,
         ])
         responce[0]?.P_TRANSACTIONSTATUS
     }

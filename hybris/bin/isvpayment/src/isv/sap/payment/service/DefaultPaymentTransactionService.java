@@ -15,6 +15,7 @@ import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.model.ModelService;
+import org.apache.commons.lang.StringUtils;
 
 import isv.cjl.payment.constants.PaymentConstants;
 import isv.cjl.payment.enums.CardType;
@@ -27,7 +28,6 @@ import static isv.sap.payment.constants.IsvPaymentConstants.TransactionStatus.RE
 import static isv.sap.payment.utils.PaymentTransactionUtils.getTransactionWithTheLatestEntry;
 import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
-import static org.apache.commons.lang.StringUtils.isBlank;
 
 /**
  * Encapsulates the default implementation of {@link PaymentTransactionService} interface.
@@ -85,18 +85,16 @@ public class DefaultPaymentTransactionService implements PaymentTransactionServi
     @Override
     public Optional<CardType> getTransactionCardTypeNew(final PaymentTransactionModel transaction)
     {
-        final IsvPaymentTransactionEntryModel entry = (IsvPaymentTransactionEntryModel) transaction.getEntries()
+        return transaction.getEntries()
                 .stream()
-                .filter(entryModel -> entryModel.getTransactionStatus().equals(ACCEPT) || entryModel
-                        .getTransactionStatus().equals(REVIEW))
+                .filter(entryModel -> entryModel.getTransactionStatus().equals(ACCEPT)
+                        || entryModel.getTransactionStatus().equals(REVIEW))
                 .findFirst()
-                .get();
-
-        final String type = entry.getProperties().get(CARD_TYPE);
-
-        return isBlank(type)
-                ? empty()
-                : stream(CardType.values()).filter(value -> value.getName().equals(type)).findFirst();
+                .map(IsvPaymentTransactionEntryModel.class::cast)
+                .map(IsvPaymentTransactionEntryModel::getProperties)
+                .map(props -> props.get(CARD_TYPE))
+                .filter(StringUtils::isNotBlank)
+                .flatMap(type -> stream(CardType.values()).filter(value -> value.getName().equals(type)).findFirst());
     }
 
     @Override
@@ -108,5 +106,21 @@ public class DefaultPaymentTransactionService implements PaymentTransactionServi
         entry.setProperties(props);
 
         modelService.save(entry);
+    }
+
+    @Override
+    public Optional<PaymentTransactionEntryModel> createAuthorizationTxEntryFromEnrollment(
+            final IsvPaymentTransactionEntryModel enrollmentTransaction)
+    {
+        final boolean isAuthReply = enrollmentTransaction.getProperties().get("ccAuthReplyReasonCode") != null;
+        if (isAuthReply)
+        {
+            final IsvPaymentTransactionEntryModel authorizationTransactionEntry = modelService
+                    .clone(enrollmentTransaction);
+            authorizationTransactionEntry.setType(PaymentTransactionType.AUTHORIZATION);
+            modelService.save(authorizationTransactionEntry);
+            return Optional.of(authorizationTransactionEntry);
+        }
+        return empty();
     }
 }

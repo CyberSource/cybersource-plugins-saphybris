@@ -2,18 +2,19 @@ package isv.sap.payment.fulfilmentprocess.actions.returns;
 
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import de.hybris.platform.returns.model.ReturnProcessModel;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Mock implementation to execute when payment capture was successful.
  */
 public class SuccessCaptureAction extends AbstractProceduralAction<ReturnProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(SuccessCaptureAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SuccessCaptureAction.class);
 
     @Override
     public void executeAction(final ReturnProcessModel process)
     {
-        LOG.info("Process: " + process.getCode() + " in step " + getClass().getSimpleName());
+        LOG.info("Process: {} in step {}", process.getCode(), getClass());
     }
 }

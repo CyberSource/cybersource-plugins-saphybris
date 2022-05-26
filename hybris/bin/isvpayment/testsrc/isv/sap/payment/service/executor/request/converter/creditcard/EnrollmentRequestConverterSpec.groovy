@@ -37,9 +37,9 @@ class EnrollmentRequestConverterSpec extends Specification
 
     def source = PaymentServiceRequest.create()
 
-    def converter = new EnrollmentRequestConverter()
-
     def requestFactory = Mock([useObjenesis: false], RequestFactory)
+
+    def converter = new EnrollmentRequestConverter(requestFactory: requestFactory)
 
     def paymentTransaction = new PaymentTransaction()
 
@@ -47,13 +47,13 @@ class EnrollmentRequestConverterSpec extends Specification
     {
         source.addParam(PAYER_AUTH_ENROLL_SERVICE_REFERENCE_ID, 'ref_id')
 
-        converter.requestFactory = requestFactory
         requestFactory.request(ENROLLMENT) >> paymentTransaction
 
         order.guid >> '123'
         order.currency >> [isocode: 'USD']
         order.paymentInfo >> paymentInfo
         order.deliveryAddress >> address
+        order.totalPrice >> 100
 
         cardInfo.cardType >> CreditCardType.VISA
         cardInfo.cardNumber >> '4111111111111111'
@@ -93,7 +93,10 @@ class EnrollmentRequestConverterSpec extends Specification
         fields['merchantId'] == 'tacit_hybris_2'
         fields['merchantReferenceCode'] == '123'
         fields['payerAuthEnrollServiceRun'] == true
+        fields['ccAuthServiceRun'] == true
+        fields['ccAuthServiceCardTypeSelectionIndicator'] == 1
         fields['purchaseTotalsCurrency'] == 'USD'
+        fields['purchaseTotalsGrandTotalAmount'] == 100
 
         fields['recurringSubscriptionInfoSubscriptionID'] == null
         fields['payerAuthEnrollServiceTransactionMode'] == TransactionMode.ECOMMERCE

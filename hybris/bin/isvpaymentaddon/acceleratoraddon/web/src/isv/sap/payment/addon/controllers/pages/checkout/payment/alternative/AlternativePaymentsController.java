@@ -104,11 +104,12 @@ public class AlternativePaymentsController extends AbstractCheckoutController
 
         return placeOrder(cart, paymentType)
                 .map(orderData -> {
-                    String redirectToConfirmationPage = redirectToOrderConfirmation(orderData);
+                    final StringBuilder redirectToConfirmationPage = new StringBuilder(redirectToOrderConfirmation(orderData));
                     // mark it as being used for alternative payments
 
-                    redirectToConfirmationPage += "?ap=" + paymentType; // NOPMD
-                    return redirectToConfirmationPage;
+                    redirectToConfirmationPage.append("?ap=")
+                        .append(paymentType);
+                    return redirectToConfirmationPage.toString();
                 })
                 .orElse(REDIRECT_PREFIX + PAYMENT_FAILED);
     }

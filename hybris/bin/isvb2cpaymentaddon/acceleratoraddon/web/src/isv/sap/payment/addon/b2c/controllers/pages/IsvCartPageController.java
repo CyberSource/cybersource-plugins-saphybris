@@ -17,6 +17,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadc
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.VoucherForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.util.Config;
 import de.hybris.platform.yb2cacceleratorstorefront.controllers.pages.CartPageController;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +50,9 @@ public class IsvCartPageController extends CartPageController
     @Resource(name = "isv.sap.payment.merchantService")
     private MerchantService merchantService;
 
+    @Resource
+    private I18NService i18NService;
+
     @Override
     protected void prepareDataForPage(final Model model) throws CMSItemNotFoundException
     {
@@ -66,11 +70,10 @@ public class IsvCartPageController extends CartPageController
         model.addAttribute(WebConstants.BREADCRUMBS_KEY, resourceBreadcrumbBuilder.getBreadcrumbs("breadcrumb.cart"));
         model.addAttribute("pageType", PageType.CART.name());
 
-        prepareVisaCheckoutData(model, visaCheckoutImageUrl, visaCheckoutSDKUrl);
+        prepareVisaCheckoutData(model);
     }
 
-    protected void prepareVisaCheckoutData(final Model model, final String vcImageUrl,
-            final String vcSDKUrl)
+    protected void prepareVisaCheckoutData(final Model model)
     {
         final boolean visaCheckoutEnabled = paymentModeFacade.isPaymentModeSupported(
                 isv.sap.payment.enums.PaymentType.VISA_CHECKOUT, null);
@@ -78,10 +81,11 @@ public class IsvCartPageController extends CartPageController
         if (visaCheckoutEnabled && !getUserFacade().isAnonymousUser())
         {
             model.addAttribute("visaCheckoutEnabled", true);
-            model.addAttribute("visaCheckoutImageUrl", vcImageUrl);
+            model.addAttribute("visaCheckoutImageUrl", visaCheckoutImageUrl);
             model.addAttribute("visaCheckoutAPIKey", merchantService.getMerchantProfileForPaymentType(
                     PaymentType.VISA_CHECKOUT, MerchantProfileType.VCO).getAccessKey());
-            model.addAttribute("visaCheckoutSDKUrl", vcSDKUrl);
+            model.addAttribute("visaCheckoutSDKUrl", visaCheckoutSDKUrl);
+            model.addAttribute("locale", i18NService.getCurrentLocale().toString());
         }
     }
 }

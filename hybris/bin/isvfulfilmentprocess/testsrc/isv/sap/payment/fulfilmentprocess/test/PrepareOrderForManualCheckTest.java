@@ -1,5 +1,6 @@
 package isv.sap.payment.fulfilmentprocess.test;
 
+import de.hybris.bootstrap.annotations.UnitTest;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
@@ -13,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import isv.sap.payment.fulfilmentprocess.actions.order.PrepareOrderForManualCheckAction;
 
+@UnitTest
 public class PrepareOrderForManualCheckTest
 {
     private PrepareOrderForManualCheckAction prepareOrderForManualCheck;

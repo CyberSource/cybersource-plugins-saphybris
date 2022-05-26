@@ -237,7 +237,7 @@ class SaleIntegrationSpec extends IsvIntegrationSpec
     'should receive accept for sofort request'()
     {
         given:
-        def order = testCartUk()
+        def order = testCartDe()
 
         def operationStartTime = new Date()
 

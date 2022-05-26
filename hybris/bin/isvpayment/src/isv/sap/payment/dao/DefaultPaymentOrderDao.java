@@ -11,10 +11,12 @@ import jersey.repackaged.com.google.common.collect.ImmutableMap;
 public class DefaultPaymentOrderDao extends DefaultOrderDao implements PaymentOrderDao
 {
     private static final String SELECT_ORDER_BY_CODE_QUERY =
-            "SELECT {pk} FROM {" + OrderModel._TYPECODE + "} WHERE {" + OrderModel.GUID + "} = ?guid";
+            "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
+                    + "} WHERE {" + OrderModel.GUID + "} = ?guid";
 
     private static final String SELECT_ORDER_BY_STATUS_QUERY =
-            "SELECT {pk} FROM {" + OrderModel._TYPECODE + "} WHERE {" + OrderModel.STATUS + "} = ?status";
+            "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
+                    + "} WHERE {" + OrderModel.STATUS + "} = ?status";
 
     @Override
     public OrderModel findOrderByGuid(final String guid)

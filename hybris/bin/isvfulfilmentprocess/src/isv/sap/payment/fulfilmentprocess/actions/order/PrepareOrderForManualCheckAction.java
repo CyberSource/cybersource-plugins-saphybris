@@ -8,7 +8,8 @@ import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.task.RetryLaterException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
@@ -19,7 +20,7 @@ import org.springframework.beans.factory.annotation.Required;
  */
 public class PrepareOrderForManualCheckAction extends AbstractProceduralAction<OrderProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(PrepareOrderForManualCheckAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PrepareOrderForManualCheckAction.class);
 
     private EventService eventService;
 
@@ -33,7 +34,7 @@ public class PrepareOrderForManualCheckAction extends AbstractProceduralAction<O
         modelService.save(order);
 
         eventService.publishEvent(new OrderFraudEmployeeNotificationEvent(order));
-        LOG.info("Process: " + process.getCode() + " in step " + getClass());
+        LOG.info("Process: {} in step {}", process.getCode(), getClass());
     }
 
     protected EventService getEventService()

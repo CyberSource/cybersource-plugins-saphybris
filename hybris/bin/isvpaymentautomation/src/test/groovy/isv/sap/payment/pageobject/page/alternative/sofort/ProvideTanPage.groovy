@@ -9,7 +9,7 @@ class ProvideTanPage extends Page
     static at = { $('#ProvideTanPage') }
     static content = {
         tan { $('#BackendFormTan') }
-        next { $('form#WizardForm > div > button') }
+        next { $('form#WizardForm > button') }
     }
 
     OrderConfirmationPage provideTan(String tanNum)

@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import isv.cjl.payment.service.MerchantService;
 import isv.cjl.payment.service.flex.FlexService;
 import isv.sap.payment.addon.facade.CreditCardPaymentFacade;
 import isv.sap.payment.addon.utils.AjaxResponse;
@@ -62,9 +61,6 @@ public class FlexMicroformController extends AbstractCheckoutController
     @Resource(name = "isv.sap.payment.paymentCheckoutFacade")
     private PaymentCheckoutFacade paymentCheckoutFacade;
 
-    @Resource(name = "isv.sap.payment.merchantService")
-    private MerchantService merchantService;
-
     @GetMapping(value = "/newJwk", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String newJwk(final HttpSession session, final UriComponentsBuilder uriComponentsBuilder)
@@ -98,7 +94,7 @@ public class FlexMicroformController extends AbstractCheckoutController
     {
         checkArgument(StringUtils.isNotBlank(flexToken), "flexToken is missing");
 
-        final boolean is3dsEnabled = merchantService.is3dsEnabled();
+        final boolean is3dsEnabled = creditCardPaymentFacade.is3dsEnabled();
         if (!is3dsEnabled)
         {
             return REDIRECT_PREFIX + payAndPlaceOrder(flexToken, null, null);
@@ -212,7 +208,7 @@ public class FlexMicroformController extends AbstractCheckoutController
             }
             catch (InvalidCartException e)
             {
-                LOG.error("Cart [{}]: Place order failed", cartService.getSessionCart().getCode(), e);
+                LOG.error("Cart [{}]: Place order failed", cart.getCode(), e);
             }
         }
 
@@ -230,5 +226,25 @@ public class FlexMicroformController extends AbstractCheckoutController
         LOG.error(exception.getMessage(), exception);
 
         return REDIRECT_PREFIX + URL_PAYMENT_FAILED;
+    }
+
+    public void setCartService(final CartService cartService)
+    {
+        this.cartService = cartService;
+    }
+
+    public void setCreditCardPaymentFacade(final CreditCardPaymentFacade creditCardPaymentFacade)
+    {
+        this.creditCardPaymentFacade = creditCardPaymentFacade;
+    }
+
+    public void setFlexService(final FlexService flexService)
+    {
+        this.flexService = flexService;
+    }
+
+    public void setPaymentCheckoutFacade(final PaymentCheckoutFacade paymentCheckoutFacade)
+    {
+        this.paymentCheckoutFacade = paymentCheckoutFacade;
     }
 }

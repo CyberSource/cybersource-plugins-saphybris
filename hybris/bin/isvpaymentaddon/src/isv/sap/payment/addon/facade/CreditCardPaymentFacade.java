@@ -78,4 +78,11 @@ public interface CreditCardPaymentFacade extends PaymentFacade
      * @return
      */
     IsvPaymentTransactionEntryModel enrollCreditCard(final String referenceId, final String transientToken);
+
+    /**
+     * Checks if 3DS is enabled for the current merchant
+     *
+     * @return true if 3DS is enabled, false otherwise
+     */
+    boolean is3dsEnabled();
 }

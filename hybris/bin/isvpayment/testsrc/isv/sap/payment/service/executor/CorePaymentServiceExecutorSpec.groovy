@@ -25,22 +25,13 @@ class CorePaymentServiceExecutorSpec extends Specification
 
     def paymentTransactionEntryModel = Mock([useObjenesis: false], IsvPaymentTransactionEntryModel)
 
-    @SuppressWarnings('BracesForClass')
-    def serviceExecutor = new CorePaymentServiceExecutor() {
-        protected PaymentTransactionCreatorContext getPaymentTransactionCreatorContext()
-        {
-            transactionCreatorContext
-        }
-
-        @SuppressWarnings('UnusedMethodParameter')
-        protected PaymentServiceResult executeSuper(PaymentServiceRequest paymentServiceRequest)
-        {
-            paymentServiceResult
-        }
-    }
+    def serviceExecutor = Spy(new CorePaymentServiceExecutor())
 
     def setup()
     {
+        serviceExecutor.paymentTransactionCreatorContext >> transactionCreatorContext
+        serviceExecutor.executeSuper(_ as PaymentServiceRequest) >> paymentServiceResult
+
         transactionCreatorContext.getPaymentTransactionCreator(paymentServiceRequest) >> paymentTransactionCreator
         paymentTransactionCreator.createTransactionEntry(paymentServiceRequest, paymentServiceResult) >> paymentTransactionEntryModel
     }

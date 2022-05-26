@@ -9,3 +9,6 @@
 # Information and shall use it only in accordance with the terms of the
 # license agreement you entered into with SAP.
 # -----------------------------------------------------------------------
+UPDATE CreditCardType; code[unique = true]; name[lang = 'en']
+                     ; carte_bancaire     ; "Carte Bancaire"
+                     ; discover           ; "Discover"

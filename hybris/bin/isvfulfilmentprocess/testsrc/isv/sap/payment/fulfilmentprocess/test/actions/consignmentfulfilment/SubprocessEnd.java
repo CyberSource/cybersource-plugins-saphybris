@@ -2,13 +2,14 @@ package isv.sap.payment.fulfilmentprocess.test.actions.consignmentfulfilment;
 
 import de.hybris.platform.ordersplitting.model.ConsignmentProcessModel;
 import de.hybris.platform.processengine.model.BusinessProcessModel;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import isv.sap.payment.fulfilmentprocess.constants.IsvfulfilmentprocessConstants;
 
 public class SubprocessEnd extends AbstractTestConsActionTemp
 {
-    private static final Logger LOG = Logger.getLogger(SubprocessEnd.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SubprocessEnd.class);
 
     @Override
     public String execute(final BusinessProcessModel process) throws Exception //NOPMD
@@ -17,8 +18,8 @@ public class SubprocessEnd extends AbstractTestConsActionTemp
 
         final ConsignmentProcessModel consProc = (ConsignmentProcessModel) process;
         getBusinessProcessService().triggerEvent(consProc.getParentProcess().getCode() + "_ConsignmentSubprocessEnd");
-        LOG.info("Process: " + process.getCode() + " fire event "
-                + IsvfulfilmentprocessConstants.CONSIGNMENT_SUBPROCESS_END_EVENT_NAME);
+        LOG.info("Process: {} fire event {}", process.getCode(),
+                IsvfulfilmentprocessConstants.CONSIGNMENT_SUBPROCESS_END_EVENT_NAME);
         ((ConsignmentProcessModel) process).setDone(true);
         modelService.save(process);
         return getResult();

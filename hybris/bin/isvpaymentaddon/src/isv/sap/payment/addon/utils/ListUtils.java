@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Joiner;
-
 public final class ListUtils
 {
     private ListUtils()
@@ -24,6 +22,6 @@ public final class ListUtils
 
     public static String toString(final Collection<String> values)
     {
-        return Joiner.on(",").join(values);
+        return String.join(",", values);
     }
 }

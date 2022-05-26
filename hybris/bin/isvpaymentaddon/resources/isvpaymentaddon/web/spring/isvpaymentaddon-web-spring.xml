@@ -27,7 +27,7 @@
 			<ref bean="defaultIsvPaymentAddonBeforeViewJsPropsHandlerAdaptee"/>
 		</property>
 	</bean>
-	<bean id="IsvPaymentAddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
+	<bean id="isvPaymentAddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
 		<property name="add" ref="getIsvPaymentAddonBeforeViewHandler"/>
 	</bean>
 

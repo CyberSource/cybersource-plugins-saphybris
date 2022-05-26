@@ -13,7 +13,7 @@ public class IsvpaymentsampledataManager extends GeneratedIsvpaymentsampledataMa
 {
     private static final Logger LOG = LoggerFactory.getLogger(IsvpaymentsampledataManager.class);
 
-    public IsvpaymentsampledataManager() // NOPMD
+    public IsvpaymentsampledataManager()
     {
         LOG.debug("constructor of IsvpaymentsampledataManager called.");
     }

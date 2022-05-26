@@ -23,7 +23,8 @@ public class BillingOrderPopulator extends OrderPopulator
     private void addBillingAddress(final AbstractOrderModel source, final AbstractOrderData target)
     {
         Optional.ofNullable(source.getPaymentAddress())
-                .ifPresent(address -> target.setBillingAddress(getAddressConverter().convert(address)));
+                .map(address -> getAddressConverter().convert(address))
+                .ifPresent(target::setBillingAddress);
     }
 
     protected void callSuperPopulate(final OrderModel source, final OrderData target)
@@ -34,12 +35,14 @@ public class BillingOrderPopulator extends OrderPopulator
     @Override
     protected void addPaymentInformation(final AbstractOrderModel source, final AbstractOrderData prototype)
     {
-        final PaymentInfoModel paymentInfoModel = source.getPaymentInfo();
-        if (paymentInfoModel != null && paymentInfoModel.getBillingAddress() != null)
-        {
-            final CCPaymentInfoData paymentInfo = new CCPaymentInfoData();
-            paymentInfo.setBillingAddress(getAddressConverter().convert(paymentInfoModel.getBillingAddress()));
-            prototype.setPaymentInfo(paymentInfo);
-        }
+        Optional.ofNullable(source.getPaymentInfo())
+                .map(PaymentInfoModel::getBillingAddress)
+                .map(addressModel -> getAddressConverter().convert(addressModel))
+                .map(addressData -> {
+                    final CCPaymentInfoData paymentInfo = new CCPaymentInfoData();
+                    paymentInfo.setBillingAddress(addressData);
+                    return paymentInfo;
+                })
+                .ifPresent(prototype::setPaymentInfo);
     }
 }

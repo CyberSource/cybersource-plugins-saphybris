@@ -6,6 +6,7 @@ import de.hybris.bootstrap.annotations.UnitTest
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController
 import de.hybris.platform.cms2.model.site.CMSSiteModel
 import de.hybris.platform.servicelayer.config.ConfigurationService
+import de.hybris.platform.servicelayer.i18n.I18NService
 import de.hybris.platform.site.BaseSiteService
 import org.apache.commons.configuration.Configuration
 import org.junit.Test
@@ -30,8 +31,6 @@ import static isv.sap.payment.enums.PaymentType.ALTERNATIVE_PAYMENT
 @UnitTest
 class SummaryCheckoutStepControllerSpec extends Specification
 {
-    SummaryCheckoutStepController controller = new SummaryCheckoutStepController()
-
     PaymentModeFacade paymentModeFacade = Mock()
 
     MerchantService merchantService = Mock()
@@ -50,15 +49,25 @@ class SummaryCheckoutStepControllerSpec extends Specification
 
     def vcPaymentDetailsFacade = Mock(VisaCheckoutPaymentDetailsFacade)
 
+    def i18NService = Mock(I18NService)
+
+    def controller = new SummaryCheckoutStepController(
+            paymentModeFacade: paymentModeFacade,
+            merchantService: merchantService,
+            visaCheckoutPaymentDetailsFacade: vcPaymentDetailsFacade,
+            i18NService: i18NService,
+            googlePayMerchantId: '1234',
+            googlePayEnvironment: 'TEST',
+            klarnaSDKUrl: 'http:klarna',
+            visaCheckoutImageUrl: 'http:visa.image.url',
+            visaCheckoutSDKUrl: 'http:visa.sdk.url',
+            )
+
     def setup()
     {
-        controller.paymentModeFacade = paymentModeFacade
-        controller.merchantService = merchantService
         merchantService.
                 getMerchantProfileForPaymentType(PaymentType.VISA_CHECKOUT, MerchantProfileType.VCO) >> profile
         profile.accessKey = '12345'
-        controller.klarnaSDKUrl = 'http:klarna'
-        controller.visaCheckoutPaymentDetailsFacade = vcPaymentDetailsFacade
         configurationService.configuration >> configuration
         baseSiteService.currentBaseSite >> site
 
@@ -66,15 +75,14 @@ class SummaryCheckoutStepControllerSpec extends Specification
         field.setAccessible(true)
         field.set(controller, baseSiteService)
 
-        controller.googlePayMerchantId = '1234'
-        controller.googlePayEnvironment = 'TEST'
+        i18NService.getCurrentLocale() >> Locale.ENGLISH
     }
 
     @Test
     def 'prepareVisaCheckoutData: should not setup visacheckout data as such payment method is not available'()
     {
         when:
-        controller.prepareVisaCheckoutData(model, 'visaImageURL', 'visaSDKURL')
+        controller.prepareVisaCheckoutData(model)
 
         then:
         1 * paymentModeFacade.isPaymentModeSupported(isv.sap.payment.enums.PaymentType.VISA_CHECKOUT, null) >> false
@@ -84,6 +92,7 @@ class SummaryCheckoutStepControllerSpec extends Specification
             get('visaCheckoutImageUrl') == null
             get('visaCheckoutSDKUrl') == null
             get('visaCheckoutAPIKey') == null
+            get('locale') == null
         }
     }
 
@@ -95,7 +104,7 @@ class SummaryCheckoutStepControllerSpec extends Specification
         def vcPaymentDetailsData = Mock(VisaCheckoutPaymentDetailsData)
 
         when:
-        controller.prepareVisaCheckoutData(model, 'visaImageURL', 'visaSDKURL')
+        controller.prepareVisaCheckoutData(model)
 
         then:
         1 * paymentModeFacade.isPaymentModeSupported(isv.sap.payment.enums.PaymentType.VISA_CHECKOUT, null) >> true
@@ -103,10 +112,11 @@ class SummaryCheckoutStepControllerSpec extends Specification
 
         with(model.asMap()) {
             get('visaCheckoutEnabled')
-            get('visaCheckoutImageUrl') == 'visaImageURL'
-            get('visaCheckoutSDKUrl') == 'visaSDKURL'
+            get('visaCheckoutImageUrl') == 'http:visa.image.url'
+            get('visaCheckoutSDKUrl') == 'http:visa.sdk.url'
             get('visaCheckoutAPIKey') == '12345'
             get('visaCheckoutPaymentDetails') == vcPaymentDetailsData
+            get('locale') == 'en'
         }
     }
 

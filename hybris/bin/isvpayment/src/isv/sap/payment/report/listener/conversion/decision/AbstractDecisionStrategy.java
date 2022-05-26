@@ -19,7 +19,7 @@ public abstract class AbstractDecisionStrategy implements DecisionChangeStrategy
 
     protected FraudReportModel createFraudReport(final OrderModel order, final FraudStatus status)
     {
-        final FraudReportModel fraudReport = modelService.create(FraudReportModel.class);
+        final FraudReportModel fraudReport = getModelService().create(FraudReportModel.class);
         fraudReport.setOrder(order);
         fraudReport.setStatus(status);
         fraudReport.setProvider("isv");
@@ -31,7 +31,7 @@ public abstract class AbstractDecisionStrategy implements DecisionChangeStrategy
 
     protected OrderHistoryEntryModel createHistoryLog(final OrderModel order, final FraudStatus fraudStatus)
     {
-        final OrderHistoryEntryModel historyEntry = modelService.create(OrderHistoryEntryModel.class);
+        final OrderHistoryEntryModel historyEntry = getModelService().create(OrderHistoryEntryModel.class);
         historyEntry.setTimestamp(new Date());
         historyEntry.setOrder(order);
         historyEntry.setDescription("Fraud status set to " + fraudStatus.getCode());
@@ -39,7 +39,7 @@ public abstract class AbstractDecisionStrategy implements DecisionChangeStrategy
         return historyEntry;
     }
 
-    protected ModelService getModelsService()
+    protected ModelService getModelService()
     {
         return modelService;
     }

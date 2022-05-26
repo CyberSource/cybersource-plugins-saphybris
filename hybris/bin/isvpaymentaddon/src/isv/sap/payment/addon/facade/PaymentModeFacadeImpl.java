@@ -30,6 +30,8 @@ import static org.apache.commons.collections.ListUtils.EMPTY_LIST;
  */
 public class PaymentModeFacadeImpl implements PaymentModeFacade
 {
+    private static final Integer DEFAULT_PAYMENT_CODE_PREFIX = 999;
+
     @Resource
     private Converter<PaymentModeModel, PaymentModeData> paymentModeConverter;
 
@@ -89,20 +91,16 @@ public class PaymentModeFacadeImpl implements PaymentModeFacade
             return convertToInt(code.split("_")[0]);
         }
 
-        @SuppressWarnings("all")
         private Integer convertToInt(final String prefix)
         {
-            Integer result = 999;
             try
             {
-                result = Integer.valueOf(prefix);
+                return Integer.valueOf(prefix);
             }
-            catch (final NumberFormatException ex) //NOPMD
+            catch (final NumberFormatException ex)
             {
-                // do nothing
+                return DEFAULT_PAYMENT_CODE_PREFIX;
             }
-
-            return result;
         }
     }
 }

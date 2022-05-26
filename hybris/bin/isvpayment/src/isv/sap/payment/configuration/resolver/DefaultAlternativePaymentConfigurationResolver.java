@@ -10,9 +10,11 @@ import isv.sap.payment.model.IsvCheckAlternativePaymentStatusConfigurationModel;
 public class DefaultAlternativePaymentConfigurationResolver
         extends AbstractPaymentConfigurationResolver<IsvCheckAlternativePaymentStatusConfigurationModel>
 {
-    private static final String QUERY_TEMPLATE = "SELECT {pk} FROM "
-            + "{" + IsvCheckAlternativePaymentStatusConfigurationModel._TYPECODE
-            + "} WHERE {" + IsvCheckAlternativePaymentStatusConfigurationModel.PAYMENTMETHOD + "}=?paymentMethod";
+    private static final String QUERY_TEMPLATE =
+            "SELECT {" + IsvCheckAlternativePaymentStatusConfigurationModel.PK + "} FROM "
+                    + "{" + IsvCheckAlternativePaymentStatusConfigurationModel._TYPECODE
+                    + "} WHERE {" + IsvCheckAlternativePaymentStatusConfigurationModel.PAYMENTMETHOD
+                    + "}=?paymentMethod";
 
     @Override
     public String getSearchQuery(final Map<String, Object> params)

@@ -117,8 +117,9 @@ class SopControllerSpec extends Specification
         fields['developer_id'] == 'developerID'
         fields['merchant_defined_data99'] == 'merchantId'
         fields['merchant_defined_data100'] == 'SOP'
+        fields['card_type_selection_indicator'] == '1'
         fields['signed_field_names'] == 'access_key,profile_id,transaction_uuid,signed_date_time,locale,transaction_type,reference_number,amount,currency,payment_method,bill_to_forename,bill_to_surname,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_country,bill_to_address_postal_code,bill_to_address_state,override_custom_receipt_page,override_backoffice_post_url,device_fingerprint_id,unsigned_field_names,signed_field_names'
-        fields['unsigned_field_names'] == 'partner_solution_id,developer_id,card_type,card_number,card_expiry_date,card_cvn,merchant_defined_data99,merchant_defined_data100'
+        fields['unsigned_field_names'] == 'partner_solution_id,developer_id,card_type,card_number,card_expiry_date,card_cvn,merchant_defined_data99,merchant_defined_data100,card_type_selection_indicator'
         fields['card_type'] == EMPTY
         fields['card_number'] == EMPTY
         fields['card_number'] == EMPTY

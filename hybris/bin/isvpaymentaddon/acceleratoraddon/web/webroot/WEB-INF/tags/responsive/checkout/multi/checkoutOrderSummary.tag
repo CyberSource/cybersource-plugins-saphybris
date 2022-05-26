@@ -72,7 +72,7 @@
     </form:form>
 
     <c:if test="${visaCheckoutEnabled}">
-        <visacheckout:vcButton imageUrl="${visaCheckoutImageUrl}"/>
+        <visacheckout:vcButton imageUrl="${visaCheckoutImageUrl}" locale="${locale}"/>
     </c:if>
 
     <googlePay:googlePay/>

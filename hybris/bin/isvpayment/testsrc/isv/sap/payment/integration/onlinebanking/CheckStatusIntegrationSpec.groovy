@@ -74,10 +74,10 @@ class CheckStatusIntegrationSpec extends IsvIntegrationSpec
     }
 
     @Test
-    def 'Should receive accept for online bankins sale'()
+    def 'Should receive accept for online banking sale'()
     {
         given:
-        def order = testCartUk()
+        def order = testCartDe()
 
         String firstOptionId = apTransactionCreator.firstOptionId
 

@@ -387,6 +387,10 @@ ACC.secureacceptance = {
                     {value: getCardCVN(), error: $("#card_cvNumber_errors")}
                 ];
 
+                if (ACC.flexCardTypeSelection == 'true') {
+                    formFieldsToValidate.push({value: getCardType(), error: $("#card_cardType_errors")});
+                }
+
                 if (isValidFormData(formFieldsToValidate) && ACC.secureacceptance.termsAndConditionsChecked()) {
                     if (CARDINAL_COMMERCE.is3dsEnabled) {
                         CARDINAL_COMMERCE.initialize();

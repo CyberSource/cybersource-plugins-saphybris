@@ -55,7 +55,7 @@ public class PayPalPaymentFacadeImpl extends AbstractPaymentFacade implements Pa
     {
         final Optional<IsvPaymentTransactionModel> payPalTransactionOptional = findCorrespondingPayPalPaymentTransaction(
                 ecToken, cart);
-        if (!payPalTransactionOptional.isPresent())
+        if (payPalTransactionOptional.isEmpty())
         {
             throw new IllegalStateException(
                     "Cart: " + cart.getGuid() + " doesn't have valid paypal CREATE SESSION transaction entry");

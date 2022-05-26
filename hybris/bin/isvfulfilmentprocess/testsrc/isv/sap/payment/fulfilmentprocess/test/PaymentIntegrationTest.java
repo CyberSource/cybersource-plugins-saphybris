@@ -1,7 +1,6 @@
 package isv.sap.payment.fulfilmentprocess.test;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Currency;
@@ -51,12 +50,13 @@ import de.hybris.platform.task.RetryLaterException;
 import de.hybris.platform.task.TaskModel;
 import de.hybris.platform.task.impl.DefaultTaskService;
 import de.hybris.platform.util.Utilities;
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -73,7 +73,7 @@ import static junit.framework.Assert.fail;
 @IntegrationTest
 public class PaymentIntegrationTest extends ServicelayerTest
 {
-    private static final Logger LOG = Logger.getLogger(PaymentIntegrationTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PaymentIntegrationTest.class);
 
     private static DefaultBusinessProcessService processService;
 
@@ -142,8 +142,9 @@ public class PaymentIntegrationTest extends ServicelayerTest
         definitonFactory.add("classpath:/isvfulfilmentprocess/test/process/payment-process.xml");
 
         final DefaultCommandFactoryRegistryImpl commandFactoryReg = appCtx
-                .getBean(DefaultCommandFactoryRegistryImpl.class);
-        commandFactoryReg.setCommandFactoryList(Arrays.asList((CommandFactory) appCtx.getBean("mockupCommandFactory")));
+                .getBean("commandFactoryRegistry", DefaultCommandFactoryRegistryImpl.class);
+        commandFactoryReg.setCommandFactoryList(
+                Collections.singletonList((CommandFactory) appCtx.getBean("mockupCommandFactory")));
 
         taskServiceStub = appCtx.getBean(TaskServiceStub.class);
         productService = appCtx.getBean("defaultProductService", DefaultProductService.class);
@@ -172,7 +173,7 @@ public class PaymentIntegrationTest extends ServicelayerTest
         final Map<String, CommandFactory> commandFactoryList = applicationContext.getBeansOfType(CommandFactory.class);
         commandFactoryList.remove("mockupCommandFactory");
         final DefaultCommandFactoryRegistryImpl commandFactoryReg = appCtx
-                .getBean(DefaultCommandFactoryRegistryImpl.class);
+                .getBean("commandFactoryRegistry", DefaultCommandFactoryRegistryImpl.class);
         commandFactoryReg.setCommandFactoryList(commandFactoryList.values());
 
         processService.setTaskService(appCtx.getBean(DefaultTaskService.class));

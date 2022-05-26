@@ -4,6 +4,7 @@ import de.hybris.bootstrap.annotations.UnitTest
 import de.hybris.platform.core.enums.OrderStatus
 import de.hybris.platform.core.model.order.OrderModel
 import de.hybris.platform.processengine.BusinessProcessService
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException
 import org.junit.Test
 import spock.lang.Specification
 
@@ -38,8 +39,6 @@ class ProcessConversionReportListenerSpec extends Specification
 
         decisionStrategy.supports('REVIEWREJECT') >> true
 
-        orderDao.findOrderByGuid('1234567890') >> order
-
         order.guid >> '1234567890'
         order.code >> '0987654321'
     }
@@ -48,6 +47,7 @@ class ProcessConversionReportListenerSpec extends Specification
     def 'handler should process conversion report'()
     {
         given:
+        orderDao.findOrderByGuid('1234567890') >> order
         order.status >> OrderStatus.FRAUD_DECISION
 
         when:
@@ -62,7 +62,36 @@ class ProcessConversionReportListenerSpec extends Specification
     def 'handler should skip already processed report'()
     {
         given:
+        orderDao.findOrderByGuid('1234567890') >> order
         order.status >> OrderStatus.COMPLETED
+
+        when:
+        handler.handle([conversionReportInfo])
+
+        then:
+        0 * decisionStrategy.updateOrderFraudStatus(_, _)
+        0 * businessProcessService.triggerEvent(_)
+    }
+
+    @Test
+    def 'handler should skip null orders'()
+    {
+        given:
+        orderDao.findOrderByGuid('1234567890') >> null
+
+        when:
+        handler.handle([conversionReportInfo])
+
+        then:
+        0 * decisionStrategy.updateOrderFraudStatus(_, _)
+        0 * businessProcessService.triggerEvent(_)
+    }
+
+    @Test
+    def 'handler should skip conversion when an exception occurs'()
+    {
+        given:
+        orderDao.findOrderByGuid('1234567890') >> { throw new UnknownIdentifierException('Order not found') }
 
         when:
         handler.handle([conversionReportInfo])

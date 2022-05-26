@@ -23,7 +23,7 @@
 			<ref bean="defaultIsvb2bpaymentaddonBeforeViewJsPropsHandlerAdaptee"/>
 		</property>
 	</bean>
-	<bean id="Isvb2bpaymentaddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
+	<bean id="isvb2bPaymentaddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
 		<property name="add" ref="getIsvb2bpaymentaddonBeforeViewHandler"/>
 	</bean>
 

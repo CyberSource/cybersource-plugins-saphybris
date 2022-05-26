@@ -8,7 +8,6 @@ import spock.lang.Specification
 
 import isv.sap.payment.addon.b2b.model.ReplenishmentInfoModel
 
-import static com.google.common.collect.Lists.newArrayList
 import static de.hybris.platform.cronjob.enums.DayOfWeek.MONDAY
 import static de.hybris.platform.cronjob.enums.DayOfWeek.TUESDAY
 import static isv.sap.payment.addon.b2b.enums.Recurrence.DAILY
@@ -16,17 +15,23 @@ import static isv.sap.payment.addon.b2b.enums.Recurrence.DAILY
 @UnitTest
 class ReplenishmentPlaceOrderPopulatorSpec extends Specification
 {
-    def source = new ReplenishmentInfoModel(startDate: new Date(), recurrence: DAILY, day: 1,
-                                            dayOfMonth: 2, week: 3, daysOfWeek: newArrayList(MONDAY, TUESDAY))
+    def populator = new ReplenishmentPlaceOrderPopulator()
 
     @Test
     def 'should populate place order data'()
     {
         given:
+        def source = Mock(ReplenishmentInfoModel)
+        source.startDate >> new Date()
+        source.recurrence >> DAILY
+        source.day >> 1
+        source.dayOfMonth >> 2
+        source.week >> 3
+        source.daysOfWeek >> [MONDAY, TUESDAY]
         def target = new PlaceOrderData()
 
         when:
-        new ReplenishmentPlaceOrderPopulator().populate(source, target)
+        populator.populate(source, target)
 
         then:
         target.replenishmentOrder == true
@@ -36,6 +41,30 @@ class ReplenishmentPlaceOrderPopulatorSpec extends Specification
         target.NDays == '1'
         target.nthDayOfMonth == '2'
         target.NWeeks == '3'
-        target.NDaysOfWeek == newArrayList(MONDAY, TUESDAY)
+        target.NDaysOfWeek == [MONDAY, TUESDAY]
+    }
+
+    @Test
+    def 'should populate place order data with recurrence default values'()
+    {
+        given:
+        def source = Mock(ReplenishmentInfoModel)
+        source.startDate >> new Date()
+        source.recurrence >> DAILY
+        source.daysOfWeek >> [MONDAY, TUESDAY]
+        def target = new PlaceOrderData()
+
+        when:
+        populator.populate(source, target)
+
+        then:
+        target.replenishmentOrder == true
+        target.termsCheck == true
+        target.replenishmentStartDate == source.startDate
+        target.replenishmentRecurrence == B2BReplenishmentRecurrenceEnum.DAILY
+        target.NDays == ''
+        target.nthDayOfMonth == ''
+        target.NWeeks == ''
+        target.NDaysOfWeek == [MONDAY, TUESDAY]
     }
 }

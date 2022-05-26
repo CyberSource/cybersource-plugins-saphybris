@@ -11,14 +11,15 @@ import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentProcessModel;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import isv.sap.payment.fulfilmentprocess.constants.IsvfulfilmentprocessConstants;
 
 public class SplitOrderAction extends AbstractProceduralAction<OrderProcessModel>
 {
-    private static final Logger LOG = Logger.getLogger(SplitOrderAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SplitOrderAction.class);
 
     private OrderSplittingService orderSplittingService;
 
@@ -27,12 +28,8 @@ public class SplitOrderAction extends AbstractProceduralAction<OrderProcessModel
     @Override
     public void executeAction(final OrderProcessModel process) throws Exception // NOPMD
     {
-        if (LOG.isInfoEnabled())
-        {
-            LOG.info("Process: " + process.getCode() + " in step " + getClass());
-        }
-
-        final List<AbstractOrderEntryModel> entriesToSplit = new ArrayList<AbstractOrderEntryModel>();
+        LOG.info("Process: {} in step {}", process.getCode(), getClass());
+        final List<AbstractOrderEntryModel> entriesToSplit = new ArrayList<>();
         for (final AbstractOrderEntryModel entry : process.getOrder().getEntries())
         {
             if (entry.getConsignmentEntries() == null || entry.getConsignmentEntries().isEmpty())
@@ -45,10 +42,7 @@ public class SplitOrderAction extends AbstractProceduralAction<OrderProcessModel
                 .splitOrderForConsignment(process.getOrder(),
                         entriesToSplit);
 
-        if (LOG.isDebugEnabled())
-        {
-            LOG.debug("Splitting order into " + consignments.size() + " consignments.");
-        }
+        LOG.debug("Splitting order into {} consignments.", consignments.size());
 
         int index = 0;
         for (final ConsignmentModel consignment : consignments)

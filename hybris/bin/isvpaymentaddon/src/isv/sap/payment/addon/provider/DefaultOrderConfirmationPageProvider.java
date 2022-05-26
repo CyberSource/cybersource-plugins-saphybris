@@ -16,4 +16,9 @@ public class DefaultOrderConfirmationPageProvider implements OrderConfirmationPa
         final boolean anonymous = checkoutCustomerStrategy.isAnonymousCheckout();
         return "/checkout/orderConfirmation/" + (anonymous ? orderData.getGuid() : orderData.getCode());
     }
+
+    public void setCheckoutCustomerStrategy(final CheckoutCustomerStrategy checkoutCustomerStrategy)
+    {
+        this.checkoutCustomerStrategy = checkoutCustomerStrategy;
+    }
 }

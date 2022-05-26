@@ -48,7 +48,7 @@ class VisaCheckoutPage extends Page
 
     void performVisaCheckout(TestData data)
     {
-        waitFor() { vcoFrame }
+        waitFor { vcoFrame }
         sleep(2000)
 
         withFrame(vcoFrame) {
@@ -73,7 +73,7 @@ class VisaCheckoutPage extends Page
                 }
             }
 
-            waitFor() { continueBtn.click() }
+            waitFor { continueBtn.click() }
 
             fill3dsForm()
         }

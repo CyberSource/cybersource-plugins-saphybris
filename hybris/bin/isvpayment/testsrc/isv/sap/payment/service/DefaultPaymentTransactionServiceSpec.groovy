@@ -218,4 +218,39 @@ class DefaultPaymentTransactionServiceSpec extends Specification
         1 * entry.setProperties([name: 'value', newName: 'newValue'])
         1 * service.modelService.save(entry)
     }
+
+    @Test
+    def 'should create an authorized transaction entry from an enrollment transaction'()
+    {
+        given:
+        def enrollmentTxEntry = Mock(IsvPaymentTransactionEntryModel)
+        enrollmentTxEntry.properties >> ['ccAuthReplyReasonCode': '100']
+        def authTxEntry = Mock(IsvPaymentTransactionEntryModel)
+        and:
+        service.modelService.clone(enrollmentTxEntry) >> authTxEntry
+
+        when:
+        def result = service.createAuthorizationTxEntryFromEnrollment(enrollmentTxEntry)
+
+        then:
+        1 * authTxEntry.setType(PaymentTransactionType.AUTHORIZATION)
+        1 * service.modelService.save(authTxEntry)
+        result.get() == authTxEntry
+    }
+
+    @Test
+    def 'should not create an authorized transaction entry from a transaction that was not bundled with Auth call'()
+    {
+        given:
+        def enrollmentTxEntry = Mock(IsvPaymentTransactionEntryModel)
+        enrollmentTxEntry.properties >> [:]
+
+        when:
+        def result = service.createAuthorizationTxEntryFromEnrollment(enrollmentTxEntry)
+
+        then:
+        0 * service.modelService.save(_)
+        0 * service.modelService.clone(_)
+        result == Optional.empty()
+    }
 }

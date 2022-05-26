@@ -5,13 +5,12 @@ import de.hybris.platform.jalo.extension.ExtensionManager;
 
 import isv.sap.payment.fulfilmentprocess.constants.IsvfulfilmentprocessConstants;
 
-@SuppressWarnings("PMD")
 public class IsvfulfilmentprocessManager extends GeneratedIsvfulfilmentprocessManager
 {
     public static final IsvfulfilmentprocessManager getInstance()
     {
-        ExtensionManager em = JaloSession.getCurrentSession().getExtensionManager();
-        return (IsvfulfilmentprocessManager) em
+        final ExtensionManager extensionManager = JaloSession.getCurrentSession().getExtensionManager();
+        return (IsvfulfilmentprocessManager) extensionManager
                 .getExtension(IsvfulfilmentprocessConstants.EXTENSIONNAME);
     }
 }

@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -39,8 +38,10 @@ import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.cronjob.enums.DayOfWeek;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,23 +55,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import isv.sap.payment.fraud.FraudFacade;
 
 import static de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType.ACCOUNT;
-import static java.lang.String.valueOf;
 
 @Controller
 @RequestMapping(value = "/checkout/multi/summary")
 public class SummaryCheckoutStepController extends AbstractCheckoutStepController
 {
-    @SuppressWarnings("all")
-    protected static final Map<String, String> ISV_SOP_CARD_TYPES = new HashMap<String, String>()
-    {{
-        put("visa", "001");
-        put("master", "002");
-        put("amex", "003");
-        put("diners", "005");
-        put("maestro", "024");
-    }};
-
-    private static final Logger LOG = Logger.getLogger(SummaryCheckoutStepController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SummaryCheckoutStepController.class);
 
     private static final String SUMMARY = "summary";
 
@@ -83,18 +73,34 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
 
     private static final String RESPONSE_ACTION = "responseAction";
 
+    private static final String REPLENISHMENT_RECURRENCE_PROP = "storefront.replenishment.recurrence.default";
+
+    private static final String REPLENISHMENT_NDAYS_PROP = "storefront.replenishment.nDays.default";
+
+    private static final String REPLENISHMENT_NDAYS_OF_WEEK_PROP = "storefront.replenishment.nDaysOfWeek.default";
+
+    private static final String REPLENISHMENT_FORM_NDAYS_RANGE_PROP = "storefront.replenishment.form.nDays.range";
+
+    private static final String REPLENISHMENT_FORM_NTHDAY_OF_MONTH_RANGE_PROP = "storefront.replenishment.form.nthDayOfMonth.range";
+
+    private static final String REPLENISHMENT_FORM_NTHWEEK_RANGE_PROP = "storefront.replenishment.form.nthWeek.range";
+
     @Resource
     private ConfiguredCheckoutPciStrategy checkoutPciStrategy;
 
     @Resource(name = "isv.sap.payment.fraudFacade")
     private FraudFacade fraudFacade;
 
+    @Resource(name = "isvCardTypes")
+    private Map<String, String> isvSopCardTypes;
+
+    @Resource
+    private ConfigurationService configurationService;
+
     @RequestMapping(value = "/view/payment/error", method = RequestMethod.GET)
     @RequireHardLogIn
     @PreValidateCheckoutStep(checkoutStep = SUMMARY)
     public String enterStepWithPaymentError(final Model model, final RedirectAttributes redirectModel)
-            throws CMSItemNotFoundException, // NOSONAR
-            CommerceCartModificationException
     {
         GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
                 "checkout.place.order.payment.error");
@@ -127,27 +133,33 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
         model.addAttribute("deliveryAddress", cartData.getDeliveryAddress());
         model.addAttribute("deliveryMode", cartData.getDeliveryMode());
         model.addAttribute("paymentInfo", cartData.getPaymentInfo());
-        // TODO:Make configuration hmc driven than hardcoding in controllers
-        model.addAttribute("nDays", getNumberRange(1, 30));
-        model.addAttribute("nthDayOfMonth", getNumberRange(1, 31));
-        model.addAttribute("nthWeek", getNumberRange(1, 12));
+        final String[] nDaysRange = configurationService.getConfiguration()
+            .getString(REPLENISHMENT_FORM_NDAYS_RANGE_PROP, "1,30").split(",");
+        final String[] nthDayOfMonthRange = configurationService.getConfiguration()
+            .getString(REPLENISHMENT_FORM_NTHDAY_OF_MONTH_RANGE_PROP, "1,31").split(",");
+        final String[] nthWeek = configurationService.getConfiguration()
+            .getString(REPLENISHMENT_FORM_NTHWEEK_RANGE_PROP, "1,12").split(",");
+        model.addAttribute("nDays", getNumberRange(Integer.parseInt(nDaysRange[0]), Integer.parseInt(nDaysRange[1])));
+        model.addAttribute("nthDayOfMonth", getNumberRange(Integer.parseInt(nthDayOfMonthRange[0]),
+            Integer.parseInt(nthDayOfMonthRange[1])));
+        model.addAttribute("nthWeek", getNumberRange(Integer.parseInt(nthWeek[0]), Integer.parseInt(nthWeek[1])));
         model.addAttribute("daysOfWeek", getB2BCheckoutFacade().getDaysOfWeekForReplenishmentCheckoutSummary());
-
         model.addAttribute("deviceFingerPrint", fraudFacade.getDeviceFingerPrint());
 
         // Only request the security code if the SubscriptionPciOption is set to Default.
         final boolean requestSecurityCode = CheckoutPciOptionEnum.DEFAULT
                 .equals(getCheckoutFlowFacade().getSubscriptionPciOption());
-        model.addAttribute("requestSecurityCode", Boolean.valueOf(requestSecurityCode));
+        model.addAttribute("requestSecurityCode", requestSecurityCode);
 
         if (!model.containsAttribute("placeOrderForm"))
         {
             final PlaceOrderForm placeOrderForm = new PlaceOrderForm();
-            // TODO: Make setting of default recurrence enum value hmc driven rather hard coding in controller
-            placeOrderForm.setReplenishmentRecurrence(B2BReplenishmentRecurrenceEnum.MONTHLY);
-            placeOrderForm.setnDays("14");
-            final List<DayOfWeek> daysOfWeek = new ArrayList<DayOfWeek>();
-            daysOfWeek.add(DayOfWeek.MONDAY);
+            final String defaultRecurrence = configurationService.getConfiguration().getString(REPLENISHMENT_RECURRENCE_PROP, "MONTHLY");
+            final String defaultNdays = configurationService.getConfiguration().getString(REPLENISHMENT_NDAYS_PROP, "14");
+            final String defaultNdaysWeek = configurationService.getConfiguration().getString(REPLENISHMENT_NDAYS_OF_WEEK_PROP, "MONDAY");
+            placeOrderForm.setReplenishmentRecurrence(B2BReplenishmentRecurrenceEnum.valueOf(defaultRecurrence));
+            placeOrderForm.setnDays(defaultNdays);
+            final List<DayOfWeek> daysOfWeek = List.of(DayOfWeek.valueOf(defaultNdaysWeek));
             placeOrderForm.setnDaysOfWeek(daysOfWeek);
             model.addAttribute("placeOrderForm", placeOrderForm);
         }
@@ -189,7 +201,7 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
 
         for (int i = 1; i <= 12; i++)
         {
-            months.add(new SelectOption(valueOf(i), valueOf(i < 10 ? "0" + i : StringUtils.EMPTY + i)));
+            months.add(new SelectOption(String.valueOf(i), String.format("%02d", i)));
         }
         return months;
     }
@@ -214,9 +226,9 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
         for (final CardTypeData supportedCardType : supportedCardTypes)
         {
             // Add credit cards for all supported cards that have mappings for isv SOP
-            if (ISV_SOP_CARD_TYPES.containsKey(supportedCardType.getCode()))
+            if (isvSopCardTypes.containsKey(supportedCardType.getCode()))
             {
-                sopCardTypes.add(createCardTypeData(ISV_SOP_CARD_TYPES.get(supportedCardType.getCode()),
+                sopCardTypes.add(createCardTypeData(isvSopCardTypes.get(supportedCardType.getCode()),
                         supportedCardType.getName()));
             }
         }
@@ -360,18 +372,16 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
 
         if (!getCheckoutFacade().containsTaxValues())
         {
-            LOG.error(String.format(
-                    "Cart %s does not have any tax values, which means the tax calculation was not properly done, placement of order can't continue",
-                    cartData.getCode()));
+            LOG.error(
+                    "Cart {} does not have any tax values, which means the tax calculation was not properly done, placement of order can't continue",
+                    cartData.getCode());
             GlobalMessages.addErrorMessage(model, "checkout.error.tax.missing");
             invalid = true;
         }
 
         if (!cartData.isCalculated())
         {
-            LOG.error(
-                    String.format("Cart %s has a calculated flag of FALSE, placement of order can't continue",
-                            cartData.getCode()));
+            LOG.error("Cart {} has a calculated flag of FALSE, placement of order can't continue", cartData.getCode());
             GlobalMessages.addErrorMessage(model, "checkout.error.cart.notcalculated");
             invalid = true;
         }

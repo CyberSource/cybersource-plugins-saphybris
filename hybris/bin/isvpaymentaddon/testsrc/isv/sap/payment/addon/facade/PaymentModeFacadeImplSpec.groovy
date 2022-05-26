@@ -85,6 +85,30 @@ class PaymentModeFacadeImplSpec extends Specification
     }
 
     @Test
+    def 'should replace payment mode prefix with lower sort priority when it is not a number'()
+    {
+        given:
+        def paymentModeModel3 = Mock(IsvPaymentModeModel)
+        def paymentModeData3 = new PaymentModeData()
+        paymentModeData3.code = 'one_paypal'
+
+        when:
+        def actual = facade.paymentModes
+
+        then:
+        1 * baseStore.allowedIsvPaymentModes >> [paymentModeModel3, paymentModeModel1, paymentModeModel2]
+        1 * paymentModeConverter.convert(paymentModeModel1) >> paymentModeData1
+        1 * paymentModeConverter.convert(paymentModeModel2) >> paymentModeData2
+        1 * paymentModeConverter.convert(paymentModeModel3) >> paymentModeData3
+
+        and:
+        actual.size() == 3
+        actual.get(0).is(paymentModeData2)
+        actual.get(1).is(paymentModeData1)
+        actual.get(2).is(paymentModeData3)
+    }
+
+    @Test
     def 'isPaymentModeSupported: should throw error if paymentType isnt provided'()
     {
         when:

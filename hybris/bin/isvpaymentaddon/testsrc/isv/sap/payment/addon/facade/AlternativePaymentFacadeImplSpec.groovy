@@ -7,6 +7,7 @@ import de.hybris.platform.payment.enums.PaymentTransactionType
 import de.hybris.platform.payment.model.PaymentTransactionModel
 import org.junit.Test
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import isv.cjl.payment.constants.PaymentConstants
 import isv.cjl.payment.model.Merchant
@@ -20,6 +21,7 @@ import isv.sap.payment.model.IsvPaymentTransactionEntryModel
 import isv.sap.payment.model.IsvPaymentTransactionModel
 
 import static isv.cjl.payment.constants.PaymentConstants.TransactionStatus.ACCEPT
+import static isv.cjl.payment.constants.PaymentConstants.TransactionStatus.ERROR
 import static isv.cjl.payment.constants.PaymentConstants.TransactionStatus.REJECT
 import static isv.cjl.payment.enums.AlternativePaymentMethod.IDL
 import static isv.sap.payment.addon.constants.IsvPaymentAddonConstants.AlternativePayments.PAYMENT_OPTION_ID
@@ -36,7 +38,8 @@ class AlternativePaymentFacadeImplSpec extends Specification
     MerchantService merchantService = Mock()
     PaymentModeService paymentModeService = Mock()
 
-    def facade = new AlternativePaymentFacadeImpl()
+    def facade = new AlternativePaymentFacadeImpl(merchantService: merchantService,
+                                                  paymentModeService: paymentModeService)
 
     CartModel cart = Mock()
 
@@ -45,9 +48,6 @@ class AlternativePaymentFacadeImplSpec extends Specification
 
     def setup()
     {
-        facade.merchantService = merchantService
-        facade.paymentModeService = paymentModeService
-
         merchantService.getCurrentMerchant(_) >> merchant
         merchant.id >> 'test_merchant'
     }
@@ -82,6 +82,44 @@ class AlternativePaymentFacadeImplSpec extends Specification
     }
 
     @Test
+    @Unroll
+    def 'makeSaleRequestForAlternativePayment: Should return empty value when transaction is not successful'()
+    {
+        given:
+        AlternativePaymentSaleRequester saleRequester = Mock()
+        facade.saleRequesters = [saleRequester]
+
+        and:
+        def cart = Stub(CartModel)
+        def pm = new IsvPaymentModeModel()
+        pm.paymentType = ALTERNATIVE_PAYMENT
+        pm.paymentSubType = AlternativePaymentMethod.IDL
+
+        and:
+        def result = PaymentServiceResult.create()
+        def entry = new IsvPaymentTransactionEntryModel()
+        result.addData('transaction', entry)
+        entry.transactionStatus = transactionStatusParam
+        entry.properties = [(PaymentConstants.AlternativePaymentsResponseFields.MERCHANT_URL): merchantUrlParam]
+
+        when:
+        Optional<String> redirectURL = facade.makeSaleRequestForAlternativePayment(cart, 'pcIDEAL', [(PAYMENT_OPTION_ID): 'ideal999'])
+
+        then:
+        1 * saleRequester.supports(IDL) >> true
+        1 * saleRequester.initiateSale(cart, IDL, 'test_merchant', [(PAYMENT_OPTION_ID): 'ideal999']) >> result
+        1 * paymentModeService.getPaymentModeForCode('pcIDEAL') >> pm
+        redirectURL.isEmpty()
+
+        where:
+        transactionStatusParam | merchantUrlParam
+        ERROR                  | ''
+        ACCEPT                 | ''
+        ERROR                  | 'www.fake.com'
+    }
+
+    @Test
+    @Unroll
     def 'validateAlternativePaymentResponse: Should validate cart if it was paid using concrete alternative payment'()
     {
         given:
@@ -111,6 +149,7 @@ class AlternativePaymentFacadeImplSpec extends Specification
         AYM       | [:]                                           | ACCEPT    | PaymentTransactionType.INITIATE      || true
         KLI       | [status: 'REJECTED']                          | ACCEPT    | PaymentTransactionType.AUTHORIZATION || false
         KLI       | [status: 'AUTHORIZED']                        | ACCEPT    | PaymentTransactionType.AUTHORIZATION || true
+        KLI       | [status: 'PENDING']                           | ACCEPT    | PaymentTransactionType.AUTHORIZATION || true
         WQR       | [apCheckStatusReplyPaymentStatus: 'SETTLED']  | ACCEPT    | PaymentTransactionType.CHECK_STATUS  || true
         WQR       | [apCheckStatusReplyPaymentStatus: 'REJECTED'] | ACCEPT    | PaymentTransactionType.CHECK_STATUS  || false
     }
