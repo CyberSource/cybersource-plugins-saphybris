@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+           
+    <context:annotation-config/> 
+
+	<!-- Expose /acceleratoraddon/web/webroot/WEB-INF/messages/base.js.properties  resource bundle as javascript variables -->
+	<bean id="defaultIsvb2bpaymentaddonJavaScriptMessageResourceAccessor" parent="abstractJavaScriptMessageResourceAccessor">
+		<property name="addOnName" value="isvb2bpaymentaddon"/>
+	</bean>
+
+	<bean id="defaultIsvb2bpaymentaddonBeforeViewJsPropsHandlerAdaptee" parent="abstractBeforeViewJsPropsHandlerAdaptee" class="de.hybris.platform.addonsupport.interceptors.ExportJsPropertiesBeforeViewHandler">
+		<property name="messageSource" ref="defaultIsvb2bpaymentaddonJavaScriptMessageResourceAccessor"/>
+	</bean>
+
+	<bean id="getIsvb2bpaymentaddonBeforeViewHandler" parent="beforeViewHandlerAdapter">
+		<property name="adaptee">
+			<ref bean="defaultIsvb2bpaymentaddonBeforeViewJsPropsHandlerAdaptee"/>
+		</property>
+	</bean>
+	<bean id="isvb2bPaymentaddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
+		<property name="add" ref="getIsvb2bpaymentaddonBeforeViewHandler"/>
+	</bean>
+
+	<!-- override b2b payment-type and summary controllers -->
+	<bean id="paymentTypeCheckoutStepController" class="isv.sap.payment.addon.b2b.controllers.pages.checkout.steps.PaymentTypeCheckoutStepController" />
+	<bean id="summaryCheckoutStepController" class="isv.sap.payment.addon.b2b.controllers.pages.checkout.steps.SummaryCheckoutStepController" />
+
+	<alias name="isvB2bPaymentMethodCheckoutStep" alias="paymentMethodCheckoutStep"/>
+	<bean id="isvB2bPaymentMethodCheckoutStep" class="isv.sap.payment.addon.b2b.steps.IsvB2BPaymentMethodCheckoutStep" parent="defaultB2bPaymentMethodCheckoutStep"/>
+
+    <!-- This overrides could be defined in Spring core context (if only b2b functionality is used), putting them here to have possibility to deploy both b2c and b2b storefronts on the same mode -->
+    <!-- override isv customer paymentcheckoutFacade to include b2b functionality -->
+    <alias name="isv.sap.payment.defaultB2BPaymentCheckoutFacade" alias="isv.sap.payment.paymentCheckoutFacade"/>
+    <bean id="isv.sap.payment.defaultB2BPaymentCheckoutFacade" class="isv.sap.payment.addon.b2b.facade.impl.IsvB2BAcceleratorCheckoutFacade"
+          parent="defaultB2BAcceleratorCheckoutFacade"/>
+
+    <bean id="replenishmentCheckoutController" class="isv.sap.payment.addon.b2b.controllers.pages.checkout.steps.ReplenishmentCheckoutController"/>
+
+    <alias alias="orderConfirmationPageProvider" name="b2bOrderConfirmationPageProvider"/>
+    <bean id="b2bOrderConfirmationPageProvider" class="isv.sap.payment.addon.b2b.provider.B2bOrderConfirmationPageProvider"/>
+
+</beans>
+

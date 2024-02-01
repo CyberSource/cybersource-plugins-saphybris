@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- CJL named bindings-->
+    <util:constant id="DEFAULT_CONFIGURATION_SERVICE"
+                   static-field="isv.cjl.module.util.ConfigurationConstants.DEFAULT_CONFIGURATION_SERVICE" />
+    <util:constant id="ONDEMAND_CONVERSION_REPORT_TIME_SERVICE"
+                   static-field="isv.cjl.module.util.ConfigurationConstants.Reporting.ONDEMAND_CONVERSION_REPORT_TIME_SERVICE" />
+    <util:constant id="DAILY_CONVERSION_REPORT_TIME_SERVICE"
+                   static-field="isv.cjl.module.util.ConfigurationConstants.Reporting.DAILY_CONVERSION_REPORT_TIME_SERVICE" />
+    <util:constant id="APPLE_PAY_DECRYPTION_SERVICE"
+                   static-field="isv.cjl.module.util.ConfigurationConstants.ApplePay.APPLE_PAY_DECRYPTION_SERVICE" />
+    <util:constant id="JWT_SERVICE"
+                   static-field="isv.cjl.module.util.ConfigurationConstants.Jwt.JWT_SERVICE" />
+
+
+    <alias name="isv.sap.payment.defaultPaymentServiceExecutor" alias="isv.sap.payment.paymentServiceExecutor"/>
+    <bean id="isv.sap.payment.defaultPaymentServiceExecutor" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.sap.payment.service.executor.CorePaymentServiceExecutor</value>
+        </property>
+    </bean>
+
+    <alias name="isv.cjl.payment.service.alternativepayment.defaultAlternativePaymentCheckStatusService" alias="isv.cjl.payment.service.alternativepayment.alternativePaymentCheckStatusService"/>
+    <bean id="isv.cjl.payment.service.alternativepayment.defaultAlternativePaymentCheckStatusService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.service.alternativepayment.AlternativePaymentCheckStatusService</value>
+        </property>
+    </bean>
+
+    <alias name="isv.cjl.payment.security.service.defaultSAService" alias="isv.cjl.payment.security.service.SAService"/>
+    <bean id="isv.cjl.payment.security.service.defaultSAService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.security.service.SAService</value>
+        </property>
+    </bean>
+
+    <alias name="isv.cjl.payment.report.defaultReportExecutor" alias="isv.cjl.payment.report.reportExecutor"/>
+    <bean id="isv.cjl.payment.report.defaultReportExecutor" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.report.executor.ReportExecutor</value>
+        </property>
+    </bean>
+
+    <alias name="isv.sap.payment.defaultFlexCredentials" alias="isv.sap.payment.flexCredentials" />
+    <bean id="isv.sap.payment.defaultFlexCredentials" class="com.cybersource.flex.sdk.CredentialsImpl">
+        <constructor-arg name="environment" value="#{configurationService.configuration.getProperty('isv.payment.customer.flex.microform.api.env')}" />
+        <constructor-arg name="mid" value="#{configurationService.configuration.getProperty('isv.payment.customer.payment.type.CREDIT_CARD.merchantId')}" />
+        <constructor-arg name="keyId" value="#{configurationService.configuration.getProperty('isv.payment.customer.flex.microform.api.key.id')}"/>
+        <constructor-arg name="sharedSecret" value="#{configurationService.configuration.getProperty('isv.payment.customer.flex.microform.shared.secret').toCharArray()}"/>
+    </bean>
+
+    <alias name="isv.sap.payment.defaultFlexService" alias="isv.sap.payment.flexService"/>
+    <bean id="isv.sap.payment.defaultFlexService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.service.flex.FlexService</value>
+        </property>
+    </bean>
+
+    <alias name="isv.cjl.payment.report.service.defaultConversionReportService" alias="isv.cjl.payment.report.service.conversionReportService"/>
+    <bean id="isv.cjl.payment.report.service.defaultConversionReportService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.report.service.ConversionReportService</value>
+        </property>
+    </bean>
+
+    <alias name="isv.cjl.payment.report.service.defaultOnDemandConversionReportTimeService" alias="isv.cjl.payment.report.service.onDemandConversionReportTimeService"/>
+    <bean id="isv.cjl.payment.report.service.defaultOnDemandConversionReportTimeService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.report.service.ReportTimeService</value>
+        </property>
+        <property name="annotatedWith" ref="ONDEMAND_CONVERSION_REPORT_TIME_SERVICE" />
+    </bean>
+
+    <alias name="isv.cjl.payment.report.service.defaultDailyConversionReportTimeService" alias="isv.cjl.payment.report.service.dailyConversionReportTimeService"/>
+    <bean id="isv.cjl.payment.report.service.defaultDailyConversionReportTimeService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.report.service.ReportTimeService</value>
+        </property>
+        <property name="annotatedWith" ref="DAILY_CONVERSION_REPORT_TIME_SERVICE" />
+    </bean>
+
+    <alias name="isv.cjl.payment.service.alternativepayment.defaultAlternativePaymentOptionsService" alias="isv.cjl.payment.service.alternativepayment.alternativePaymentOptionsService"/>
+    <bean id="isv.cjl.payment.service.alternativepayment.defaultAlternativePaymentOptionsService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.service.alternativepayment.AlternativePaymentOptionsService</value>
+        </property>
+        <property name="annotatedWith" value="alternativePaymentOptionsService" />
+    </bean>
+
+    <alias name="isv.cjl.payment.service.processinglevel.defaultProcessingLevelService" alias="isv.cjl.payment.service.processinglevel.processingLevelService"/>
+    <bean id="isv.cjl.payment.service.processinglevel.defaultProcessingLevelService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.service.processinglevel.ProcessingLevelService</value>
+        </property>
+    </bean>
+
+    <alias name="isv.cjl.payment.configuration.service.defaultConfigurationService" alias="isvConfigurationService"/>
+    <bean id="isv.cjl.payment.configuration.service.defaultConfigurationService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.configuration.service.ConfigurationService</value>
+        </property>
+        <property name="annotatedWith" ref="DEFAULT_CONFIGURATION_SERVICE" />
+    </bean>
+
+    <alias name="isv.sap.payment.defaultApplePayDecryptionService" alias="isv.sap.payment.applePayDecryptionService"/>
+    <bean id="isv.sap.payment.defaultApplePayDecryptionService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.service.applepay.ApplePayDecryptionService</value>
+        </property>
+        <property name="annotatedWith" ref="APPLE_PAY_DECRYPTION_SERVICE" />
+    </bean>
+
+    <alias name="isv.sap.payment.defaultJwtService" alias="isv.sap.payment.jwtService"/>
+    <bean id="isv.sap.payment.defaultJwtService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.service.jwt.JwtService</value>
+        </property>
+        <property name="annotatedWith" ref="JWT_SERVICE" />
+    </bean>
+
+    <alias name="isv.cjl.payment.utils.defaultPaymentHelper" alias="isv.cjl.payment.utils.paymentHelper"/>
+    <bean id="isv.cjl.payment.utils.defaultPaymentHelper" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
+        <property name="beanClass">
+            <value type="java.lang.Class">isv.cjl.payment.utils.PaymentHelper</value>
+        </property>
+        <property name="annotatedWith" value="isv.cjl.payment.utils.paymentHelper"/>
+    </bean>
+
+    <alias name="isv.sap.payment.defaultGuiceInjectorFactory" alias="isv.sap.payment.guiceInjectorFactory"/>
+    <bean id="isv.sap.payment.defaultGuiceInjectorFactory" class="isv.sap.payment.injector.DefaultGuiceInjectorFactory">
+        <property name="modules">
+            <list merge="true">
+                <bean class="isv.sap.payment.modules.common.ConfigurationModule"/>
+                <bean class="isv.sap.payment.modules.common.CommonHybrisModule"/>
+                <bean class="isv.sap.payment.modules.common.IsvPaymentHybrisModule"/>
+                <bean class="isv.sap.payment.modules.converter.CreditCardRequestConverterHybrisModule"/>
+                <bean class="isv.sap.payment.modules.converter.VisaCheckoutRequestConverterHybrisModule"/>
+                <bean class="isv.sap.payment.modules.converter.AlternativePaymentRequestConverterHybrisModule"/>
+                <bean class="isv.sap.payment.modules.converter.PayPalRequestConverterHybrisModule"/>
+                <bean class="isv.sap.payment.modules.converter.PayPalSORequestConverterHybrisModule"/>
+                <bean class="isv.sap.payment.modules.converter.ReportingTransactionRequestConverterHybrisModule"/>
+                <bean class="isv.sap.payment.modules.converter.FraudRequestConverterHybrisModule"/>
+                <bean class="isv.sap.payment.modules.converter.VerificationRequestConverterHybrisModule"/>
+                <bean class="isv.sap.payment.modules.converter.KlarnaRequestConverterHybrisModule"/>
+                <bean class="isv.sap.payment.modules.converter.ApplePayRequestConverterHybrisModule"/>
+                <bean class="isv.sap.payment.modules.converter.GooglePayRequestConverterHybrisModule"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="isv.sap.payment.guiceInjector" factory-bean="isv.sap.payment.guiceInjectorFactory" factory-method="createInjectorInstance"/>
+
+    <alias name="isv.sap.payment.hybrisMerchantService" alias="isv.sap.payment.merchantService"/>
+    <bean id="isv.sap.payment.hybrisMerchantService" class="isv.sap.payment.service.IsvHybrisMerchantService"/>
+
+    <alias name="isv.sap.payment.populator.l2.defaultAmexDirectPopulator" alias="isv.sap.payment.populator.l2.amexDirectPopulator"/>
+    <bean id="isv.sap.payment.populator.l2.defaultAmexDirectPopulator" class="isv.sap.payment.service.executor.request.populator.processinglevel.l2.AmexDirectPopulator"/>
+
+    <alias name="isv.sap.payment.populator.l2.defaultOmniPayMastercardPopulator" alias="isv.sap.payment.populator.l2.omniPayMastercardPopulator"/>
+    <bean id="isv.sap.payment.populator.l2.defaultOmniPayMastercardPopulator" class="isv.sap.payment.service.executor.request.populator.processinglevel.l2.OmniPayMastercardPopulator"/>
+
+    <alias name="isv.sap.payment.populator.l2.defaultOmniPayVisaPopulator" alias="isv.sap.payment.populator.l2.omniPayVisaPopulator"/>
+    <bean id="isv.sap.payment.populator.l2.defaultOmniPayVisaPopulator" class="isv.sap.payment.service.executor.request.populator.processinglevel.l2.OmniPayVisaPopulator"/>
+
+    <alias name="isv.sap.payment.populator.l3.defaultOmniPayMastercardPopulator" alias="isv.sap.payment.populator.l3.omniPayMastercardPopulator"/>
+    <bean id="isv.sap.payment.populator.l3.defaultOmniPayMastercardPopulator" class="isv.sap.payment.service.executor.request.populator.processinglevel.l3.OmniPayMastercardPopulator"/>
+
+    <alias name="isv.sap.payment.populator.l3.defaultOmniPayVisaPopulator" alias="isv.sap.payment.populator.l3.omniPayVisaPopulator"/>
+    <bean id="isv.sap.payment.populator.l3.defaultOmniPayVisaPopulator" class="isv.sap.payment.service.executor.request.populator.processinglevel.l3.OmniPayVisaPopulator"/>
+
+    <import resource="converter/isvpayment-converter-creditcard-spring.xml"/>
+    <import resource="converter/isvpayment-converter-visacheckout-spring.xml"/>
+    <import resource="converter/isvpayment-converter-alternative-spring.xml"/>
+    <import resource="converter/isvpayment-converter-paypal-spring.xml"/>
+    <import resource="converter/isvpayment-converter-paypalso-spring.xml"/>
+    <import resource="converter/isvpayment-converter-reporting-spring.xml"/>
+    <import resource="converter/isvpayment-converter-fraud-spring.xml"/>
+    <import resource="converter/isvpayment-converter-verification-spring.xml"/>
+    <import resource="converter/isvpayment-converter-applepay-spring.xml"/>
+    <import resource="converter/isvpayment-converter-googlepay-spring.xml"/>
+
+</beans>

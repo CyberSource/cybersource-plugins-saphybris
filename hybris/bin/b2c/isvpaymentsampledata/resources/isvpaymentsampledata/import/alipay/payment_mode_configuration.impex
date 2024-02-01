@@ -1,0 +1,6 @@
+INSERT_UPDATE IsvPaymentMode; code[unique = true]; paymentType(code); paymentinfotype(code); name[lang = en]; paymentSubType(code); active[default = true]
+; 6_alipay       ; ALTERNATIVE_PAYMENT ; IsvAlternativePaymentInfo  ; AliPay        ; APY
+
+UPDATE BaseStore; uid[unique = true]; allowedIsvPaymentModes(code)[mode=append]
+; apparel-uk ; 6_alipay
+; apparel-de ; 6_alipay

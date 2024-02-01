@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+           
+    <context:annotation-config/>
+
+	<alias name="defaultCheckOrderPaymentTypeAction" alias="checkOrderPaymentTypeAction"/>
+	<bean id="defaultCheckOrderPaymentTypeAction" class="isv.sap.payment.fulfilmentprocess.actions.order.CheckOrderPaymentTypeAction">
+		<property name="modelService" ref="modelService"/>
+		<property name="paymentTypeMappings">
+			<map>
+				<entry key="CREDIT_CARD" value="CREDIT_CARD"/>
+				<entry key="ALTERNATIVE_PAYMENT" value="ALTERNATIVE"/>
+				<entry key="PAY_PAL" value="ALTERNATIVE"/>
+                <entry key="VISA_CHECKOUT" value="VISA_CHECKOUT"/>
+                <entry key="APPLE_PAY" value="APPLE_PAY"/>
+                <entry key="GOOGLE_PAY" value="GOOGLE_PAY"/>
+			</map>
+		</property>
+	</bean>
+
+    <bean id="checkAlternativeAuthorizeOrderPaymentAction" class="isv.sap.payment.fulfilmentprocess.actions.order.CheckAlternativeAuthorizeOrderPaymentAction" parent="abstractAction"/>
+
+	<alias name="defaultCheckPaymentAction" alias="checkPaymentAction"/>
+	<bean id="defaultCheckPaymentAction" class="isv.sap.payment.fulfilmentprocess.actions.order.CheckAlternativePaymentAction">
+		<property name="transitionMap">
+			<map>
+				<entry key="PAYMENT_CAPTURED" value="OK"/>
+				<entry key="PAYMENT_NOT_CAPTURED" value="NOK"/>
+				<entry key="WAITING_FOR_PAYMENT" value="WAIT"/>
+				<entry key="REJECTED" value="NOK"/>
+                <entry key="PAYMENT_AUTHORIZED" value="PAY"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="abstractOrderAction" class="isv.sap.payment.fulfilmentprocess.actions.order.AbstractOrderAction" abstract="true" parent="abstractAction">
+		<property name="timeService" ref="timeService"/>
+	</bean>
+
+	<bean id="duplicatedAuthorizationAction" class="isv.sap.payment.fulfilmentprocess.actions.order.ProcessDuplicatedAuthorizationAction" parent="abstractAction"/>
+
+	<bean id="checkOrderAction" class="isv.sap.payment.fulfilmentprocess.actions.order.CheckOrderAction" parent="abstractAction">
+		<property name="checkOrderService" ref="checkOrderService"/>
+	</bean>
+
+	<bean id="cancelWholeOrderAuthorizationAction" class="isv.sap.payment.fulfilmentprocess.actions.order.CancelWholeOrderAuthorizationAction"
+            parent="abstractAction">
+    </bean>
+
+	<bean id="sendOrderPlacedNotificationAction" class="isv.sap.payment.fulfilmentprocess.actions.order.SendOrderPlacedNotificationAction" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+	<bean id="takePaymentAction" class="isv.sap.payment.fulfilmentprocess.actions.order.TakePaymentAction" parent="abstractAction">
+		<property name="alternativePaymentOrderStatusMap" ref="takePaymentAlternativePaymentOrderStatusMap" />
+		<property name="orderStatusTransitionMap" ref="takePaymentOrderStatusTransitionMap" />
+	</bean>
+
+	<util:map id="takePaymentAlternativePaymentOrderStatusMap">
+		<entry key="PENDING" value="WAITING_FOR_PAYMENT"/>
+		<entry key="CAPTURED" value="PAYMENT_CAPTURED"/>
+		<entry key="SETTLED" value="PAYMENT_CAPTURED"/>
+		<entry key="FAILED" value="PAYMENT_NOT_CAPTURED"/>
+		<entry key="DISPUTED" value="PAYMENT_NOT_CAPTURED"/>
+	</util:map>
+
+	<util:map id="takePaymentOrderStatusTransitionMap">
+		<entry key="WAITING_FOR_PAYMENT" value="WAIT"/>
+		<entry key="PAYMENT_CAPTURED" value="OK"/>
+		<entry key="PAYMENT_NOT_CAPTURED" value="NOK"/>
+	</util:map>
+
+	<bean id="sendPaymentFailedNotificationAction" class="isv.sap.payment.fulfilmentprocess.actions.order.SendPaymentFailedNotificationAction" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+	<bean id="checkTransactionReviewStatusAction" class="isv.sap.payment.fulfilmentprocess.actions.order.CheckTransactionReviewStatusAction" parent="abstractAction">
+		<property name="ticketBusinessService" ref="ticketBusinessService"/>
+	</bean>
+
+	<bean id="fraudCheckOrderAction" class="isv.sap.payment.fulfilmentprocess.actions.order.FraudCheckOrderAction" parent="abstractOrderAction">
+		<property name="fraudService" ref="fraudService"/>
+		<property name="providerName" value="Mockup_3rdPartyProvider"/>
+	</bean>
+
+	<bean id="prepareOrderForManualCheckAction" class="isv.sap.payment.fulfilmentprocess.actions.order.PrepareOrderForManualCheckAction" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+	<bean id="sendFraudErrorNotificationAction" class="isv.sap.payment.fulfilmentprocess.actions.order.SendFraudErrorNotificationAction" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+	<bean id="checkAuthorizeOrderPaymentAction" class="isv.sap.payment.fulfilmentprocess.actions.order.CheckAuthorizeOrderPaymentAction" parent="abstractAction"/>
+
+	<bean id="sendAuthorizationFailedNotificationAction" class="isv.sap.payment.fulfilmentprocess.actions.order.SendAuthorizationFailedNotificationAction" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+	<bean id="reserveOrderAmountAction" class="isv.sap.payment.fulfilmentprocess.actions.order.ReserveOrderAmountAction" parent="abstractAction"/>
+
+	<bean id="fraudCheckOrderInternalAction" class="isv.sap.payment.fulfilmentprocess.actions.order.FraudCheckOrderInternalAction" parent="abstractOrderAction">
+		<property name="fraudService" ref="fraudService"/>
+		<property name="providerName" value="hybris"/>
+	</bean>
+
+	<bean id="orderManualCheckedAction" class="isv.sap.payment.fulfilmentprocess.actions.order.OrderManualCheckedAction" parent="abstractOrderAction"/>
+
+	<bean id="splitOrderAction" class="isv.sap.payment.fulfilmentprocess.actions.order.SplitOrderAction" parent="abstractAction">
+		<property name="orderSplittingService" ref="orderSplittingService"/>
+		<property name="businessProcessService" ref="businessProcessService"/>
+	</bean>
+
+	<bean id="subprocessesCompletedAction" class="isv.sap.payment.fulfilmentprocess.actions.order.SubprocessesCompletedAction" parent="abstractAction"/>
+
+	<bean id="sendOrderCompletedNotificationAction" class="isv.sap.payment.fulfilmentprocess.actions.order.SendOrderCompletedNotificationAction" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+	<bean id="scheduleForCleanUpAction" class="isv.sap.payment.fulfilmentprocess.actions.order.ScheduleForCleanUpAction" parent="abstractAction">
+		<property name="timeService" ref="timeService"/>
+	</bean>
+
+	<bean id="notifyCustomerAboutFraudAction" class="isv.sap.payment.fulfilmentprocess.actions.order.NotifyCustomerAboutFraudAction" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+</beans>

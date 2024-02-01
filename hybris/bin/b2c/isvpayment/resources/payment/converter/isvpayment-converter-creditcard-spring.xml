@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultSaAuthorizationRequestConverter" alias="isv.sap.payment.converter.creditcard.saAuthorizationRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultSaAuthorizationRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.SaAuthorizationRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultCaptureRequestConverter" alias="isv.sap.payment.converter.creditcard.captureRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultCaptureRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.CaptureRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultPaymentTokenCreateRequestConverter" alias="isv.sap.payment.converter.creditcard.paymentTokenCreateRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultPaymentTokenCreateRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.PaymentTokenCreateRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultPaymentTokenDeleteRequestConverter" alias="isv.sap.payment.converter.creditcard.paymentTokenDeleteRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultPaymentTokenDeleteRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.PaymentTokenDeleteRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultRefundFollowOnRequestConverter" alias="isv.sap.payment.converter.creditcard.refundFollowOnRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultRefundFollowOnRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.RefundFollowOnRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultVoidRequestConverter" alias="isv.sap.payment.converter.creditcard.voidRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultVoidRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.VoidRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultAuthorizationRequestConverter" alias="isv.sap.payment.converter.creditcard.authorizationRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultAuthorizationRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.AuthorizationRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultAuthorizationReversalRequestConverter" alias="isv.sap.payment.converter.creditcard.authorizationReversalRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultAuthorizationReversalRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.AuthorizationReversalRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultRefundStandaloneRequestConverter" alias="isv.sap.payment.converter.creditcard.refundStandaloneRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultRefundStandaloneRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.RefundStandaloneRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultEnrollmentRequestConverter" alias="isv.sap.payment.converter.creditcard.enrollmentRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultEnrollmentRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.EnrollmentRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultValidateRequestConverter" alias="isv.sap.payment.converter.creditcard.validateRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultValidateRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.ValidateRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.creditcard.defaultTaxRequestConverter" alias="isv.sap.payment.converter.creditcard.taxRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultTaxRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.TaxRequestConverter"/>
+
+    <bean id="defaultProcessingLevelPopulator" class="isv.cjl.payment.service.executor.request.converter.processinglevel.DefaultProcessingLevelPopulator"/>
+
+</beans>

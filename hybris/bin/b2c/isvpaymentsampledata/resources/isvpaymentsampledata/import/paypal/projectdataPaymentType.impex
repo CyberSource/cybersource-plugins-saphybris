@@ -1,0 +1,2 @@
+INSERT_UPDATE CheckoutPaymentType;code[unique=true];sequenceNumber;name[lang=en]
+;PAYPAL;2;PayPal Payment

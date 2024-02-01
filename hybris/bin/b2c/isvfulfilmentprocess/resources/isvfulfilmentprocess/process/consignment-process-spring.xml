@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2016 SAP SE or an SAP affiliate company.
+ All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+           
+    <context:annotation-config/>
+
+	<!-- Consignment Process Actions -->
+
+	<bean id="sendConsignmentToWarehouseAction" class="isv.sap.payment.fulfilmentprocess.actions.consignment.SendConsignmentToWarehouseAction" parent="abstractAction">
+		<property name="process2WarehouseAdapter" ref="process2WarehouseAdapter"/>
+	</bean>
+
+	<bean id="waitBeforeTransmissionAction" class="isv.sap.payment.fulfilmentprocess.actions.consignment.WaitBeforeTransmissionAction" parent="abstractAction"/>
+
+	<bean id="receiveConsignmentStatusAction" class="isv.sap.payment.fulfilmentprocess.actions.consignment.ReceiveConsignmentStatusAction" parent="abstractAction"/>
+
+	<bean id="confirmConsignmentPickupAction" class="isv.sap.payment.fulfilmentprocess.actions.consignment.ConfirmConsignmentPickupAction" parent="abstractAction"/>
+
+	<bean id="sendDeliveryMessageAction" class="isv.sap.payment.fulfilmentprocess.actions.consignment.SendDeliveryMessageAction" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+	<bean id="sendReadyForPickupMessageAction" class="isv.sap.payment.fulfilmentprocess.actions.consignment.SendReadyForPickupMessageAction" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+	
+	<bean id="sendPickedUpMessageAction" class="isv.sap.payment.fulfilmentprocess.actions.consignment.SendPickedUpMessageAction" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+	<bean id="cancelConsignmentAction" class="isv.sap.payment.fulfilmentprocess.actions.consignment.CancelConsignmentAction" parent="abstractAction"/>
+
+	<bean id="sendCancelMessageAction" class="isv.sap.payment.fulfilmentprocess.actions.consignment.SendCancelMessageAction" parent="abstractAction"/>
+
+	<bean id="subprocessEndAction" class="isv.sap.payment.fulfilmentprocess.actions.consignment.SubprocessEndAction" parent="abstractAction">
+		<property name="businessProcessService" ref="businessProcessService"/>
+	</bean>
+
+	<bean id="allowShipmentAction" class="isv.sap.payment.fulfilmentprocess.actions.consignment.AllowShipmentAction" parent="abstractAction">
+		<property name="process2WarehouseAdapter" ref="process2WarehouseAdapter"/>
+	</bean>
+
+</beans>

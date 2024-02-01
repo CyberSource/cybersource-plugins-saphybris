@@ -1,0 +1,14 @@
+INSERT_UPDATE Customer; uid[unique = true]; name           ; password       ; &customerRef
+                      ; $email       ; $firstName $lastName ; $password ; customer
+
+INSERT_UPDATE Address; owner(&customerRef)[unique = true]; streetname    ; postalcode     ; town       ; country(isocode); billingAddress; contactAddress; shippingAddress; unloadingAddress; title(code); firstname       ; lastname       ; email       ; &addressRef
+                     ; customer                          ; $address ; $postCode ; $city ; $country   ; true          ; false         ; true           ; false           ; mr         ; $firstName ; $lastName ; $email ; address
+
+INSERT_UPDATE PaymentInfo; code[unique = true]; user(&customerRef); billingaddress(&addressRef); &paymentRef
+                         ; $paymentCode  ; customer          ; address                    ; payment
+
+INSERT_UPDATE Cart; guid[unique = true]; user(&customerRef)[unique = true]; deliveryAddress(&addressRef); paymentAddress(&addressRef); paymentinfo(&paymentRef); deliveryMode(code); date[dateformat = dd-MM-yyyy]; currency(isoCode); site(uid)       ; store(uid)      ; &cartRef
+                  ; $cartGuid     ; customer                         ; address                     ; address                    ; payment                 ; standard-gross    ; $today                  ; $currency   ; $baseStore ; $baseStore ; cart
+
+INSERT_UPDATE CartEntry; order(&cartRef)[unique = true]; product(code, catalogVersion(catalog(id), version)); unit(code); quantity
+                       ; cart                          ; $product:apparelProductCatalog:Online         ; pieces    ; 1

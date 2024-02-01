@@ -1,9 +1,0 @@
-#Ant properties
-#Wed Apr 25 16:03:44 BST 2018
-description=ISV SAP Payment Sample fulfilment extension
-name=isvfulfilmentprocess
-builddate=20200402 1419
-releasedate=20190628 1509
-vendor=isv.sap
-version=1905.13
-version.api=1905

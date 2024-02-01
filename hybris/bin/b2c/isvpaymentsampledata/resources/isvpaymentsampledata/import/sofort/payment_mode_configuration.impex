@@ -1,0 +1,5 @@
+INSERT_UPDATE IsvPaymentMode; code[unique = true]; paymentType(code); paymentinfotype(code); name[lang = en]; paymentSubType(code); active[default = true]
+; 4_sofort       ; ALTERNATIVE_PAYMENT ; IsvAlternativePaymentInfo  ; Sofort        ; SOF
+
+UPDATE BaseStore; uid[unique = true]; allowedIsvPaymentModes(code)[mode=append]
+; apparel-de ; 4_sofort

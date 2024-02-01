@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+
+
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+           
+    <context:annotation-config/>
+	<context:component-scan base-package="isv.sap.payment.addon.b2c.controllers" />
+
+	<!-- Expose /acceleratoraddon/web/webroot/WEB-INF/messages/base.js.properties  resource bundle as javascript variables -->
+	<bean id="defaultIsvb2cpaymentaddonJavaScriptMessageResourceAccessor" parent="abstractJavaScriptMessageResourceAccessor">
+		<property name="addOnName" value="isvb2cpaymentaddon"/>
+	</bean>
+
+	<bean id="defaultIsvb2cpaymentaddonBeforeViewJsPropsHandlerAdaptee" parent="abstractBeforeViewJsPropsHandlerAdaptee" class="de.hybris.platform.addonsupport.interceptors.ExportJsPropertiesBeforeViewHandler">
+		<property name="messageSource" ref="defaultIsvb2cpaymentaddonJavaScriptMessageResourceAccessor"/>
+	</bean>
+
+	<bean id="getIsvb2cpaymentaddonBeforeViewHandler" parent="beforeViewHandlerAdapter">
+		<property name="adaptee">
+			<ref bean="defaultIsvb2cpaymentaddonBeforeViewJsPropsHandlerAdaptee"/>
+		</property>
+	</bean>
+	<bean id="isvb2cPaymentAddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
+		<property name="add" ref="getIsvb2cpaymentaddonBeforeViewHandler"/>
+	</bean>
+
+	<bean id="paymentMethodCheckoutStepController" class="isv.sap.payment.addon.controllers.pages.checkout.steps.PaymentMethodCheckoutStepController" />
+	<bean id="summaryCheckoutStepController" class="isv.sap.payment.addon.b2c.controllers.pages.checkout.steps.SummaryCheckoutStepController" />
+	<bean id="cartPageController" class="isv.sap.payment.addon.b2c.controllers.pages.IsvCartPageController" />
+
+</beans>

@@ -1,0 +1,3 @@
+UPDATE CheckoutPaymentType;code[unique=true];sequenceNumber
+;CARD;0
+;ACCOUNT;100
