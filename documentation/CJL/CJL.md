@@ -2,8 +2,8 @@
 
 ## CJL - Core Java Library <!-- omit in toc -->
 
-**Version 3.0.2**
-December 2023
+**Version 24.1.0**
+February 2024
 
 ## Contents <!-- omit in toc -->
 
@@ -126,8 +126,8 @@ December 2023
 | February 2020 | - Added support for Google Pay operations |
 | March 2020    | - Added WeChat Pay |
 | May 2020      | - Repackaging with ISV package |
-| March 2021    | - Upgraded Cybersource Transaction Web Service to version 175 <br> - Added cardTypeSelectionIndicator field to  support Credit Mutuel-CIC transactions <br> - Upgraded cybersource-rest-client-java to version 0.0.30|
-| December 2023 | - Upgraded cybersource-rest-client-java to version 0.0.58 and okhttp to 4.12.0|
+| March 2021    | - Upgraded Cybersource Transaction Web Service to version 175 <br> - Added cardTypeSelectionIndicator field to  support Credit Mutuel-CIC transactions <br> - Upgraded cybersource-rest-client-java to version 0.0.30 |
+| February 2024 | - Upgraded cybersource-rest-client-java to version 0.0.58 and okhttp to 4.12.0 |
 
 ## About This Guide
 
@@ -345,7 +345,7 @@ compile 'commons-io:commons-io:2.6'
 compile 'cglib:cglib-nodep:3.1'
 compile 'joda-time:joda-time:2.9.9'
 compile 'com.squareup.okhttp3:okhttp:4.12.0'
-compile 'com.cybersource:cybersource-rest-client-java:0.0.30'
+compile 'com.cybersource:cybersource-rest-client-java:0.0.58'
 
 // tests related deps
 testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'

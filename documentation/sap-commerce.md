@@ -3,8 +3,8 @@
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 23.1.0**
-December 2023
+**Version 24.1.0**
+February 2024
 
 ## Contents <!-- omit in toc -->
 <!-- TOC -->
@@ -159,7 +159,7 @@ December 2023
 | March 2021    | 3.0.2                        | - The payer authentication and card authorization services are requested at the same time for Flex <br>- Added support for Credit Mutuel-CIC transactions|
 | March 2021    | 3.1.0                        | - SAP Commerce upgrade to 2005 |
 | March 2021    | 3.2.0                        | - SAP Commerce upgrade to 2011 |
-| December 2023 | 23.1.0                       | - Upgraded cybersource-rest-client-java to version 0.0.58 and AuthenticationSdk to 0.0.28 |
+| February 2024 | 24.1.0                       | - Upgraded Cybersource REST Client SDK to version 0.0.58 |
 
 ### Audience and Purpose
 
@@ -310,7 +310,7 @@ All technical installation concepts in this document are initial draft provided 
 The following components are required:
 
 1. SAP Commerce platform release v2011
-2. sap-commerce-payment-plugin-23.1.0.zip
+2. sap-commerce-payment-plugin-24.1.0.zip
 3. Java 11
 4. Required Dependencies installed in maven repository
 
