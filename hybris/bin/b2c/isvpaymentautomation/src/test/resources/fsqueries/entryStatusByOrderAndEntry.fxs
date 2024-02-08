@@ -1,0 +1,10 @@
+SELECT { pte.TransactionStatus }
+    FROM { IsvPaymentTransaction AS pt
+        JOIN order
+        ON { pt:order } = { order:pk }
+        JOIN IsvPaymentTransactionEntry AS pte
+        ON { pte:PaymentTransaction } = { pt:pk }
+        JOIN PaymentTransactionType as ptt
+        ON { pte:type } = { ptt:pk }
+        }
+    WHERE { order.code } = '$orderCode' AND { ptt.code } = '$entryType'

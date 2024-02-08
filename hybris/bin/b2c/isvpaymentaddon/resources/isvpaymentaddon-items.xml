@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="items.xsd">
+
+    <collectiontypes>
+        <collectiontype code="allowedIsvPaymentModes" elementtype="IsvPaymentMode"
+                        autocreate="true" generate="true" type="list"/>
+    </collectiontypes>
+
+    <itemtypes>
+        <itemtype code="BaseStore" autocreate="false" generate="false">
+            <attributes>
+                <attribute qualifier="allowedIsvPaymentModes" type="allowedIsvPaymentModes">
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+    </itemtypes>
+
+</items>

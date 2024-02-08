@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <alias name="isv.sap.payment.converter.alternative.defaultSaleRequestConverter" alias="isv.sap.payment.converter.alternative.saleRequestConverter"/>
+    <bean id="isv.sap.payment.converter.alternative.defaultSaleRequestConverter" class="isv.sap.payment.service.executor.request.converter.alternative.SaleRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.alternative.defaultRefundRequestConverter" alias="isv.sap.payment.converter.alternative.refundRequestConverter"/>
+    <bean id="isv.sap.payment.converter.alternative.defaultRefundRequestConverter" class="isv.sap.payment.service.executor.request.converter.alternative.RefundRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.alternative.defaultOptionsRequestConverter" alias="isv.sap.payment.converter.alternative.optionsRequestConverter"/>
+    <bean id="isv.sap.payment.converter.alternative.defaultOptionsRequestConverter" class="isv.sap.payment.service.executor.request.converter.alternative.OptionsRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.alternative.defaultInitiateRequestConverter" alias="isv.sap.payment.converter.alternative.initiateRequestConverter"/>
+    <bean id="isv.sap.payment.converter.alternative.defaultInitiateRequestConverter" class="isv.sap.payment.service.executor.request.converter.alternative.InitiateRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.alternative.defaultCheckStatusRequestConverter" alias="isv.sap.payment.converter.alternative.checkStatusRequestConverter"/>
+    <bean id="isv.sap.payment.converter.alternative.defaultCheckStatusRequestConverter" class="isv.sap.payment.service.executor.request.converter.alternative.CheckStatusRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.alternative.defaultCreateSessionRequestConverter" alias="isv.sap.payment.converter.alternative.createSessionRequestConverter"/>
+    <bean id="isv.sap.payment.converter.alternative.defaultCreateSessionRequestConverter" class="isv.sap.payment.service.executor.request.converter.alternative.CreateSessionRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.alternative.defaultUpdateSessionRequestConverter" alias="isv.sap.payment.converter.alternative.updateSessionRequestConverter"/>
+    <bean id="isv.sap.payment.converter.alternative.defaultUpdateSessionRequestConverter" class="isv.sap.payment.service.executor.request.converter.alternative.UpdateSessionRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.alternative.defaultCaptureRequestConverter" alias="isv.sap.payment.converter.alternative.captureRequestConverter"/>
+    <bean id="isv.sap.payment.converter.alternative.defaultCaptureRequestConverter" class="isv.sap.payment.service.executor.request.converter.alternative.CaptureRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.alternative.defaultAuthorizationRequestConverter" alias="isv.sap.payment.converter.alternative.authorizationRequestConverter"/>
+    <bean id="isv.sap.payment.converter.alternative.defaultAuthorizationRequestConverter" class="isv.sap.payment.service.executor.request.converter.alternative.AuthorizationRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.alternative.defaultAuthorizationReversalRequestConverter" alias="isv.sap.payment.converter.alternative.authorizationReversalRequestConverter"/>
+    <bean id="isv.sap.payment.converter.alternative.defaultAuthorizationReversalRequestConverter" class="isv.sap.payment.service.executor.request.converter.alternative.AuthorizationReversalRequestConverter"/>
+
+</beans>

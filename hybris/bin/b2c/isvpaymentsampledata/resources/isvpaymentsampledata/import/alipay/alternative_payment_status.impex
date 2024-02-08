@@ -1,0 +1,3 @@
+INSERT_UPDATE IsvCheckAlternativePaymentStatusConfiguration; paymentMethod(code)[unique = true]; statusMap(key(code), value(code))[map-delimiter = ','][key2value-delimiter = '->']
+; APY ; COMPLETED->PAYMENT_CAPTURED,ABANDONED->REJECTED,PENDING->WAITING_FOR_PAYMENT,REJECTED->REJECTED                                                                                             ;
+; AYM ; COMPLETED->PAYMENT_CAPTURED,ABANDONED->REJECTED,PENDING->WAITING_FOR_PAYMENT,REJECTED->REJECTED                                                                                             ;

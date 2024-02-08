@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="items.xsd">
+
+    <collectiontypes>
+        <collectiontype code="longList" elementtype="java.lang.Long" autocreate="true" generate="true" type="list" />
+    </collectiontypes>
+
+    <enumtypes>
+        <enumtype code="IsvPaymentSource" generate="true" autocreate="true">
+            <value code="SECURE_ACCEPTANCE">
+                <description>Secure Acceptance SOP/HOP payment source</description>
+            </value>
+            <value code="SERVICE_API">
+                <description>Payment Service API source</description>
+            </value>
+            <value code="REPORTING">
+                <description>Payment Report API source</description>
+            </value>
+        </enumtype>
+
+        <enumtype code="PaymentType" generate="true" autocreate="true">
+            <value code="CREDIT_CARD">
+                <description>Credit Card payment method (e.g. Visa, MasterCard, American Express, etc.)</description>
+            </value>
+            <value code="PAY_PAL">
+                <description>PayPal payment method</description>
+            </value>
+            <value code="ALTERNATIVE_PAYMENT">
+                <description>Alternative Payment method (e.g. AliPay, Sofort, Bancontact, etc.)</description>
+            </value>
+            <value code="TAX_CALCULATION">
+                <description>
+                    Tax Calculation, provides tax calculation service according to tax regulations, including but not
+                    limited to, district, city, county and state levels of governing tax authority.
+                </description>
+            </value>
+            <value code="FRAUD">
+                <description>Groups fraud management (i.e. account takeover protection, etc.)</description>
+            </value>
+            <value code="VISA_CHECKOUT">
+                <description>Visa Checkout Payment Type</description>
+            </value>
+            <value code="VERIFICATION">
+                <description>Verification Services (e.g. address verification, export compliance)</description>
+            </value>
+            <value code="GIFT">
+                <description>Zero Value Payment method (e.g. products offered as gift).</description>
+            </value>
+            <value code="APPLE_PAY">
+                <description>ApplePay payment method</description>
+            </value>
+            <value code="GOOGLE_PAY">
+                <description>Google Pay payment method</description>
+            </value>
+        </enumtype>
+
+        <enumtype code="AlternativePaymentMethod" generate="true" autocreate="true">
+            <value code="IDL">
+                <description>Alternative payment type identifier for iDEAL</description>
+            </value>
+            <value code="MCH">
+                <description>Alternative payment type identifier for Bancontact</description>
+            </value>
+            <value code="SOF">
+                <description>Alternative payment type identifier for Sofort</description>
+            </value>
+            <value code="APY">
+                <description>Alternative payment type identifier for AliPay web payment</description>
+            </value>
+            <value code="AYM">
+                <description>Alternative payment type identifier for AliPay mobile payment</description>
+            </value>
+            <value code="KLI">
+                <description>Alternative payment type identifier for Klarna</description>
+            </value>
+            <value code="PPL">
+                <description>Alternative payment type identifier for PayPal</description>
+            </value>
+            <value code="APP">
+                <description>Alternative payment type identifier for Apple Pay</description>
+            </value>
+            <value code="GGP">
+                <description>Alternative payment type identifier for Google Pay</description>
+            </value>
+            <value code="WQR">
+                <description>Alternative payment type identifier for WeChat Pay</description>
+            </value>
+        </enumtype>
+
+        <enumtype code="IsvAlternativePaymentStatus" generate="true" autocreate="true">
+            <value code="PENDING">
+                <description>Payment was initiated.</description>
+            </value>
+            <value code="SETTLED">
+                <description>Payment is complete and the funds have been settled in your merchant account.</description>
+            </value>
+            <value code="CAPTURED">
+                <description>Payment is complete and the funds have been settled in your merchant account. Applicable for Klarna capture only</description>
+            </value>
+            <value code="AUTHORIZED">
+                <description>Customer authorized the payment. This status is valid only for Sofort transactions.</description>
+            </value>
+            <value code="ABANDONED">
+                <description>Customer did not confirm the payment within 15 minutes or the customer
+                    cancelled the payment. This status is valid only for iDEAL, Bancontact transactions.</description>
+            </value>
+            <value code="FAILED">
+                <description>Payment failed.</description>
+            </value>
+            <value code="REJECTED">
+                <description>Payment rejected.</description>
+            </value>
+            <value code="COMPLETED">
+                <description>AliPay Payment was completed.</description>
+            </value>
+            <value code="REFUNDED">
+                <description>PayPal payment was refunded.</description>
+            </value>
+            <value code="AUTH_REVERSED">
+                <description>Authorization was successfully reversed.</description>
+            </value>
+            <value code="CREATED">
+                <description>Session was successfully created.</description>
+            </value>
+            <value code="EXPIRED">
+                <description>Authorization expired.</description>
+            </value>
+            <value code="DISPUTED">
+                <description>Authorization disputed.</description>
+            </value>
+        </enumtype>
+
+        <enumtype code="IsvPaymentChannel" generate="true" autocreate="true">
+            <value code="WEB"/>
+            <value code="BACKOFFICE"/>
+        </enumtype>
+
+        <enumtype code="IsvConfigurationType" generate="true" autocreate="true">
+            <value code="MERCHANT"/>
+            <value code="MERCHANT_CONFIG"/>
+            <value code="PAYMENT_CONFIG"/>
+            <value code="ALTERNATIVE_PAYMENT_CONFIG"/>
+        </enumtype>
+
+        <enumtype code="CheckoutPciOptionEnum" generate="false" autocreate="false" dynamic="true">
+            <value code="FLEX" />
+        </enumtype>
+
+        <enumtype code="MerchantProfileType" generate="true" autocreate="true">
+            <value code="SOP"/>
+            <value code="HOP"/>
+            <value code="VCO"/>
+        </enumtype>
+
+        <enumtype code="OrderStatus" autocreate="false" generate="false">
+            <value code="FRAUD"/>
+            <value code="FRAUD_DECISION"/>
+            <value code="WAITING_FOR_PAYMENT"/>
+        </enumtype>
+
+        <enumtype code="PaymentTransactionType" autocreate="false" generate="false">
+            <value code="OPTIONS">
+                <description>Options service - retrieves a list of bank option IDs and bank names</description>
+            </value>
+            <value code="ENROLLMENT">
+                <description>Enrollment service -  checks that the customer is enrolled in a card authentication program</description>
+            </value>
+            <value code="VALIDATE">
+                <description>Validate service -  checks the authentication received from the issuing bank is valid</description>
+            </value>
+            <value code="ORDER_SETUP">
+                <description>Order Setup - sets up a PayPal order in anticipation of one or more authorizations</description>
+            </value>
+            <value code="SET">
+                <description>Set service - alerts PayPal that an order is going to occur</description>
+            </value>
+            <value code="GET">
+                <description>Get service - returns information about a customer</description>
+            </value>
+            <value code="INITIATE">
+                <description>Initiate service - initiation of funds collection process</description>
+            </value>
+            <value code="SALE">
+                <description>Sale service - initiation of funds collection process (usually combines the authorization and capture)</description>
+            </value>
+            <value code="VOID">
+                <description>Void Transaction service - cancellation of a previously submitted capture/refund request</description>
+            </value>
+            <value code="AUTHORIZATION_REVERSAL">
+                <description>Authorization Reversal (Full) service - reversal (cancellation) of a previously submitted authorization</description>
+            </value>
+            <value code="ORDER_SETUP_REVERSAL">
+                <description>Order Setup Reversal (Full) service - reversal (cancellation) of a previously submitted order setup</description>
+            </value>
+            <value code="CHECK_STATUS">
+                <description>Check Status service - returns the most recent status of a payment</description>
+            </value>
+            <value code="TAX">
+                <description>Tax service - provides an accurate assessment of taxes</description>
+            </value>
+            <value code="REFUND"/>
+            <value code="ACCOUNT_TAKEOVER_PROTECTION"/>
+            <value code="ADVANCED_FRAUD_SCREEN"/>
+            <value code="CREATE_SESSION">
+                <description>Sessions service - creates a Klarna session and responds with a processor token</description>
+            </value>
+            <value code="UPDATE_SESSION">
+                <description>Sessions service - update a Klarna session and responds with a processor token</description>
+            </value>
+            <value code="DELIVERY_ADDRESS_VERIFICATION">
+                <description>Delivery Address Verification - verifies a delivery address during card-not-present transactions</description>
+            </value>
+            <value code="EXPORT_COMPLIANCE">
+                <description>Export Compliance service - verifies customer information and returns detailed information about declined orders</description>
+            </value>
+            <value code="BILLING_AGREEMENT"/>
+            <value code="CREATE_BILLING_AGREEMENT_SESSION"/>
+            <value code="CANCEL_ORDER"/>
+        </enumtype>
+
+        <enumtype code="CreditCardType" autocreate="false" generate="false">
+            <value code="discover"/>
+            <value code="carte_bancaire"/>
+        </enumtype>
+    </enumtypes>
+
+    <maptypes>
+        <maptype code="StringMap" argumenttype="java.lang.String" returntype="java.lang.String" generate="true" autocreate="true" />
+        <maptype code="PaymentStatusMap" argumenttype="IsvAlternativePaymentStatus"
+                     returntype="OrderStatus" autocreate="true" generate="false" />
+    </maptypes>
+
+    <relations>
+        <relation code="MerchantToProfile" generate="true" localized="false" autocreate="true">
+            <sourceElement qualifier="merchant" type="IsvMerchant" cardinality="one">
+                <modifiers write="true" initial="true" optional="false" />
+            </sourceElement>
+            <targetElement qualifier="profiles" type="IsvMerchantProfile" cardinality="many">
+                <modifiers partof="true" />
+            </targetElement>
+        </relation>
+    </relations>
+
+    <itemtypes>
+        <itemtype code="IsvMerchantPaymentConfiguration" jaloclass="isv.sap.payment.jalo.IsvMerchantPaymentConfiguration"
+                  autocreate="true" generate="true">
+            <deployment table="IsvMerchantPaymentConf" typecode="11000"/>
+            <attributes>
+                <attribute qualifier="merchant" type="IsvMerchant">
+                    <modifiers read="true" write="true" search="true" optional="false" initial="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="site" type="BaseSite">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="paymentType" type="PaymentType">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="currency" type="Currency">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="paymentChannel" type="IsvPaymentChannel">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="authServiceCommerceIndicator" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="IsvCheckAlternativePaymentStatusConfiguration" generate="true" autocreate="true"
+                  jaloclass="isv.sap.payment.jalo.IsvCheckAlternativePaymentStatusConfiguration">
+            <deployment table="IsvPaymentStatusConf" typecode="11005"/>
+            <attributes>
+                <attribute qualifier="paymentMethod" type="AlternativePaymentMethod">
+                    <modifiers read="true" write="true" optional="false" initial="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="statusMap" type="PaymentStatusMap">
+                    <modifiers read="true" write="true" optional="false" initial="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="IsvMerchant" autocreate="true" generate="true" jaloclass="isv.sap.payment.jalo.IsvMerchant">
+            <deployment table="IsvMerchant" typecode="11001"/>
+            <attributes>
+                <attribute qualifier="id" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" unique="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="userName" type="java.lang.String">
+                    <description>SO API credentials: user name</description>
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property">
+                        <columntype>
+                            <value>HYBRIS.LONG_STRING</value>
+                        </columntype>
+                    </persistence>
+                </attribute>
+                <attribute qualifier="passwordToken" type="java.lang.String">
+                    <description>SO API credentials: password token</description>
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property">
+                        <columntype>
+                            <value>HYBRIS.LONG_STRING</value>
+                        </columntype>
+                    </persistence>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="merchantIdIdx">
+                    <key attribute="id"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="IsvMerchantProfile" autocreate="true" generate="true"
+                  jaloclass="isv.sap.payment.jalo.IsvMerchantProfile">
+            <deployment table="IsvMerchantProfile" typecode="11003"/>
+            <attributes>
+                <attribute qualifier="id" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" unique="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="profileType" type="MerchantProfileType">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="profileId" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="accessKey" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="secretKey" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property">
+                        <columntype>
+                            <value>HYBRIS.LONG_STRING</value>
+                        </columntype>
+                    </persistence>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="merchantProfileIdx">
+                    <key attribute="id"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="IsvPaymentConfiguration" jaloclass="isv.sap.payment.jalo.IsvPaymentConfiguration"
+                  autocreate="true" generate="true">
+            <deployment table="IsvPaymentConfig" typecode="11002"/>
+            <attributes>
+                <attribute qualifier="key" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" unique="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="value" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="configKeyIdx">
+                    <key attribute="key"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="IsvPaymentInfo" generate="true" autocreate="true" extends="PaymentInfo">
+            <attributes>
+                <attribute qualifier="properties" type="StringMap">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="IsvPaymentTransaction" generate="true" autocreate="true" extends="PaymentTransaction">
+            <attributes>
+                <attribute qualifier="merchantId" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="false" initial="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="alternativePaymentMethod" type="AlternativePaymentMethod">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="IsvPaymentTransactionEntry" generate="true" autocreate="true" extends="PaymentTransactionEntry">
+            <attributes>
+                <attribute qualifier="properties" type="StringMap">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="IsvConversionReportPollingCronJob" extends="CronJob" generate="true" autocreate="true">
+            <attributes>
+                <attribute qualifier="lastRunDate" type="java.util.Date">
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="IsvPayPalPaymentInfo" extends="PaymentInfo" autocreate="true" generate="true"/>
+
+        <itemtype code="IsvAlternativePaymentInfo" extends="PaymentInfo" autocreate="true" generate="true"/>
+
+        <itemtype code="IsvVisaCheckoutPaymentInfo" extends="PaymentInfo" autocreate="true" generate="true"/>
+
+        <itemtype code="IsvPaymentMode" extends="PaymentMode" autocreate="true" generate="true">
+            <attributes>
+                <attribute qualifier="paymentType" type="PaymentType">
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="paymentSubType" type="AlternativePaymentMethod">
+                    <description>Concrete alternative payment type, e.g.: IDL, SOF, etc. for cases when main payment type is ALTERNATIVE_PAYMENT</description>
+                    <modifiers read="true" write="true" search="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="IsvAlternativePaymentOption" jaloclass="isv.sap.payment.jalo.IsvAlternativePaymentOption"
+                  autocreate="true" generate="true">
+            <deployment table="IsvAltPaymentOption" typecode="11004"/>
+            <attributes>
+                <attribute qualifier="id" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" unique="true" optional="false" initial="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="name" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="false" initial="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="altOptionIdx">
+                    <key attribute="id"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="IsvAlternativePaymentOptionsCronJob" extends="CronJob" generate="true" autocreate="true">
+            <attributes>
+                <attribute qualifier="merchant" type="IsvMerchant">
+                    <modifiers read="true" write="true" search="true" unique="true" optional="false" initial="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="altOptionCronJobIdx">
+                    <key attribute="merchant"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="IsvAlternativePaymentUpdateOrderStatusJob" extends="CronJob" generate="true" autocreate="true"/>
+
+        <itemtype code="AbstractOrder" autocreate="false" generate="false">
+            <attributes>
+                <attribute qualifier="fingerPrintSessionID" type="java.lang.String">
+                    <persistence type="property"/>
+                    <modifiers read="true" write="true" optional="true"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+    </itemtypes>
+</items>
