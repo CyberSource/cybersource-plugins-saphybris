@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <alias name="isv.sap.payment.converter.paypal.defaultCreateSessionRequestConverter" alias="isv.sap.payment.converter.paypal.createSessionRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypal.defaultCreateSessionRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypal.CreateSessionRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypal.defaultCreateBillingAgreementSessionRequestConverter" alias="isv.sap.payment.converter.paypal.createBillingAgreementSessionRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypal.defaultCreateBillingAgreementSessionRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypal.CreateBillingAgreementSessionRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypal.defaultCheckStatusRequestConverter" alias="isv.sap.payment.converter.paypal.checkStatusRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypal.defaultCheckStatusRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypal.CheckStatusRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypal.defaultAuthorizationRequestConverter" alias="isv.sap.payment.converter.paypal.authorizationRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypal.defaultAuthorizationRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypal.AuthorizationRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypal.defaultAuthorizationReversalRequestConverter" alias="isv.sap.payment.converter.paypal.authorizationReversalRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypal.defaultAuthorizationReversalRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypal.AuthorizationReversalRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypal.defaultOrderSetupRequestConverter" alias="isv.sap.payment.converter.paypal.orderSetupRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypal.defaultOrderSetupRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypal.OrderSetupRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypal.defaultCaptureRequestConverter" alias="isv.sap.payment.converter.paypal.captureRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypal.defaultCaptureRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypal.CaptureRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypal.defaultSaleRequestConverter" alias="isv.sap.payment.converter.paypal.saleRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypal.defaultSaleRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypal.SaleRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypal.defaultRefundRequestConverter" alias="isv.sap.payment.converter.paypal.refundRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypal.defaultRefundRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypal.RefundRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypal.defaultCancelOrderRequestConverter" alias="isv.sap.payment.converter.paypal.cancelOrderRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypal.defaultCancelOrderRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypal.CancelOrderRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypal.defaultBillingAgreementRequestConverter" alias="isv.sap.payment.converter.paypal.billingAgreementRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypal.defaultBillingAgreementRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypal.BillingAgreementRequestConverter"/>
+
+</beans>

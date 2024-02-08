@@ -1,0 +1,9 @@
+#Ant properties
+#Wed Apr 25 16:03:44 BST 2018
+description=ISV B2B Storefront Addon
+name=isvb2bpaymentaddon
+builddate=20210318 1419
+releasedate=20210318 1509
+vendor=isv.sap
+version=24.1.0
+version.api=2011

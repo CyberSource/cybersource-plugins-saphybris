@@ -1,0 +1,10 @@
+SELECT { pte.TransactionStatus }
+    FROM { IsvPaymentTransaction as pt
+        JOIN cart ON { pt:order } = { cart:pk }
+        JOIN customer ON { cart:user } = { customer:PK }
+        JOIN IsvPaymentTransactionEntry AS pte
+        ON { pte:PaymentTransaction } = { pt:pk }
+        JOIN PaymentTransactionType as ptt
+        ON { pte:type } = { ptt:pk }
+        }
+    WHERE { customer.uid } = '$userEmail' AND { ptt.code } = '$entryType'

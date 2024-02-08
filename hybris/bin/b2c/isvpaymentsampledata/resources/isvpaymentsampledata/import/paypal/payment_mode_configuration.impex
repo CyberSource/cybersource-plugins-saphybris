@@ -1,0 +1,6 @@
+INSERT_UPDATE IsvPaymentMode; code[unique = true]; paymentType(code); paymentinfotype(code); name[lang = en]; paymentSubType(code); active[default = true]
+; 2_paypal       ; PAY_PAL             ; IsvPayPalPaymentInfo       ; PayPal        ; ;
+
+UPDATE BaseStore; uid[unique = true]; allowedIsvPaymentModes(code)[mode=append]
+; apparel-uk ; 2_paypal
+; apparel-de ; 2_paypal

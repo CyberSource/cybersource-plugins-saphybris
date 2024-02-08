@@ -1,0 +1,6 @@
+select { order:code }
+    from {
+        order join cronjob
+            on { order:schedulingCronJob } = { cronjob:pk }
+        }
+    where { cronjob:code } = '$cronJob'

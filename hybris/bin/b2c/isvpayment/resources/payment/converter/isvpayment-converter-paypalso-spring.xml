@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <alias name="isv.sap.payment.converter.paypalso.defaultGetRequestConverter" alias="isv.sap.payment.converter.paypalso.getRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypalso.defaultGetRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypalso.GetRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypalso.defaultSetRequestConverter" alias="isv.sap.payment.converter.paypalso.setRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypalso.defaultSetRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypalso.SetRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypalso.defaultRefundRequestConverter" alias="isv.sap.payment.converter.paypalso.refundRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypalso.defaultRefundRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypalso.RefundRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypalso.defaultCaptureRequestConverter" alias="isv.sap.payment.converter.paypalso.captureRequestConverter" />
+    <bean id="isv.sap.payment.converter.paypalso.defaultCaptureRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypalso.CaptureRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypalso.defaultOrderSetupRequestConverter" alias="isv.sap.payment.converter.paypalso.orderSetupRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypalso.defaultOrderSetupRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypalso.OrderSetupRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypalso.defaultOrderSetupReversalRequestConverter" alias="isv.sap.payment.converter.paypalso.orderSetupReversalRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypalso.defaultOrderSetupReversalRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypalso.OrderSetupReversalRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypalso.defaultAuthorizationRequestConverter" alias="isv.sap.payment.converter.paypalso.authorizationRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypalso.defaultAuthorizationRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypalso.AuthorizationRequestConverter"/>
+
+    <alias name="isv.sap.payment.converter.paypalso.defaultAuthorizationReversalRequestConverter" alias="isv.sap.payment.converter.paypalso.authorizationReversalRequestConverter"/>
+    <bean id="isv.sap.payment.converter.paypalso.defaultAuthorizationReversalRequestConverter" class="isv.sap.payment.service.executor.request.converter.paypalso.AuthorizationReversalRequestConverter"/>
+
+</beans>

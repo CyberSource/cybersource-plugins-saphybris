@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<config xmlns="http://www.hybris.com/cockpit/config">
+
+    <context merge-by="type" parent="PaymentInfo" type="IsvPaymentInfo" component="listview">
+        <list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+            <list-view:column qualifier="code"/>
+            <list-view:column qualifier="user"/>
+        </list-view:list-view>
+    </context>
+
+    <context type="IsvPaymentInfo" component="advanced-search">
+        <as:advanced-search xmlns:as="http://www.hybris.com/cockpitng/config/advancedsearch" connection-operator="AND">
+            <as:field-list>
+                <as:field name="code" operator="equals"/>
+                <as:field name="user" operator="equals"/>
+            </as:field-list>
+            <as:sort-field name="code" asc="true"/>
+            <as:sort-field name="user" asc="true"/>
+        </as:advanced-search>
+    </context>
+
+    <context merge-by="type" parent="PaymentInfo" type="IsvPaymentInfo" component="editor-area">
+        <editorArea:editorArea xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea">
+            <editorArea:essentials merge-mode="replace">
+                <editorArea:essentialSection name="hmc.essential">
+                    <editorArea:attribute qualifier="code"/>
+                    <editorArea:attribute qualifier="properties"/>
+                    <editorArea:attribute qualifier="user"/>
+                </editorArea:essentialSection>
+            </editorArea:essentials>
+        </editorArea:editorArea>
+    </context>
+
+    <context merge-by="type" parent="PaymentTransactionEntry" type="IsvPaymentTransactionEntry" component="listview">
+        <list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+            <list-view:column qualifier="code"/>
+        </list-view:list-view>
+    </context>
+
+    <context type="IsvPaymentTransactionEntry" component="advanced-search">
+        <as:advanced-search xmlns:as="http://www.hybris.com/cockpitng/config/advancedsearch" connection-operator="AND">
+            <as:field-list>
+                <as:field name="code" operator="equals"/>
+            </as:field-list>
+            <as:sort-field name="code" asc="true"/>
+        </as:advanced-search>
+    </context>
+
+    <context merge-by="type" parent="PaymentTransactionEntry" type="IsvPaymentTransactionEntry" component="editor-area">
+        <editorArea:editorArea xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea">
+            <editorArea:essentials merge-mode="append">
+                <editorArea:essentialSection name="hmc.essential">
+                    <editorArea:attribute qualifier="code"/>
+                    <editorArea:attribute qualifier="properties"/>
+                </editorArea:essentialSection>
+            </editorArea:essentials>
+        </editorArea:editorArea>
+    </context>
+
+</config>

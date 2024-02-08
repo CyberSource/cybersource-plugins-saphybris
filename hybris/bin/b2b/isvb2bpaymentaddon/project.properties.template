@@ -1,0 +1,35 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform 
+# 
+# Copyright (c) 2000-2016 hybris AG
+# All rights reserved.
+#  
+# This software is the confidential and proprietary information of hybris 
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with hybris.
+#
+#  
+# -----------------------------------------------------------------------
+
+# you can put key/value pairs here.
+# Use Config.getParameter(..) to retrieve the values during runtime.
+
+isvb2bpaymentaddon.key=value
+
+# Specifies the location of the spring context file added automatically to the global platform application context.
+isvb2bpaymentaddon.application-context=isvb2bpaymentaddon-spring.xml
+
+yacceleratorstorefront.additionalWebSpringConfigs.isvb2bpaymentaddon=classpath:/isvb2bpaymentaddon/web/spring/isvb2bpaymentaddon-web-spring.xml
+
+isvb2bpaymentaddon.javascript.paths.responsive=/responsive/common/js/isvb2bpaymentaddon.js
+isvb2bpaymentaddon.css.paths.responsive=/responsive/common/css/isvb2bpaymentaddon.css
+
+yb2bacceleratorstorefront.additionalWebSpringConfigs.isvb2bpaymentaddon=classpath\:/isvb2bpaymentaddon/web/spring/isvb2bpaymentaddon-web-spring.xml
+
+yb2bacceleratorstorefront.wro4jconfigscan.isvb2bpaymentaddon=true
+
+secure.acceptance.powertools.transaction.type=create_payment_token
+
+configuration.view.blacklist.custom=website.apparel-de.http,website.apparel-de.https,website.apparel-uk.http,website.apparel-uk.https,website.electronics.http,website.electronics.https
+configuration.view.strategy=remove

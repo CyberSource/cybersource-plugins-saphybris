@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   		http://www.springframework.org/schema/beans/spring-beans.xsd
+	   		http://www.springframework.org/schema/util
+           	http://www.springframework.org/schema/util/spring-util.xsd
+           	http://www.springframework.org/schema/context
+           	http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+
+	<bean id="isvpaymentaddonCoreDataImportedEventListener" parent="abstractCoreDataImportedEventListener">
+		<property name="supportedChannels">
+			<list value-type="de.hybris.platform.commerceservices.enums.SiteChannel">
+				<value>B2C</value>
+			</list>
+		</property>
+		<property name="addonExtensionMetadata">
+			<bean class="de.hybris.platform.addonsupport.data.AddonExtensionMetadata">
+				<property name="suffixChannel" value="false"/>
+				<property name="baseExtensionName" value="isvpaymentaddon"/>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="isvpaymentaddonSampleDataEventListener" parent="abstractGenericAddOnSampleDataEventListener"  >
+		<property name="extensionName" value="isvpaymentaddon" />
+	</bean>
+
+	<alias alias="isvResponseHandler" name="defaultIsvResponseHandler"/>
+	<bean id="defaultIsvResponseHandler" class="isv.sap.payment.addon.handler.DefaultIsvResponseHandler">
+        <property name="transactionTypeMap">
+            <map>
+                <entry key="authorization" value="AUTHORIZATION"/>
+                <entry key="create_payment_token" value="CREATE_SUBSCRIPTION"/>
+            </map>
+        </property>
+    </bean>
+
+	<bean name="extPaymentInfoFacade"
+		  class="isv.sap.payment.addon.facade.impl.PaymentInfoFacadeImpl"/>
+
+	<alias alias="paymentFacade" name="creditCardPaymentFacade"/>
+	<bean name="abstractPaymentFacade" class="isv.sap.payment.addon.facade.impl.AbstractPaymentFacade"
+		  abstract="true"
+		  parent="defaultPaymentFacade"/>
+	<bean name="creditCardPaymentFacade"
+		  class="isv.sap.payment.addon.facade.impl.CreditCardPaymentFacadeImpl"
+		  parent="abstractPaymentFacade"/>
+	<bean name="payPalPaymentFacade"
+		  class="isv.sap.payment.addon.facade.impl.PayPalPaymentFacadeImpl"
+		  parent="abstractPaymentFacade"/>
+	<bean name="applePayPaymentFacade"
+		  class="isv.sap.payment.addon.facade.impl.ApplePayPaymentFacadeImpl"
+		  parent="abstractPaymentFacade"/>
+	<bean name="googlePayPaymentFacade"
+		  class="isv.sap.payment.addon.facade.impl.GooglePayPaymentFacadeImpl"
+		  parent="abstractPaymentFacade"/>
+	<bean name="visaCheckoutPaymentFacade"
+		  class="isv.sap.payment.addon.facade.impl.VisaCheckoutPaymentFacadeImpl"
+		  parent="abstractPaymentFacade"/>
+	<bean name="klarnaPaymentFacade"
+		  class="isv.sap.payment.addon.facade.impl.KlarnaPaymentFacadeImpl"
+		  parent="abstractPaymentFacade"/>
+	<bean name="alternativePaymentFacade"
+		  class="isv.sap.payment.addon.facade.impl.AlternativePaymentFacadeImpl"
+		  parent="abstractPaymentFacade"/>
+
+	<bean name="isvAlternativePaymentStatusFacade" class="isv.sap.payment.addon.facade.AlternativePaymentStatusFacadeImpl"/>
+
+	<bean name="isvAlipaySaleRequester" class="isv.sap.payment.addon.strategy.impl.AlipaySaleRequester"/>
+	<bean name="isvWeChatSaleRequester" class="isv.sap.payment.addon.strategy.impl.WeChatSaleRequester"/>
+	<bean name="isvIdealSaleRequester" class="isv.sap.payment.addon.strategy.impl.IdealSaleRequester"/>
+	<bean name="isvSofortSaleRequester" class="isv.sap.payment.addon.strategy.impl.SofortSaleRequester"/>
+	<bean name="isvBancontactSaleRequester" class="isv.sap.payment.addon.strategy.impl.BancontactSaleRequester"/>
+	<bean name="isvKlarnaAuthRequester" class="isv.sap.payment.addon.strategy.impl.KlarnaAuthRequester"/>
+
+	<alias alias="checkoutFlowFacade" name="isvCheckoutFlowFacade" />
+	<bean id="isvCheckoutFlowFacade" class="isv.sap.payment.addon.facade.CheckoutFlowFacade" parent="sessionOverrideCheckoutFlowFacade" />
+
+	<alias alias="orderPopulator" name="billingOrderPopulator" />
+	<bean id="billingOrderPopulator" class="isv.sap.payment.addon.order.converters.populator.BillingOrderPopulator" parent="defaultOrderPopulator"/>
+
+
+    <alias alias="paymentModeFacade" name="isvPaymentModeFacade" />
+    <bean name="isvPaymentModeFacade" class="isv.sap.payment.addon.facade.PaymentModeFacadeImpl"/>
+
+    <alias name="defaultPaymentModeConverter" alias="paymentModeConverter"/>
+    <bean id="defaultPaymentModeConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="de.hybris.platform.acceleratorservices.payment.data.PaymentModeData"/>
+        <property name="populators">
+            <list>
+                <bean class="isv.sap.payment.addon.paymentmode.populator.PaymentModePopulator"/>
+            </list>
+        </property>
+    </bean>
+
+	<alias alias="vcPaymentDetailsFacade" name="defaultVCPaymentDetailsFacade" />
+	<bean name="defaultVCPaymentDetailsFacade" class="isv.sap.payment.addon.facade.VisaCheckoutPaymentDetailsFacadeImpl"/>
+
+	<alias name="defaultVCPaymentDetailsConverter" alias="vcPaymentDetailsConverter"/>
+	<bean id="defaultVCPaymentDetailsConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="isv.sap.payment.addon.VisaCheckoutPaymentDetailsData"/>
+		<property name="populators">
+			<list>
+				<bean class="isv.sap.payment.addon.visacheckout.populator.VisaCheckoutPaymentDetailsPopulator"/>
+			</list>
+		</property>
+	</bean>
+
+    <alias alias="orderConfirmationPageProvider" name="defaultOrderConfirmationPageProvider" />
+    <bean id="defaultOrderConfirmationPageProvider" class="isv.sap.payment.addon.provider.DefaultOrderConfirmationPageProvider"/>
+
+    <alias alias="hopSecureAcceptanceUrlProvider" name="defaultHOPSecureAcceptanceUrlProvider"/>
+    <bean id="defaultHOPSecureAcceptanceUrlProvider" class="isv.sap.payment.addon.provider.HOPSecureAcceptanceUrlProvider"/>
+
+	<alias alias="enrollmentPayloadPopulator" name="defaultEnrollmentPayloadPopulator" />
+	<bean id="defaultEnrollmentPayloadPopulator" class="isv.sap.payment.addon.order.converters.populator.EnrollmentPayloadPopulator"/>
+
+	<alias name="defaultEnrollmentPayloadConverter" alias="enrollmentPayloadConverter"/>
+	<bean id="defaultEnrollmentPayloadConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="isv.cjl.payment.data.enrollment.OrderData"/>
+		<property name="populators">
+			<list>
+				<ref bean="enrollmentPayloadPopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<alias alias="enrollmentAddressPopulator" name="defaultEnrollmentAddressPopulator" />
+	<bean id="defaultEnrollmentAddressPopulator" class="isv.sap.payment.addon.address.converters.populator.EnrollmentAddressPopulator"/>
+
+	<alias name="defaultCreditCardReverseAddressConverter" alias="creditCardReverseAddressConverter"/>
+	<bean id="defaultCreditCardReverseAddressConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.core.model.user.AddressModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="creditCardReverseAddressPopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultCreditCardReverseAddressPopulator" alias="creditCardReverseAddressPopulator"/>
+	<bean id="defaultCreditCardReverseAddressPopulator"
+		  class="isv.sap.payment.addon.address.converters.populator.CreditCardReverseAddressPopulator"/>
+
+	<alias name="defaultVisaCheckoutBillingAddressReverseConverter" alias="visaCheckoutBillingAddressReverseConverter"/>
+	<bean id="defaultVisaCheckoutBillingAddressReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.core.model.user.AddressModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="visaCheckoutBillingAddressReversePopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultVisaCheckoutBillingAddressReversePopulator" alias="visaCheckoutBillingAddressReversePopulator"/>
+	<bean id="defaultVisaCheckoutBillingAddressReversePopulator"
+		  class="isv.sap.payment.addon.address.converters.populator.VisaCheckoutBillingAddressReversePopulator"
+		  parent="baseVisaCheckoutAddressReversePopulator"/>
+
+	<alias name="defaultVisaCheckoutDeliveryAddressReverseConverter" alias="visaCheckoutDeliveryAddressReverseConverter"/>
+	<bean id="defaultVisaCheckoutDeliveryAddressReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.core.model.user.AddressModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="visaCheckoutDeliveryAddressReversePopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultVisaCheckoutDeliveryAddressReversePopulator"
+		   alias="visaCheckoutDeliveryAddressReversePopulator"/>
+	<bean id="defaultVisaCheckoutDeliveryAddressReversePopulator"
+		  class="isv.sap.payment.addon.address.converters.populator.VisaCheckoutDeliveryAddressReversePopulator"
+		  parent="baseVisaCheckoutAddressReversePopulator"/>
+
+
+	<bean id="baseVisaCheckoutAddressReversePopulator"
+		  class="isv.sap.payment.addon.address.converters.populator.AbstractVisaCheckoutAddressReversePopulator"
+		  abstract="true"/>
+
+	<alias alias="isvCardTypes" name="defaultIsvCardTypes"/>
+	<util:map id="defaultIsvCardTypes">
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).VISA.code}" value="001"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).MASTER.code}" value="002"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).AMEX.code}" value="003"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).DISCOVER.code}" value="004"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).DINERS.code}" value="005"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).MAESTRO.code}" value="024"/>
+		<entry key="#{T(de.hybris.platform.core.enums.CreditCardType).CARTE_BANCAIRE.code}" value="036"/>
+	</util:map>
+
+</beans>

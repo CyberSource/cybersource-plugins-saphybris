@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd">
+           
+    <context:annotation-config/>
+	<context:component-scan base-package="isv.sap.payment.addon.controllers" />
+
+	<!-- Expose /acceleratoraddon/web/webroot/WEB-INF/messages/base.js.properties  resource bundle as javascript variables -->
+	<bean id="defaultIsvPaymentAddonJavaScriptMessageResourceAccessor" parent="abstractJavaScriptMessageResourceAccessor">
+		<property name="addOnName" value="isvpaymentaddon"/>
+	</bean>
+	<bean id="defaultIsvPaymentAddonBeforeViewJsPropsHandlerAdaptee" parent="abstractBeforeViewJsPropsHandlerAdaptee" class="de.hybris.platform.addonsupport.interceptors.ExportJsPropertiesBeforeViewHandler">
+		<property name="messageSource" ref="defaultIsvPaymentAddonJavaScriptMessageResourceAccessor"/>
+	</bean>
+
+	<bean id="getIsvPaymentAddonBeforeViewHandler" parent="beforeViewHandlerAdapter">
+		<property name="adaptee">
+			<ref bean="defaultIsvPaymentAddonBeforeViewJsPropsHandlerAdaptee"/>
+		</property>
+	</bean>
+	<bean id="isvPaymentAddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
+		<property name="add" ref="getIsvPaymentAddonBeforeViewHandler"/>
+	</bean>
+
+	<util:list id="csrfAllowedUrlPatternsList">
+		<value>/[^/]+(/[^?]*)+(payment/sa/receipt)$</value>
+		<value>/[^/]+(/[^?]*)+(payment/sa/merchantpost)$</value>
+	</util:list>
+
+	<bean id="checkoutController" class="isv.sap.payment.addon.controllers.pages.checkout.CheckoutController"/>
+
+	<bean id="paymentMethodCheckoutStepController" class="isv.sap.payment.addon.controllers.pages.checkout.steps.PaymentMethodCheckoutStepController" />
+
+	<bean id="sopPaymentDetailsFormValidator" class="isv.sap.payment.addon.controllers.validation.SopPaymentDetailsValidator" />
+</beans>

@@ -20,8 +20,8 @@ def platform = platform {
         property 'initialpassword.admin', 'nimda'
         property 'googleApiKey', ''
 
-        property 'build.source', '1.8'
-        property 'build.target', '1.8'
+        property 'build.source', '11.0'
+        property 'build.target', '11.0'
 
         property 'website.apparel-de.http', 'http://apparel-de.local:9001/yb2cacceleratorstorefront'
         property 'website.apparel-de.https', 'https://apparel-de.local:9002/yb2cacceleratorstorefront'
@@ -32,6 +32,8 @@ def platform = platform {
 
         // defines a strategy for credit card payment (FLEX, HOP, SOP)
         property 'site.pci.strategy', 'FLEX'
+
+        property 'log4j.rootLogger.level', 'warn'
     }
 
     extensions {

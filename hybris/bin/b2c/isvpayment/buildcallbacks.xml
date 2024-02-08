@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project name="isvpayment_buildcallbacks">
+
+	<macrodef name="isvpayment_after_yunitinit">
+		<sequential>
+			<yrun>
+				de.hybris.platform.core.Registry.setCurrentTenantByID("junit");
+				new de.hybris.platform.jalo.CoreBasicDataCreator().createEssentialData(null,null);
+				de.hybris.platform.util.RedeployUtilities.shutdown();
+			</yrun>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="isvpayment_before_build">
+	        <sequential>
+	            <property environment="update.dependencies"/>
+	            <property name="update.dependencies" value="true"/>
+
+	            <if>
+	                <equals arg1="${update.dependencies}" arg2="true"/>
+	                <then>
+	                    <echo message="Updating ${ext.isvpayment.extension.name} external dependencies ..."/>
+	                    <delete file="${ext.isvpayment.path}/lib/.lastupdate"/>
+	                    <updateMavenDependencies extname="${ext.isvpayment.extension.name}"/>
+	                    <ysetplatformproperties/>
+	                </then>
+	            </if>
+	        </sequential>
+	    </macrodef>
+
+</project>

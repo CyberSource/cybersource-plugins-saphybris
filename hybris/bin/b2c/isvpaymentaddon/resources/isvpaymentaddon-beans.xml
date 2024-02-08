@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+
+	<bean class="de.hybris.platform.acceleratorservices.payment.data.PaymentSubscriptionResultItem"
+			extends="de.hybris.platform.acceleratorservices.payment.data.PaymentSubscriptionResult">
+		<property name="storedPayment" type="de.hybris.platform.core.model.order.payment.PaymentInfoModel" />
+	</bean>
+
+	<bean class="de.hybris.platform.commercefacades.order.data.AbstractOrderData">
+		<property name="billingAddress" type="de.hybris.platform.commercefacades.user.data.AddressData"/>
+	</bean>
+
+    <bean class="de.hybris.platform.acceleratorservices.payment.data.PaymentModeData">
+        <property name="code" type="String"/>
+        <property name="name" type="String"/>
+        <property name="active" type="boolean"/>
+        <property name="description" type="String"/>
+        <property name="paymentType" type="String"/>
+        <property name="paymentSubType" type="String"/>
+        <property name="paymentInfoType" type="String"/>
+    </bean>
+
+    <bean class="isv.sap.payment.addon.VisaCheckoutPaymentDetailsData">
+        <property name="billToName" type="String"/>
+        <property name="cardArt" type="String"/>
+        <property name="cardExpirationMonth" type="String"/>
+        <property name="cardExpirationYear" type="String"/>
+        <property name="cardType" type="String"/>
+        <property name="cardSuffix" type="String"/>
+    </bean>
+</beans>

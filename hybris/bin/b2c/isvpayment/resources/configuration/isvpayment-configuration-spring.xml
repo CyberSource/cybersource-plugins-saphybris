@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="isv.sap.payment.abstractPaymentConfigurationResolver" abstract="true" class="isv.sap.payment.configuration.resolver.AbstractPaymentConfigurationResolver">
+        <property name="flexibleSearchService" ref="flexibleSearchService"/>
+    </bean>
+
+    <bean id="isv.sap.payment.merchantResolver" parent="isv.sap.payment.abstractPaymentConfigurationResolver"
+          class="isv.sap.payment.configuration.resolver.MerchantResolver"/>
+
+    <bean id="isv.sap.payment.merchantPaymentConfigurationResolver" parent="isv.sap.payment.abstractPaymentConfigurationResolver"
+          class="isv.sap.payment.configuration.resolver.MerchantPaymentConfigurationResolver"/>
+
+    <bean id="isv.sap.payment.defaultPaymentConfigurationResolver" parent="isv.sap.payment.abstractPaymentConfigurationResolver"
+          class="isv.sap.payment.configuration.resolver.DefaultPaymentConfigurationResolver"/>
+
+    <bean id="isv.sap.payment.defaultAlternativePaymentConfigurationResolver" parent="isv.sap.payment.abstractPaymentConfigurationResolver"
+          class="isv.sap.payment.configuration.resolver.DefaultAlternativePaymentConfigurationResolver"/>
+
+    <alias alias="isv.sap.payment.paymentConfigurationService" name="isv.sap.payment.defaultPaymentConfigurationService"/>
+    <bean id="isv.sap.payment.defaultPaymentConfigurationService" class="isv.sap.payment.configuration.service.DefaultPaymentConfigurationService">
+        <property name="resolverMap">
+            <util:map>
+                <entry key="MERCHANT" value-ref="isv.sap.payment.merchantResolver"/>
+                <entry key="MERCHANT_CONFIG" value-ref="isv.sap.payment.merchantPaymentConfigurationResolver"/>
+                <entry key="PAYMENT_CONFIG" value-ref="isv.sap.payment.defaultPaymentConfigurationResolver"/>
+                <entry key="ALTERNATIVE_PAYMENT_CONFIG" value-ref="isv.sap.payment.defaultAlternativePaymentConfigurationResolver"/>
+            </util:map>
+        </property>
+    </bean>
+
+</beans>

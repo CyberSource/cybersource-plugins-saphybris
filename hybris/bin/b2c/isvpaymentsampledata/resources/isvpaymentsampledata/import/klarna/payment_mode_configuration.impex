@@ -1,0 +1,6 @@
+INSERT_UPDATE IsvPaymentMode; code[unique = true]; paymentType(code); paymentinfotype(code); name[lang = en]; paymentSubType(code); active[default = true]
+; 8_klarna       ; ALTERNATIVE_PAYMENT ; IsvAlternativePaymentInfo  ; Klarna        ; KLI
+
+UPDATE BaseStore; uid[unique = true]; allowedIsvPaymentModes(code)[mode=append]
+; apparel-uk ; 8_klarna
+; apparel-de ; 8_klarna

@@ -1,0 +1,5 @@
+INSERT_UPDATE IsvPaymentMode; code[unique = true]; paymentType(code); paymentinfotype(code); name[lang = en]; paymentSubType(code); active[default = true]
+; 3_ideal        ; ALTERNATIVE_PAYMENT ; IsvAlternativePaymentInfo  ; iDeal         ; IDL
+
+UPDATE BaseStore; uid[unique = true]; allowedIsvPaymentModes(code)[mode=append]
+; apparel-de ; 3_ideal
