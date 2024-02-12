@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+    <extension abstractclassprefix="Generated" classprefix="IsvPaymentAddon"
+               description="Isv Payment Addon Extension" name="isvpaymentaddon">
+
+        <requires-extension name="acceleratorstorefrontcommons"/>
+        <requires-extension name="isvpayment"/>
+        <requires-extension name="addonsupport"/>
+
+        <coremodule generated="true" manager="de.hybris.platform.jalo.extension.GenericManager"
+                    packageroot="isv.sap.payment.addon"/>
+
+        <meta key="classpathgen" value="false"/>
+
+    </extension>
+
+</extensioninfo>

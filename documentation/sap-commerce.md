@@ -3,8 +3,8 @@
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 3.2.0**
-March 2021
+**Version 24.1.0**
+February 2024
 
 ## Contents <!-- omit in toc -->
 <!-- TOC -->
@@ -159,6 +159,7 @@ March 2021
 | March 2021    | 3.0.2                        | - The payer authentication and card authorization services are requested at the same time for Flex <br>- Added support for Credit Mutuel-CIC transactions|
 | March 2021    | 3.1.0                        | - SAP Commerce upgrade to 2005 |
 | March 2021    | 3.2.0                        | - SAP Commerce upgrade to 2011 |
+| February 2024 | 24.1.0                       | - Upgraded Cybersource REST Client SDK to version 0.0.58 |
 
 ### Audience and Purpose
 
@@ -309,7 +310,7 @@ All technical installation concepts in this document are initial draft provided 
 The following components are required:
 
 1. SAP Commerce platform release v2011
-2. sap-commerce-payment-plugin-3.2.0.zip
+2. sap-commerce-payment-plugin-24.1.0.zip
 3. Java 11
 4. Required Dependencies installed in maven repository
 
@@ -380,9 +381,9 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     Considering REST APIs are being used by Reporting functionality the following merchant specific configuration should be provided:
 
     ```text
-    # For TEST environment use "CyberSource.Environment.SANDBOX"
-    # For PROD environment use "CyberSource.Environment.PRODUCTION"
-    isv.payment.api.rest.runEnvironment=CyberSource.Environment.SANDBOX
+    # For TEST environment use "apitest.cybersource.com"
+    # For PROD environment use "api.cybersource.com"
+    isv.payment.api.rest.runEnvironment=apitest.cybersource.com
 
     # HTTP_Signature = http_signature and JWT = jwt
     isv.payment.api.rest.authenticationType = http_signature
@@ -401,7 +402,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     isv.payment.api.rest.<merchant_id>.keysDirectory = isvpayment/keys
     ```
 
-    > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `CyberSource.Environment.PRODUCTION` on production environments.
+    > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `api.cybersource.com` on production environments.
 
 4. SAP Commerce provides an OOTB installer tool that allows you to install, initialize and run the platform using a recipe feature. SAP Commerce payment extension package provides two recipes: they allow installation either in B2C or B2B storefronts which are generated from `yacceleratorstorefront` template; configures which extensions are required; adds minimal required properties for using the extension.
 
@@ -556,9 +557,9 @@ SAP Commerce payment extension installation process is based on OOTB build appro
 
     site.pci.strategy=FLEX
 
-    # For TEST environment use "CyberSource.Environment.SANDBOX"
-    # For PROD environment use "CyberSource.Environment.PRODUCTION"
-    isv.payment.api.rest.runEnvironment=CyberSource.Environment.SANDBOX
+    # For TEST environment use "apitest.cybersource.com"
+    # For PROD environment use "api.cybersource.com"
+    isv.payment.api.rest.runEnvironment=apitest.cybersource.com
 
     # HTTP_Signature = http_signature and JWT = jwt
     isv.payment.api.rest.authenticationType = http_signature
@@ -578,7 +579,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
 
     ```
 
-    > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `CyberSource.Environment.PRODUCTION` on production environments.
+    > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `api.cybersource.com` on production environments.
 
 7. In order to keep provided accelerator storefront clean as is, but with payment functionality included, payment add-ons should be installed
 

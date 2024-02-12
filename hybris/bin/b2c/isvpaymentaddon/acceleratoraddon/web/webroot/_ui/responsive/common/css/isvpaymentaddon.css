@@ -1,0 +1,229 @@
+.no-close .ui-dialog-titlebar-close {
+    display: none;
+}
+
+#sopIframeCbox {
+    display: none;
+    overflow: hidden;
+}
+
+#sopRequestIframe {
+    width: 100%;
+    height: 340px;
+    border: 0;
+}
+
+.ccVisaImage {
+    height: 43px;
+    margin-top: 4px;
+}
+
+.ccMasterImage {
+    height: 80px;
+    margin-left: 3px;
+    margin-top: 2px;
+}
+
+.ccMaestroImage {
+    height: 67px;
+    margin-left: 5px;
+    margin-right: 2px;
+}
+
+.ccAmexImage {
+    height: 46px;
+    margin-top: 11px;
+    margin-left: 5px;
+}
+
+@media (max-width:1220px) {
+    .ccLogo {
+        margin-left: 25px;
+    }
+
+    .ccLogo.ccVisaImage {
+        margin-left: 0;
+    }
+
+    .ccLogo.ccDiscoverImage {
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width:640px) {
+    .ccLogo {
+        margin-left: 0px;
+    }
+}
+
+@media (max-width:605px) {
+    .ccLogo {
+        margin-left: 25px;
+    }
+}
+
+.payment-logos {
+    padding-left: 10px;
+}
+
+.ccImage {
+    width: 80px;
+    height: 48px
+}
+
+.ccDiscoverImage {
+    height: 51px;
+    margin-top: 13px;
+}
+
+.cs-help-block {
+    display: block;
+    color: #c53131;
+}
+
+.card-image {
+    width: 100%;
+    max-width: 100px;
+}
+
+#flexCardNumber-container {
+    height: 39px;
+    padding: 10px 15px;
+    border: 1px solid #cccccc;
+}
+
+#flexCardNumber-label {
+    margin-top: 30px;
+}
+
+#flexSecurityCode-container {
+    height: 39px;
+    padding: 10px 15px;
+    border: 1px solid #cccccc;
+}
+
+.flex-microform-focused {
+    border-color: #5adfd9;
+}
+
+.flex-microform-invalid {
+    background: rgb(246, 224, 224);
+    border-color: rgb(197, 49, 49);
+}
+
+.flex-microform-valid {
+    background: rgb(255, 255, 255);
+}
+
+#flexSecurityCode-label {
+    margin-top: 30px;
+}
+
+#flexCardType-label {
+    font-style: italic;
+    margin-top: 10px;
+    color: #005BBC;
+}
+
+.applePayBtnDiv {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.applePayBtn {
+    -webkit-appearance: -apple-pay-button;
+    -apple-pay-button-style: black;
+    height: 30px;
+    width: 150px;
+    -apple-pay-button-type: buy;
+    display: block;
+}
+
+.spinner-wrapper {
+    background-color: black;
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: none;
+    z-index: 999;
+}
+
+.spinner {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height:60px;
+    width:60px;
+    margin-left: 50%;
+    margin-top:20%;
+    -webkit-animation: rotation .6s infinite linear;
+    -moz-animation: rotation .6s infinite linear;
+    -o-animation: rotation .6s infinite linear;
+    animation: rotation .6s infinite linear;
+    border-left:6px solid rgba(0,174,239,.15);
+    border-right:6px solid rgba(0,174,239,.15);
+    border-bottom:6px solid rgba(0,174,239,.15);
+    border-top:6px solid rgba(0,174,239,.8);
+    border-radius:100%;
+    z-index: 999;
+}
+
+@-webkit-keyframes rotation {
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(359deg);}
+}
+@-moz-keyframes rotation {
+    from {-moz-transform: rotate(0deg);}
+    to {-moz-transform: rotate(359deg);}
+}
+@-o-keyframes rotation {
+    from {-o-transform: rotate(0deg);}
+    to {-o-transform: rotate(359deg);}
+}
+@keyframes rotation {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(359deg);}
+}
+
+.place-order-3ds-notification {
+    padding: 0px 10px 20px 20px;
+    text-align: justify;
+}
+
+.googlePayBtnDiv {
+    text-align: center;
+}
+
+.weChatModalInstructions {
+    padding: 20px 20px 20px 20px;
+    text-align: justify;
+    font-size: small;
+}
+
+.visaCheckoutBtnDiv {
+    text-align: center;
+}
+
+.click-to-pay-btn-wrapper {
+    width: 250px;
+    margin: auto;
+}
+
+.click-to-pay-link {
+    float: right;
+    margin-right: 25px;
+    margin-top: -5px
+}
+
+.click-to-pay-label {
+    font-size: 16px;
+    font-weight: 500;
+    vertical-align: middle;
+    margin-left: -5px;
+}
+
+

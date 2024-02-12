@@ -1,0 +1,80 @@
+#Mon, 31 Oct 2022 12:22:15 +0530
+# Specifies the location of the spring context file added automatically to the global platform application context.
+isvpaymentaddon.application-context=isvpaymentaddon-spring.xml
+
+
+
+isvpaymentaddon.javascript.paths.responsive=/responsive/common/js/isvpaymentaddon.js;/responsive/pages/js/checkout/multi/payment/flexCardPaymentDetails.js
+isvpaymentaddon.css.paths.responsive=/responsive/common/css/isvpaymentaddon.css;/responsive/common/css/jquery-ui.css
+
+# URLs that do not need CSRF verification
+csrf.allowed.url.patterns=/[^/]+(/[^?]*)+(sop/response)$,/[^/]+(/[^?]*)+(merchant_callback)$,/[^/]+(/[^?]*)+(hop/response)$,/[^/]+(/[^?]*)+(language)$,/[^/]+(/[^?]*)+(currency)$,.*/checkout/multi/summary/payment/canceled.*,.*payment/ap/pay.*
+
+# Paypal
+isv.payment.paypal.return.url=/checkout/payment/paypal/handleResponse
+isv.payment.paypal.cancelReturn.url=/checkout/multi/summary/view
+
+# Alternative payments configuration
+isv.payment.alternativepayment.return.url=/checkout/payment/ap/return?type\=
+isv.payment.alternativepayment.cancel.url=/checkout/multi/summary/view
+isv.payment.alternativepayment.failed.url=/checkout/multi/summary/view/payment/error
+
+isv.payment.alternativepayment.merchantName=ISV powered
+
+# Alipay
+# reconciliationID=333333333401 => paymentStatus=COMPLETED => reason code=100
+# reconciliationID=333333333402 => paymentStatus=PENDING => reason code=100
+# reconciliationID=333333333403 => paymentStatus=ABANDONED => reason code=100
+# reconciliationID=333333333429 => paymentStatus=-- => reason code=102
+# for testing only, in production env please remove this value
+isv.payment.alternativepayment.alipay.reconcilationId=333333333401
+
+# production only
+#isv.payment.alternativepayment.alipay.merchanturl.host=http://www.alipay.net/cooperate/gateway.do
+# test
+# link to alipay stub controller, for testing only
+isv.payment.alternativepayment.alipay.merchanturl.host=/checkout/payment/ap/alipay
+
+# Apple Pay
+isv.payment.applepay.initiative=web
+# Available decryption types 'ISV_PAYMENT', 'MERCHANT'
+isv.payment.customer.applepay.decryption.type=ISV_PAYMENT
+
+# The following properties MUST be overridden. Please check documentation
+isv.payment.customer.applepay.merchant.identifier=<merchant identifier>
+isv.payment.customer.applepay.apparel-de.initiative.context=<merchantID>
+isv.payment.customer.applepay.apparel-uk.initiative.context=<merchantID>
+
+# Sample keystores: 'isvpaymentaddon/applepay/keystores/isvDecryption/applePayMerchantId.jks' or 'isvpaymentaddon/applepay/keystores/merchDecryption/applePayMerchDecryption.jks'
+isv.payment.customer.applepay.keystore.location=isvpaymentaddon/applepay/keystores/merchDecryption/applePayMerchDecryption.jks
+isv.payment.customer.applepay.keystore.password=<apple pay pwd>
+isv.payment.customer.applepay.merchantidentity.key.password=<apple pay pwd>
+isv.payment.customer.applepay.payment.privatekey.alias=<private key alias>
+isv.payment.customer.applepay.payment.privatekey.password=<apple pay pwd>
+isv.payment.customer.applepay.payment.expiration.time=-1
+
+# Klarna
+klarna.sdk.url=https\://x.klarnacdn.net/kp/lib/v1/api.js
+klarna.success.url=http\://klarna-success.com
+klarna.cancel.url=http\://klarna-cancel.com
+klarna.failure.url=http\://klarna-error.com
+klarna.language.apparel-de=de-DE
+klarna.language.apparel-uk=en-GB
+
+# Visa Checkout
+isv.payment.clicktopay.checkout.sdk.url=https\://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js
+isv.payment.clicktopay.checkout.image.url=https\://sandbox.secure.checkout.visa.com/wallet-services-web/xo/button.png?legacy\=false
+isv.payment.ws.endpoint.address=https\://ics2wstesta.ic3.com\:443/commerce/1.x/transactionProcessor
+isv.payment.flex.microform.sdk.url=https\://flex.cybersource.com/cybersource/assets/microform/0.11.0/flex-microform.min.js
+isv.payment.secure.acceptance.hop.post.url=https\://testsecureacceptance.cybersource.com/pay
+isv.payment.secure.acceptance.hop.subscription.create.post.url=https\://testsecureacceptance.cybersource.com/embedded/token/create
+isv.payment.secure.acceptance.sop.post.url=https\://testsecureacceptance.cybersource.com/silent/embedded/pay
+isv.payment.api.rest.runEnvironment=apitest.cybersource.com
+isv.payment.customer.flex.microform.api.env=SANDBOX
+isv.payment.flex.card.type.selection=false
+site.pci.strategy=FLEX
+
+yb2cacceleratorstorefront.additionalWebSpringConfigs.isvpaymentaddon=classpath\:/isvpaymentaddon/web/spring/isvpaymentaddon-web-spring.xml
+
+yb2cacceleratorstorefront.wro4jconfigscan.isvpaymentaddon=true
+

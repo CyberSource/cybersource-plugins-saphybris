@@ -1,0 +1,2 @@
+INSERT_UPDATE IsvCheckAlternativePaymentStatusConfiguration; paymentMethod(code)[unique = true]; statusMap(key(code), value(code))[map-delimiter = ','][key2value-delimiter = '->']
+; KLI ; PENDING->WAITING_FOR_PAYMENT,FAILED->REJECTED,ABANDONED->REJECTED,AUTHORIZED->PAYMENT_AUTHORIZED                                                                                            ;

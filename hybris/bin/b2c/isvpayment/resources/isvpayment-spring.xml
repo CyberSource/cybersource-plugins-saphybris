@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="isv.sap.payment" />
+
+    <import resource="isvpayment-dao-spring.xml"/>
+    <import resource="isvpayment-cronjobs-spring.xml"/>
+
+    <import resource="payment/isvpayment-payment-spring.xml"/>
+    <import resource="payment/isvpayment-integration-spring.xml"/>
+    <import resource="reporting/isvpayment-reports-spring.xml"/>
+    <import resource="configuration/isvpayment-configuration-spring.xml"/>
+
+    <bean id="isvPaymentSystemSetup" class="isv.sap.payment.setup.IsvPaymentSystemSetup"/>
+
+    <alias alias="isv.sap.payment.paymentTransactionService" name="isv.sap.payment.defaultPaymentTransactionService"/>
+    <bean id="isv.sap.payment.defaultPaymentTransactionService" class="isv.sap.payment.service.DefaultPaymentTransactionService"/>
+
+    <alias alias="isv.sap.payment.paymentCartService" name="isv.sap.payment.defaultPaymentCartService"/>
+    <bean id="isv.sap.payment.defaultPaymentCartService" class="isv.sap.payment.commerceservices.order.DefaultPaymentCartService"/>
+
+    <alias name="isv.sap.payment.defaultPaymentCheckoutFacade" alias="isv.sap.payment.paymentCheckoutFacade"/>
+    <bean id="isv.sap.payment.defaultPaymentCheckoutFacade" class="isv.sap.payment.commercefacades.order.DefaultPaymentCheckoutFacade"
+          parent="defaultAcceleratorCheckoutFacade"/>
+
+    <alias alias="isv.sap.payment.orderDao" name="isv.sap.payment.defaultPaymentOrderDao"/>
+    <bean id="isv.sap.payment.defaultPaymentOrderDao" class="isv.sap.payment.dao.DefaultPaymentOrderDao" parent="defaultOrderDao" />
+
+    <alias alias="isv.sap.payment.paymentSystemInfo" name="isv.sap.payment.defaultPaymentSystemInfo"/>
+    <bean id="isv.sap.payment.defaultPaymentSystemInfo" class="isv.sap.payment.data.PaymentSystemInfo"/>
+
+    <alias alias="isv.sap.payment.paymentOptionService" name="isv.sap.payment.defaultPaymentOptionService"/>
+    <bean id="isv.sap.payment.defaultPaymentOptionService" class="isv.sap.payment.option.service.DefaultPaymentOptionService"/>
+
+    <alias alias="isv.sap.payment.paymentOptionFacade" name="isv.sap.payment.defaultPaymentOptionFacade"/>
+    <bean id="isv.sap.payment.defaultPaymentOptionFacade" class="isv.sap.payment.option.facade.DefaultPaymentOptionFacade"/>
+
+    <alias alias="isv.sap.payment.paymentOptionPopulator" name="isv.sap.payment.defaultPaymentOptionPopulator"/>
+    <bean id="isv.sap.payment.defaultPaymentOptionPopulator" class="isv.sap.payment.option.populator.PaymentOptionPopulator"/>
+
+    <alias alias="isv.sap.payment.paymentOptionConverter" name="isv.sap.payment.defaultPaymentOptionConverter"/>
+    <bean id="isv.sap.payment.defaultPaymentOptionConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="isv.cjl.payment.data.AlternativePaymentOptionData"/>
+        <property name="populators">
+            <list>
+                <ref bean="isv.sap.payment.paymentOptionPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <alias alias="isv.sap.payment.paymentOptionReversePopulator" name="isv.sap.payment.defaultPaymentOptionReversePopulator"/>
+    <bean id="isv.sap.payment.defaultPaymentOptionReversePopulator" class="isv.sap.payment.option.populator.PaymentOptionReversePopulator"/>
+
+    <alias alias="isv.sap.payment.paymentOptionReverseConverter" name="isv.sap.payment.defaultPaymentOptionReverseConverter"/>
+    <bean id="isv.sap.payment.defaultPaymentOptionReverseConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="isv.sap.payment.model.IsvAlternativePaymentOptionModel"/>
+        <property name="populators">
+            <list>
+                <ref bean="isv.sap.payment.paymentOptionReversePopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <alias name="isv.sap.payment.defaultFraudFacade" alias="isv.sap.payment.fraudFacade"/>
+    <bean id="isv.sap.payment.defaultFraudFacade" class="isv.sap.payment.fraud.DefaultFraudFacade"/>
+
+    <alias alias="isv.sap.payment.alternativePaymentOrderStatusService" name="isv.sap.payment.defaultAlternativePaymentOrderStatusService" />
+    <bean id="isv.sap.payment.defaultAlternativePaymentOrderStatusService" class="isv.sap.payment.service.alternativepayment.DefaultAlternativePaymentOrderStatusService"/>
+
+    <alias alias="isv.sap.payment.alternativePaymentOrderStatusContext" name="isv.sap.payment.defaultAlternativePaymentOrderStatusContext" />
+    <bean id="isv.sap.payment.defaultAlternativePaymentOrderStatusContext" class="isv.sap.payment.service.alternativepayment.AlternativePaymentOrderStatusContext">
+        <property name="pendingOrderHandlersMap">
+            <map>
+                <entry key="PPL" value-ref="isv.sap.payment.paypalPaymentPendingOrderHandler"></entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="isv.sap.payment.alternativePaymentAbandonedOrderHandler" class="isv.sap.payment.service.alternativepayment.handler.AlternativePaymentAbandonedOrderHandler"/>
+
+    <bean id="isv.sap.payment.defaultPaymentPendingOrderHandler" class="isv.sap.payment.service.alternativepayment.handler.DefaultPaymentPendingOrderHandler"/>
+    <bean id="isv.sap.payment.paypalPaymentPendingOrderHandler" class="isv.sap.payment.service.alternativepayment.handler.PayPalPaymentPendingOrderHandler"/>
+
+
+    <bean name="abstractOrderGenericDao" class="de.hybris.platform.servicelayer.internal.dao.DefaultGenericDao" >
+		<constructor-arg value="AbstractOrder" />
+	</bean>
+
+    <alias name="isv.sap.payment.converter.defaultPaymentResultToTransactionEntryConverter"
+           alias="isv.sap.payment.converter.paymentResultToTransactionEntryConverter"/>
+    <bean id="isv.sap.payment.converter.defaultPaymentResultToTransactionEntryConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="isv.sap.payment.model.IsvPaymentTransactionEntryModel"/>
+        <property name="populators">
+            <list merge="true">
+                <bean class="isv.sap.payment.service.transaction.PaymentResultTransactionEntryPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>
