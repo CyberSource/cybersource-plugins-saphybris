@@ -4,14 +4,14 @@ ACC.secureacceptance = {
 
     _autoload: ['attachHandlerForPlaceOrderBtn', 'initSOPIframeDialog', 'initDefaultPaymentMode', 'attachHandlerForPaymentModeRadioBtn', 'attachVCHandlers', 'initBasket', 'initApplePay'],
 
-    handleCheckAltPaymentStatusResponse: function(checkStatusResponse, paymentType){
+    handleCheckAltPaymentStatusResponse: function (checkStatusResponse, paymentType) {
         switch (checkStatusResponse) {
             case "PAYMENT_SUCCESS":
                 $(".checkout-paymentmethod").after('<form name="placeOrderAltPayment" action="' + ACC.config.contextPath
-                        + '/checkout/payment/ap/return">' +
-                        '<input type="hidden" name="type" value="'+paymentType+'">'+
-                        '<input type="hidden" name="CSRFToken" value="' + ACC.config.CSRFToken + '" /> ' +
-                        '</form>');
+                    + '/checkout/payment/ap/return">' +
+                    '<input type="hidden" name="type" value="' + paymentType + '">' +
+                    '<input type="hidden" name="CSRFToken" value="' + ACC.config.CSRFToken + '" /> ' +
+                    '</form>');
 
                 $('[name ="placeOrderAltPayment"]').submit();
                 break;
@@ -25,28 +25,28 @@ ACC.secureacceptance = {
     },
 
     checkOrderStatusInterval: function (cartGuid, timeout) {
-        var checkStatusUrl =  ACC.config.contextPath + '/checkout/payment/sa/isorderplaced';
-        var successCallback =  ACC.secureacceptance.handleStatusCheckResponse;
+        var checkStatusUrl = ACC.config.contextPath + '/checkout/payment/sa/isorderplaced';
+        var successCallback = ACC.secureacceptance.handleStatusCheckResponse;
 
         setInterval(function () {
             ACC.secureacceptance.checkOrderStatus(
-                    cartGuid,
-                    checkStatusUrl,
-                    successCallback
+                cartGuid,
+                checkStatusUrl,
+                successCallback
             )
         }, timeout);
     },
 
     checkAlternativePaymentOrderStatusInterval: function (cartGuid, timeout, paymentType) {
         var checkStatusUrl = ACC.config.contextPath + '/checkout/payment/ap/checkstatus';
-        var successCallback =   ACC.secureacceptance.handleCheckAltPaymentStatusResponse;
+        var successCallback = ACC.secureacceptance.handleCheckAltPaymentStatusResponse;
 
         setInterval(function () {
             ACC.secureacceptance.checkOrderStatus(
-                    cartGuid,
-                    checkStatusUrl,
-                    successCallback,
-                    paymentType
+                cartGuid,
+                checkStatusUrl,
+                successCallback,
+                paymentType
             )
         }, timeout);
     },
@@ -69,21 +69,21 @@ ACC.secureacceptance = {
         });
     },
 
-    handleStatusCheckResponse: function(checkStatusResponse){
+    handleStatusCheckResponse: function (checkStatusResponse) {
         if (checkStatusResponse) {
             $(".checkout-paymentmethod").after('<form id="placeOrder" action="' + ACC.config.contextPath
-                    + '/checkout/orderConfirmation/'+orderCode +'" method="get"></form>');
+                + '/checkout/orderConfirmation/' + orderCode + '" method="get"></form>');
             $("#placeOrder").submit();
         }
     },
 
-    handleStatusCheckError: function(){
+    handleStatusCheckError: function () {
         $(".checkout-paymentmethod").after('<form id="paymentError" action="' + ACC.config.contextPath
-                + '/checkout/multi/summary/view/payment/error" method="get"></form>');
+            + '/checkout/multi/summary/view/payment/error" method="get"></form>');
         $("#paymentError").submit();
     },
 
-    termsAndConditionsChecked: function(skipAcceptance) {
+    termsAndConditionsChecked: function (skipAcceptance) {
         if (typeof skipAcceptance !== 'undefined' && skipAcceptance === true) {
             return true;
         }
@@ -126,12 +126,12 @@ ACC.secureacceptance = {
 
     initDefaultPaymentMode: function () {
         if (ACC.expressVisaCheckout == 'true') {
-          var visaCheckoutMode = $("#paymentMode_7_visacheckout");
-          if (visaCheckoutMode.length) {
-            visaCheckoutMode.prop("checked", true);
-            ACC.secureacceptance.selectPaymentMethod(visaCheckoutMode.attr("data-payment-type"));
-            return;
-          }
+            var visaCheckoutMode = $("#paymentMode_7_visacheckout");
+            if (visaCheckoutMode.length) {
+                visaCheckoutMode.prop("checked", true);
+                ACC.secureacceptance.selectPaymentMethod(visaCheckoutMode.attr("data-payment-type"));
+                return;
+            }
         }
         // By default, select Credit Card payment mode
         var creditCardMode = $("#paymentMode_1_creditcard");
@@ -141,9 +141,9 @@ ACC.secureacceptance = {
         }
     },
 
-    initBasket: function() {
+    initBasket: function () {
         if (ACC.cartPage) {
-          ACC.secureacceptance.enableCustomPaymentBtn(".visaCheckoutBtnDiv");
+            ACC.secureacceptance.enableCustomPaymentBtn(".visaCheckoutBtnDiv");
         }
     },
 
@@ -160,13 +160,13 @@ ACC.secureacceptance = {
         }
     },
 
-    initCreditCardPaymentMode: function() {
+    initCreditCardPaymentMode: function () {
         if (typeof MICROFORM !== 'undefined') {
             MICROFORM.setup();
         }
     },
 
-    initKlarnaWidget: function() {
+    initKlarnaWidget: function () {
         if (typeof KLARNA !== 'undefined' && !KLARNA.loaded) {
             // Do not try to load it more than once.
             KLARNA.loaded = true;
@@ -195,7 +195,7 @@ ACC.secureacceptance = {
         }
     },
 
-    selectPaymentMethod: function(selectedPaymentType) {
+    selectPaymentMethod: function (selectedPaymentType) {
         var creditCardDetails = $(".creditCardDetails");
         var vcCardDetails = $(".vc_card_details");
         var klarnaContainer = $("#klarna_container");
@@ -232,36 +232,36 @@ ACC.secureacceptance = {
         }
     },
 
-    enableCustomPaymentBtn: function(btnSelector) {
+    enableCustomPaymentBtn: function (btnSelector) {
         $(".placeOrderBtnDiv").hide();
         $(btnSelector).show();
     },
 
-    disableCustomPaymentBtn: function(btnSelector) {
+    disableCustomPaymentBtn: function (btnSelector) {
         $(".placeOrderBtnDiv").show();
         $(btnSelector).hide();
     },
 
-    getPaymentType: function() {
+    getPaymentType: function () {
         return $("input[type='radio'][name='paymentMode']:checked").attr("data-payment-type");
     },
 
-    isVisaCheckoutPayment: function() {
+    isVisaCheckoutPayment: function () {
         return ACC.secureacceptance.getPaymentType() === "VISA_CHECKOUT";
     },
 
-    isVisaExpressCheckout: function() {
+    isVisaExpressCheckout: function () {
         return ACC.secureacceptance.isVisaCheckoutPayment() && ACC.expressVisaCheckout == 'true';
     },
 
-    createApplePaySession: function(request) {
+    createApplePaySession: function (request) {
         var session = new ApplePaySession(3, request);
 
         session.onvalidatemerchant = function (event) {
             $.ajax({
                 method: 'GET',
                 url: ACC.config.contextPath + '/checkout/payment/ap/applepay/validate',
-                data: {validationUrl: event.validationURL},
+                data: { validationUrl: event.validationURL },
                 success: function (merchSession) {
                     session.completeMerchantValidation(merchSession);
                 }
@@ -294,7 +294,7 @@ ACC.secureacceptance = {
 
     attachHandlerForPlaceOrderBtn: function () {
 
-        var isValidFormData = function(fieldsToValidate) {
+        var isValidFormData = function (fieldsToValidate) {
             var isValid = true;
 
             fieldsToValidate.forEach(function (field) {
@@ -352,10 +352,10 @@ ACC.secureacceptance = {
 
         var submitSOPForm = function () {
             var formFieldsToValidate = [
-                {value: getCardType(), error: $("#card_cardType_errors")},
-                {value: getCardNumber(), error: $("#card_accountNumber_errors")},
-                {value: getCardExpireYear(), error: $("#card_expirationYear_errors")},
-                {value: getCardExpireMonth(), error: $("#card_expirationMonth_errors")}
+                { value: getCardType(), error: $("#card_cardType_errors") },
+                { value: getCardNumber(), error: $("#card_accountNumber_errors") },
+                { value: getCardExpireYear(), error: $("#card_expirationYear_errors") },
+                { value: getCardExpireMonth(), error: $("#card_expirationMonth_errors") }
             ];
 
             if (isValidFormData(formFieldsToValidate) && ACC.secureacceptance.termsAndConditionsChecked()) {
@@ -377,18 +377,18 @@ ACC.secureacceptance = {
             }
         };
 
-        var submitFlexForm = function() {
+        var submitFlexForm = function () {
 
-            if (! MICROFORM.error) {
+            if (!MICROFORM.error) {
                 var formFieldsToValidate = [
-                    {value: getCardNumber(), error: $("#card_accountNumber_errors")},
-                    {value: getCardExpireYear(), error: $("#card_expirationYear_errors")},
-                    {value: getCardExpireMonth(), error: $("#card_expirationMonth_errors")},
-                    {value: getCardCVN(), error: $("#card_cvNumber_errors")}
+                    { value: getCardNumber(), error: $("#card_accountNumber_errors") },
+                    { value: getCardExpireYear(), error: $("#card_expirationYear_errors") },
+                    { value: getCardExpireMonth(), error: $("#card_expirationMonth_errors") },
+                    { value: getCardCVN(), error: $("#card_cvNumber_errors") }
                 ];
 
                 if (ACC.flexCardTypeSelection == 'true') {
-                    formFieldsToValidate.push({value: getCardType(), error: $("#card_cardType_errors")});
+                    formFieldsToValidate.push({ value: getCardType(), error: $("#card_cardType_errors") });
                 }
 
                 if (isValidFormData(formFieldsToValidate) && ACC.secureacceptance.termsAndConditionsChecked()) {
@@ -418,7 +418,7 @@ ACC.secureacceptance = {
         var placeOrderWithPayPal = function () {
             if (ACC.secureacceptance.termsAndConditionsChecked()) {
                 $(".checkout-paymentmethod").after('<form id="paypalPlaceOrder" action="' + ACC.config.contextPath
-                + '/checkout/payment/paypal/startFlow" method="get"></form>');
+                    + '/checkout/payment/paypal/startFlow" method="get"></form>');
                 $("#paypalPlaceOrder").submit();
             }
         };
@@ -427,48 +427,53 @@ ACC.secureacceptance = {
             var alternativePaymentCode = $("input[type='radio'][name='paymentMode']:checked").val();
 
             if (ACC.secureacceptance.termsAndConditionsChecked()) {
-                $(".checkout-paymentmethod").after(
-                    '<form id="alternativePlaceOrder" action="' + ACC.config.contextPath + '/checkout/payment/ap/pay" method="post">' +
-                    '<input type="hidden" name="paymentModeCode" value="' + alternativePaymentCode + '" /> ' +
-                    '<input type="hidden" name="CSRFToken" value="' + ACC.config.CSRFToken + '" /> ' +
-                    '</form>');
-               $("#alternativePlaceOrder").submit();
+                // Dynamically create the form to avoid XSS risks
+                var form = $('<form>', {
+                    id: "alternativePlaceOrder",
+                    action: ACC.config.contextPath + '/checkout/payment/ap/pay',
+                    method: "post"
+                }).append(
+                    $('<input>', { type: 'hidden', name: 'paymentModeCode', value: alternativePaymentCode }),
+                    $('<input>', { type: 'hidden', name: 'CSRFToken', value: ACC.config.CSRFToken })
+                );
+
+                // Append the form to the DOM and submit it
+                $(".checkout-paymentmethod").after(form);
+                $("#alternativePlaceOrder").submit();
             }
+
         };
 
 
         var placeOrderWithWeChatPayment = function () {
-            if (ACC.secureacceptance.termsAndConditionsChecked())
-            {
+            if (ACC.secureacceptance.termsAndConditionsChecked()) {
                 var alternativePaymentCode = $("input[type='radio'][name='paymentMode']:checked").val();
 
                 event.preventDefault();
                 var url = ACC.config.contextPath + '/checkout/payment/ap/payNoRedirect';
-                var postData = {paymentModeCode: alternativePaymentCode};
+                var postData = { paymentModeCode: alternativePaymentCode };
 
                 $.post(url, postData, undefined, 'html')
-                        .done(function (result, data, status) {
-                            result = ACC.sanitizer.sanitize(result);
-                            showWeChatPayQRModal(result);
+                    .done(function (result, data, status) {
+                        result = ACC.sanitizer.sanitize(result);
+                        showWeChatPayQRModal(result);
 
-                        })
-                        .fail(function (response, status, error) {
-                            window.location = ACC.config.contextPath + response.responseText;
-                        });
+                    })
+                    .fail(function (response, status, error) {
+                        window.location = ACC.config.contextPath + response.responseText;
+                    });
             }
         };
 
-        var showWeChatPayQRModal = function (qrURL)
-        {
+        var showWeChatPayQRModal = function (qrURL) {
             var title = $('#weChatModalTitle').text().trim();
 
-            ACC.colorbox.open(title,{
+            ACC.colorbox.open(title, {
                 inline: true,
                 height: "600px",
                 width: "500px",
                 href: ".checkout-weChatPaymentDetails",
-                onComplete: function ()
-                {
+                onComplete: function () {
                     $(this).colorbox.resize();
                 }
             });
@@ -486,7 +491,7 @@ ACC.secureacceptance = {
             });
         };
 
-        var placeOrderWithKlarna = function() {
+        var placeOrderWithKlarna = function () {
             if (ACC.secureacceptance.termsAndConditionsChecked()) {
                 if (!KLARNA.loadResponse || !KLARNA.loadResponse['show_form'] || KLARNA.loadResponse['errors']) {
                     window.location = ACC.config.contextPath + '/checkout/multi/summary/view/payment/error';
@@ -503,26 +508,36 @@ ACC.secureacceptance = {
                     }
                 });
 
-                Klarna.Credit.authorize({}, function(res) {
+                Klarna.Credit.authorize({}, function (res) {
                     KLARNA.authResponse = res;
                     console.log(JSON.stringify(res));
+                    if (KLARNA.authResponse['approved'] === true) {
+                        // Safely get the alternative payment code
+                        var alternativePaymentCode = $("input[type='radio'][name='paymentMode']:checked").val();
 
-                  if (KLARNA.authResponse['approved'] === true) {
-                    var alternativePaymentCode = $("input[type='radio'][name='paymentMode']:checked").val();
-                    $(".checkout-paymentmethod").after(
-                      '<form id="alternativePlaceOrder" action="' + ACC.config.contextPath + '/checkout/payment/ap/pay" method="post">' +
-                      '<input type="hidden" name="paymentModeCode" value="' + alternativePaymentCode + '" /> ' +
-                      '<input type="hidden" name="klarnaAuthToken" value="' + KLARNA.authResponse['authorization_token'] + '" /> ' +
-                      '</form>');
-                    $("#alternativePlaceOrder").submit();
-                  } else if (KLARNA.authResponse['show_form'] === false) {
-                    window.location = ACC.config.contextPath + '/checkout/multi/summary/view/payment/error';
-                  }
+                        // Create the form dynamically to avoid direct string concatenation
+                        var form = $('<form>', {
+                            id: "alternativePlaceOrder",
+                            action: ACC.config.contextPath + '/checkout/payment/ap/pay',
+                            method: "post"
+                        }).append(
+                            $('<input>', { type: 'hidden', name: 'paymentModeCode', value: alternativePaymentCode }),
+                            $('<input>', { type: 'hidden', name: 'klarnaAuthToken', value: KLARNA.authResponse['authorization_token'] })
+                        );
+
+                        // Append the form to the DOM and submit
+                        $(".checkout-paymentmethod").after(form);
+                        $("#alternativePlaceOrder").submit();
+                    } else if (KLARNA.authResponse['show_form'] === false) {
+                        // Redirect to the error page safely
+                        window.location = ACC.config.contextPath + '/checkout/multi/summary/view/payment/error';
+                    }
+
                 });
             }
         };
 
-        var placeOrderWithVisaCheckout = function() {
+        var placeOrderWithVisaCheckout = function () {
             ACC.secureacceptance.vcSuccess({ callid: ACC.vcCallId });
         };
 
@@ -538,7 +553,7 @@ ACC.secureacceptance = {
                     currencyCode: currencyIso,
                     supportedNetworks: ['visa', 'masterCard', 'amex', 'discover'],
                     merchantCapabilities: ['supports3DS'],
-                    total: {label: storeName, amount: orderTotal, type: 'final'}
+                    total: { label: storeName, amount: orderTotal, type: 'final' }
                 }
 
                 var session = ACC.secureacceptance.createApplePaySession(request);
@@ -587,11 +602,11 @@ ACC.secureacceptance = {
         var $element = (ACC.cartPage ? $(".visaCheckoutBtnDiv") : $(".checkout-paymentmethod"));
 
         $element.after(
-          '<form id="visaCheckoutPlaceOrder" action="' + ACC.config.contextPath + successEndpoint + '" method="post">' +
-              '<input type="hidden" name="callId" value="' + payment.callid + '" /> ' +
-              '<input type="hidden" name="CSRFToken" value="' + ACC.config.CSRFToken + '" /> ' +
-              (ACC.cartPage ? '' : '<input type="hidden" name="expressCheckout" value="' + ACC.secureacceptance.isVisaExpressCheckout() + '" />') +
-          '</form>');
+            '<form id="visaCheckoutPlaceOrder" action="' + ACC.config.contextPath + successEndpoint + '" method="post">' +
+            '<input type="hidden" name="callId" value="' + payment.callid + '" /> ' +
+            '<input type="hidden" name="CSRFToken" value="' + ACC.config.CSRFToken + '" /> ' +
+            (ACC.cartPage ? '' : '<input type="hidden" name="expressCheckout" value="' + ACC.secureacceptance.isVisaExpressCheckout() + '" />') +
+            '</form>');
 
         $("#visaCheckoutPlaceOrder").submit();
     },
@@ -611,7 +626,7 @@ ACC.secureacceptance = {
         }
     },
 
-    attachVCHandlers: function() {
+    attachVCHandlers: function () {
         if (typeof V !== 'undefined') {
             V.on("payment.success", ACC.secureacceptance.vcSuccess);
             V.on("payment.error", ACC.secureacceptance.vcError);
@@ -619,9 +634,9 @@ ACC.secureacceptance = {
         }
     },
 
-    initApplePay: function() {
-       if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
+    initApplePay: function () {
+        if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
             $('input[data-payment-type=APP]').parent().removeClass("hidden");
-       }
+        }
     }
 };

@@ -1,13 +1,14 @@
-
 # Payment Plugin <!-- omit in toc -->
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 24.1.0**
-February 2024
+**Version 25.1.0**
+January 2025
 
 ## Contents <!-- omit in toc -->
+
 <!-- TOC -->
+
 - [Introduction](#introduction)
 - [Installation and Upgrade](#installation-and-upgrade)
   - [Requirements](#requirements)
@@ -147,19 +148,20 @@ February 2024
 
 ## Recent Revisions to This Document
 
-| Release       | Release version              | Changes                      |
-|---------------|------------------------------|------------------------------|
-| May 2018      | 2.0.0                        | Repackaged solution              |
-| November 2018 | 2.1.0                        | Added documentation for: <br>- Flex Microform <br>- Apple Pay <br>- Token Management Service  <br>The section [Reference Implementation](#_nfslfvdlftqg) updated with:  <br>- Device fingerprinting implementation details  <br>- Updated fulfillment process |
-| June 2019     | 2.2.1                        | Added documentation for: <br>- New Update Session operation for Klarna <br>- Enabling 3DS 2.x |
-| July 2019     | 2.3.0                        | - Introduced an enhancement of configurable mappers, in order to convert request / response between low level objects and CJL <br>- Adjusted converters to use new approach for creating requests what was introduced in CJL 2.3.0 |
-| January 2020  | 2.4.0                        | - Added integration support for the REST API using Java Client SDK <br>- Migrated Reporting and Transaction Search from Servlet to REST APIs |
-| March 2020    | 2.5.0                        | - Added support for Google Pay <br>- Added support for WeChat payments <br>- SAP Commerce upgrade to 19.0.5 |
-| May 2020      | 3.0.0                        | - Re-packaging under ISV package |
-| March 2021    | 3.0.2                        | - The payer authentication and card authorization services are requested at the same time for Flex <br>- Added support for Credit Mutuel-CIC transactions|
-| March 2021    | 3.1.0                        | - SAP Commerce upgrade to 2005 |
-| March 2021    | 3.2.0                        | - SAP Commerce upgrade to 2011 |
-| February 2024 | 24.1.0                       | - Upgraded Cybersource REST Client SDK to version 0.0.58 |
+| Release       | Release version | Changes                                                                                                                                                                                                                                                    |
+| ------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| May 2018      | 2.0.0           | Repackaged solution                                                                                                                                                                                                                                        |
+| November 2018 | 2.1.0           | Added documentation for: <br>- Flex Microform <br>- Apple Pay <br>- Token Management Service <br>The section [Reference Implementation](#_nfslfvdlftqg) updated with: <br>- Device fingerprinting implementation details <br>- Updated fulfillment process |
+| June 2019     | 2.2.1           | Added documentation for: <br>- New Update Session operation for Klarna <br>- Enabling 3DS 2.x                                                                                                                                                              |
+| July 2019     | 2.3.0           | - Introduced an enhancement of configurable mappers, in order to convert request / response between low level objects and CJL <br>- Adjusted converters to use new approach for creating requests what was introduced in CJL 2.3.0                         |
+| January 2020  | 2.4.0           | - Added integration support for the REST API using Java Client SDK <br>- Migrated Reporting and Transaction Search from Servlet to REST APIs                                                                                                               |
+| March 2020    | 2.5.0           | - Added support for Google Pay <br>- Added support for WeChat payments <br>- SAP Commerce upgrade to 19.0.5                                                                                                                                                |
+| May 2020      | 3.0.0           | - Re-packaging under ISV package                                                                                                                                                                                                                           |
+| March 2021    | 3.0.2           | - The payer authentication and card authorization services are requested at the same time for Flex <br>- Added support for Credit Mutuel-CIC transactions                                                                                                  |
+| March 2021    | 3.1.0           | - SAP Commerce upgrade to 2005                                                                                                                                                                                                                             |
+| March 2021    | 3.2.0           | - SAP Commerce upgrade to 2011                                                                                                                                                                                                                             |
+| February 2024 | 24.1.0          | - Upgraded Cybersource REST Client SDK to version 0.0.58                                                                                                                                                                                                   |
+| January 2025  | 25.1.0          | - Upgraded Nimbus JOSE+JWT to version 9.37.2 <br>- Security Scan Fixes                                                                                                                                                                                     |
 
 ### Audience and Purpose
 
@@ -169,7 +171,7 @@ This document is intended for merchants who want to use Payment and Value Added 
 
 ### Note, Important, and Warning Statements
 
-> ![Note](images/note.jpg)  A Note contains helpful suggestions or references to material not contained in the document.
+> ![Note](images/note.jpg) A Note contains helpful suggestions or references to material not contained in the document.
 
 ![Important](images/important.jpg) An Important statement contains information essential to successfully completing a task or learning a concept.
 
@@ -177,29 +179,29 @@ This document is intended for merchants who want to use Payment and Value Added 
 
 ### Text and Command Conventions
 
-| **Convention** | **Usage**                                                                                          |
-|----------------|----------------------------------------------------------------------------------------------------|
-| `Inline Code`     | Field and service names in text; for example: Include the `card_accountNumber` field.|
-|                   | Items that you are instructed to act upon; for example: `Click Save`. |
-| ```Code Block```  | XML elements. |
-|                   | Code examples and samples. |
+| **Convention** | **Usage**                                                                             |
+| -------------- | ------------------------------------------------------------------------------------- |
+| `Inline Code`  | Field and service names in text; for example: Include the `card_accountNumber` field. |
+|                | Items that you are instructed to act upon; for example: `Click Save`.                 |
+| `Code Block`   | XML elements.                                                                         |
+|                | Code examples and samples.                                                            |
 
 ### Acronyms and terminology
 
-| **SI** | System Integrator. A person or company that specializes in integrating the SAP Commerce Payment extension |
-| --- | --- |
-| **CJL** | Core Java Library. A Java Library, which provides an extensible and platform agnostic integration layer over the payment provider API |
-| **RI** | Reference Implementation. The implementation of SAP Commerce using the Core Java Library based on B2C and B2BB accelerators |
-| **OOTB** | Out Of The Box |
-| **Google Guice** | Google Guice is an open source software framework that provides support for dependency injection using annotations to configure Java objects. It is used in the CJL for wiring dependencies |
-| **Converter** | A component in CJL which transforms payment service request into operation specific object. |
-| **Payment service request** | An upper level object container defined in CJL, that contains information necessary for executing payment operation |
-| **Payment service result** | An upper level object container defined in CJL, which contains the result of payment operation execution |
-| **PSP** | Payment Service Provider |
-| **Installer** | SAP Commerce OOTB installation script. |
-| **Recipe** | Installation script, that manages SAP Commerce installation process, by providing an internal DSL |
-| **Add-On** | An extension that overrides existing web functionality, by holding existing SAP Commerce code intact |
-| **local.properties** | A file which contains property values that are used by SAP Commerce in order to override or extend functionalities |
+| **SI**                      | System Integrator. A person or company that specializes in integrating the SAP Commerce Payment extension                                                                                   |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **CJL**                     | Core Java Library. A Java Library, which provides an extensible and platform agnostic integration layer over the payment provider API                                                       |
+| **RI**                      | Reference Implementation. The implementation of SAP Commerce using the Core Java Library based on B2C and B2BB accelerators                                                                 |
+| **OOTB**                    | Out Of The Box                                                                                                                                                                              |
+| **Google Guice**            | Google Guice is an open source software framework that provides support for dependency injection using annotations to configure Java objects. It is used in the CJL for wiring dependencies |
+| **Converter**               | A component in CJL which transforms payment service request into operation specific object.                                                                                                 |
+| **Payment service request** | An upper level object container defined in CJL, that contains information necessary for executing payment operation                                                                         |
+| **Payment service result**  | An upper level object container defined in CJL, which contains the result of payment operation execution                                                                                    |
+| **PSP**                     | Payment Service Provider                                                                                                                                                                    |
+| **Installer**               | SAP Commerce OOTB installation script.                                                                                                                                                      |
+| **Recipe**                  | Installation script, that manages SAP Commerce installation process, by providing an internal DSL                                                                                           |
+| **Add-On**                  | An extension that overrides existing web functionality, by holding existing SAP Commerce code intact                                                                                        |
+| **local.properties**        | A file which contains property values that are used by SAP Commerce in order to override or extend functionalities                                                                          |
 
 ## Related Documents
 
@@ -219,7 +221,7 @@ Ecommerce Platform plugin comes with Core Java library documentation which is th
 - Level II and Level III Processing Using the Simple Order API ([HTML](http://apps.cybersource.com/library/documentation/dev_guides/Level_2_3_SO_API/html) |[PDF](http://apps.cybersource.com/library/documentation/dev_guides/Level_2_3_SO_API/Level_II_III_SO_API.pdf) )
 - PayPal Express Checkout Using Alternative Payments and the Simple Order API ([PDF](https://apps.cybersource.com/library/documentation/dev_guides/AltPay_PayPal_Express_SO/AltPay_PayPal_Express_SO_API.pdf)) ([HTML](https://apps.cybersource.com/library/documentation/dev_guides/AltPay_PayPal_Express_SO/html))
 - Online Bank Transfers Using the Simple Order API ([HTML](http://apps.cybersource.com/library/documentation/dev_guides/OnlineBankTransfers_SO_API/html) |[PDF](http://apps.cybersource.com/library/documentation/dev_guides/OnlineBankTransfers_SO_API/OnlineBankTransfers_SO_API.pdf) )
-- Authorizations with Payment Network Tokens Using the Simple Order API  ([HTML](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/html/index.html) |[PDF](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/Authorizations_PNT_SO_API.pdf))
+- Authorizations with Payment Network Tokens Using the Simple Order API ([HTML](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/html/index.html) |[PDF](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/Authorizations_PNT_SO_API.pdf))
 - Tax Calculation Service for the Simple Order API ( [HTML](http://apps.cybersource.com/library/documentation/dev_guides/Tax_SO_API/html) | [PDF](http://apps.cybersource.com/library/documentation/dev_guides/Tax_SO_API/Tax_SO_API.pdf))
 - Reporting Developer Guides ( [HTML](https://developer.cybersource.com/api/developer-guides/dita-reporting-rest-api-dev-guide-102718/reporting_api.html))
 - Payer Authentication Using the Simple Order API ( [HTML](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/html/) | [PDF](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf) )
@@ -249,7 +251,7 @@ More details on SAP Commerce accelerators: <https://help.sap.com/viewer/4c33bf18
 As part of reference functionality, the following features are supported:
 
 | Feature                                     | CJL 3.0.2 | SAP B2C | SAP B2B | Description                                         |
-|---------------------------------------------|-----------|---------|---------|-----------------------------------------------------|
+| ------------------------------------------- | --------- | ------- | ------- | --------------------------------------------------- |
 | SA SOP                                      | Y         | Y       | Y       | Secure Acceptance Silent Order Post                 |
 | Flex Microform v.0.11                       | Y         | Y       | N       | Secure field - PCI compliant                        |
 | SA WM (HOP)                                 | Y         | Y       | Y       | Secure Acceptance Web Mobile (Hosted Order Page)    |
@@ -310,7 +312,7 @@ All technical installation concepts in this document are initial draft provided 
 The following components are required:
 
 1. SAP Commerce platform release v2011
-2. sap-commerce-payment-plugin-24.1.0.zip
+2. sap-commerce-payment-plugin-25.1.0.zip
 3. Java 11
 4. Required Dependencies installed in maven repository
 
@@ -330,7 +332,7 @@ Following errors will be thrown during SAP Commerce build:
 
 #### Solution <!-- omit in toc -->
 
-The "isvpayment" extension comes with all the library binaries included in "hybris/bin/isvpayment/lib" so that you are able to build the extension without Maven. For that you will need to disable Maven dependency resolution for the extension (please see the documentation here <https://help.sap.com/viewer/d0224eca81e249cb821f2cdf45a82ace/2011/en-US/120f6d7b89a745018cb28b5e34318fa4.html>). 
+The "isvpayment" extension comes with all the library binaries included in "hybris/bin/isvpayment/lib" so that you are able to build the extension without Maven. For that you will need to disable Maven dependency resolution for the extension (please see the documentation here <https://help.sap.com/viewer/d0224eca81e249cb821f2cdf45a82ace/2011/en-US/120f6d7b89a745018cb28b5e34318fa4.html>).
 
 As a quick local build solution the dependency can be installed in local maven repository and retrieved as a cached dependency as per <https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html>.
 
@@ -340,7 +342,7 @@ $mvn install:install-file -Dfile=isv-payment-api-3.0.2.jar -DgroupId=isv.payment
 
 Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.2.jar".
 
-> ![Note](images/note.jpg) According to SAP documentation:  The ant updateMavenDependencies task deletes all *.jar files from the lib folder by default. Only libraries listed in unmanaged-dependencies.txt files are not deleted.
+> ![Note](images/note.jpg) According to SAP documentation: The ant updateMavenDependencies task deletes all \*.jar files from the lib folder by default. Only libraries listed in unmanaged-dependencies.txt files are not deleted.
 
 ## Installation steps
 
@@ -350,289 +352,289 @@ SAP Commerce payment extension installation process is based on OOTB build appro
 
 1. Obtain SAP Commerce Suite 2011 release package and unzip it into appropriate location
 
-    ```text
-    $unzip sap-commerce-suite-2011.zip -d sap-commerce-suite-2011
-    ```
+   ```text
+   $unzip sap-commerce-suite-2011.zip -d sap-commerce-suite-2011
+   ```
 
 2. Copy the payment extensions to SAP Commerce release, following default folder structure
 
-    ```text
-    $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-2011
-    ```
+   ```text
+   $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-2011
+   ```
 
 3. Configure the merchant data
 
-    Please update the configuration files by providing your payment merchant configuration. To do this please find the configuration template files having extension ".tpl", rename them to "\*.impex" and edit them by adding merchant details.
+   Please update the configuration files by providing your payment merchant configuration. To do this please find the configuration template files having extension ".tpl", rename them to "\*.impex" and edit them by adding merchant details.
 
-    ```text
-    $cd sap-commerce-suite-2011/hybris/bin/isvpaymentsampledata/
-    $cd /resources/isvpaymentsampledata/import
-    ```
+   ```text
+   $cd sap-commerce-suite-2011/hybris/bin/isvpaymentsampledata/
+   $cd /resources/isvpaymentsampledata/import
+   ```
 
-    For each payment method:
+   For each payment method:
 
-    ```text
-    $mv merchant_payment_configuration.impex.tpl merchant_payment_configuration.impex
-    $mv cronjobs.impex.tpl cronjobs.impex
-    ```
+   ```text
+   $mv merchant_payment_configuration.impex.tpl merchant_payment_configuration.impex
+   $mv cronjobs.impex.tpl cronjobs.impex
+   ```
 
-    ![Note](images/note.jpg) Please notice not all payment method provides `cronjobs.impex.tpl` thus no need to run `mv cronjobs.impex.tpl cronjobs.impex`
+   ![Note](images/note.jpg) Please notice not all payment method provides `cronjobs.impex.tpl` thus no need to run `mv cronjobs.impex.tpl cronjobs.impex`
 
-    Considering REST APIs are being used by Reporting functionality the following merchant specific configuration should be provided:
+   Considering REST APIs are being used by Reporting functionality the following merchant specific configuration should be provided:
 
-    ```text
-    # For TEST environment use "apitest.cybersource.com"
-    # For PROD environment use "api.cybersource.com"
-    isv.payment.api.rest.runEnvironment=apitest.cybersource.com
+   ```text
+   # For TEST environment use "apitest.cybersource.com"
+   # For PROD environment use "api.cybersource.com"
+   isv.payment.api.rest.runEnvironment=apitest.cybersource.com
 
-    # HTTP_Signature = http_signature and JWT = jwt
-    isv.payment.api.rest.authenticationType = http_signature
+   # HTTP_Signature = http_signature and JWT = jwt
+   isv.payment.api.rest.authenticationType = http_signature
 
-    # HTTP Parameters
-    # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=http_signature"
-    isv.payment.api.rest.<merchant_id>.merchantKeyId = <merchantKeyId>
-    isv.payment.api.rest.<merchant_id>.merchantsecretKey = <merchantsecretKey>
+   # HTTP Parameters
+   # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=http_signature"
+   isv.payment.api.rest.<merchant_id>.merchantKeyId = <merchantKeyId>
+   isv.payment.api.rest.<merchant_id>.merchantsecretKey = <merchantsecretKey>
 
-    # JWT Parameters
-    # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=jwt"
-    isv.payment.api.rest.<merchant_id>.keyAlias = <merchant_id>
-    isv.payment.api.rest.<merchant_id>.keyPass = <merchant_id>
-    isv.payment.api.rest.<merchant_id>.keyFileName = <merchant_id>
-    # P12 key path. Enter the folder path where the .p12 file is located.
-    isv.payment.api.rest.<merchant_id>.keysDirectory = isvpayment/keys
-    ```
+   # JWT Parameters
+   # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=jwt"
+   isv.payment.api.rest.<merchant_id>.keyAlias = <merchant_id>
+   isv.payment.api.rest.<merchant_id>.keyPass = <merchant_id>
+   isv.payment.api.rest.<merchant_id>.keyFileName = <merchant_id>
+   # P12 key path. Enter the folder path where the .p12 file is located.
+   isv.payment.api.rest.<merchant_id>.keysDirectory = isvpayment/keys
+   ```
 
-    > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `api.cybersource.com` on production environments.
+   > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `api.cybersource.com` on production environments.
 
 4. SAP Commerce provides an OOTB installer tool that allows you to install, initialize and run the platform using a recipe feature. SAP Commerce payment extension package provides two recipes: they allow installation either in B2C or B2B storefronts which are generated from `yacceleratorstorefront` template; configures which extensions are required; adds minimal required properties for using the extension.
 
-    > ![Note](images/note.jpg) You execute the recipes with the script `install.sh` (Unix/Mac) or `install.bat` (Windows), respectively.
+   > ![Note](images/note.jpg) You execute the recipes with the script `install.sh` (Unix/Mac) or `install.bat` (Windows), respectively.
 
-    Installation for b2c storefront:
+   Installation for b2c storefront:
 
-    ```text
-    $cd sap-commerce-suite-2011/installer
-    $./install.sh -r b2c_acc_isv
-    $./install.sh -r b2c_acc_isv initialize
-    ```
+   ```text
+   $cd sap-commerce-suite-2011/installer
+   $./install.sh -r b2c_acc_isv
+   $./install.sh -r b2c_acc_isv initialize
+   ```
 
-    Installation for b2b storefront:
+   Installation for b2b storefront:
 
-    ```text
-    $cd sap-commerce-suite-2011/installer
-    $./install.sh -r b2b_acc_isv
-    $./install.sh -r b2b_acc_isv initialize
-    ```
+   ```text
+   $cd sap-commerce-suite-2011/installer
+   $./install.sh -r b2b_acc_isv
+   $./install.sh -r b2b_acc_isv initialize
+   ```
 
-    > ![Note](images/note.jpg) Both `b2c_acc_isv` and `b2b_acc_isv` recipes include an additional step which generates automatically `yb2cacceleratorstorefront` and `yb2bacceleratorstorefront` extensions respectively based on `yacceleratorstorefront` template. The step is implemented in `createStoreFrontExt` Gradle task and depends on `setup` task.
+   > ![Note](images/note.jpg) Both `b2c_acc_isv` and `b2b_acc_isv` recipes include an additional step which generates automatically `yb2cacceleratorstorefront` and `yb2bacceleratorstorefront` extensions respectively based on `yacceleratorstorefront` template. The step is implemented in `createStoreFrontExt` Gradle task and depends on `setup` task.
 
-    OOTB SAP Commerce configured apparel storefronts (this is b2c storefront) to respond to dns names, which should be added into hosts file, this is more reliable than using IP addresses.
+   OOTB SAP Commerce configured apparel storefronts (this is b2c storefront) to respond to dns names, which should be added into hosts file, this is more reliable than using IP addresses.
 
-    Open hosts file for editing and add the following line:
+   Open hosts file for editing and add the following line:
 
-    ```text
-     127.0.0.1 apparel-de.local apparel-uk.local
-    ```
+   ```text
+    127.0.0.1 apparel-de.local apparel-uk.local
+   ```
 
-    For b2b storefront (powertools) add following entry:
+   For b2b storefront (powertools) add following entry:
 
-    ```text
-     127.0.0.1 powertools.local
-    ```
+   ```text
+    127.0.0.1 powertools.local
+   ```
 
 5. Now platform is ready to be started
 
-    For b2c use:
+   For b2c use:
 
-    ```text
-     $./install.sh -r b2c_acc_isv start
-    ```
+   ```text
+    $./install.sh -r b2c_acc_isv start
+   ```
 
-    For b2c use:
+   For b2c use:
 
-    ```text
-     $./install.sh -r b2b_acc_isv start
-    ```
+   ```text
+    $./install.sh -r b2b_acc_isv start
+   ```
 
-    In order to check that SAP Commerce starts, the home page should be accessed, as a result the home screen should be displayed.
+   In order to check that SAP Commerce starts, the home page should be accessed, as a result the home screen should be displayed.
 
-    For b2c:
+   For b2c:
 
-    ```text
-     https://apparel-uk.local:9002/yb2cacceleratorstorefront
-    ```
+   ```text
+    https://apparel-uk.local:9002/yb2cacceleratorstorefront
+   ```
 
-    For b2c:
+   For b2c:
 
-    ```text
-     https://powertools.local:9002/yb2bacceleratorstorefront
-    ```
+   ```text
+    https://powertools.local:9002/yb2bacceleratorstorefront
+   ```
 
 #### Step by Step installation - manual approach <!-- omit in toc -->
 
 1. Obtain SAP Commerce suite 2011 release package and unzip it into appropriate location
 
-    ```text
-     $unzip sap-commerce-suite-2011.zip -d sap-commerce-suite-2011
-    ```
+   ```text
+    $unzip sap-commerce-suite-2011.zip -d sap-commerce-suite-2011
+   ```
 
 2. Install B2C components with accelerator storefront, that includes apparel store as sample data
 
-    ```text
-    $cd sap-commerce-suite-2011/installer
-    $./install.sh -r b2c_acc
-    $cd ..
-    ```
+   ```text
+   $cd sap-commerce-suite-2011/installer
+   $./install.sh -r b2c_acc
+   $cd ..
+   ```
 
-    > ![Note](images/note.jpg) If you need b2b functionality use b2b_acc recipe
+   > ![Note](images/note.jpg) If you need b2b functionality use b2b_acc recipe
 
 3. Generate a separate B2C storefront extension from `yacceleratorstorefront` template, using OOTB `extgen` tool
 
-    ```text
-    $cd hybris/bin/platform
-    $. ./setantenv.sh
-    $ant extgen -Dinput.template=yacceleratorstorefront -Dinput.name=yb2cacceleratorstorefront -Dinput.package=de.hybris.platform.yb2cacceleratorstorefront
-    ```
+   ```text
+   $cd hybris/bin/platform
+   $. ./setantenv.sh
+   $ant extgen -Dinput.template=yacceleratorstorefront -Dinput.name=yb2cacceleratorstorefront -Dinput.package=de.hybris.platform.yb2cacceleratorstorefront
+   ```
 
-    For B2B functionality use following command
+   For B2B functionality use following command
 
-    ```text
-    $cd hybris/bin/platform
-    $. ./setantenv.sh
-    $ant extgen -Dinput.template=yacceleratorstorefront -Dinput.name=yb2bacceleratorstorefront -Dinput.package=de.hybris.platform.yb2bacceleratorstorefront
-    ```
+   ```text
+   $cd hybris/bin/platform
+   $. ./setantenv.sh
+   $ant extgen -Dinput.template=yacceleratorstorefront -Dinput.name=yb2bacceleratorstorefront -Dinput.package=de.hybris.platform.yb2bacceleratorstorefront
+   ```
 
 4. Copy payment extensions to SAP Commerce suite, following default folder structure
 
-    ```text
-     $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-2011
-    ```
+   ```text
+    $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-2011
+   ```
 
 5. In order to use payment extensions, they need to be added and configured into localextensions.xml file. This file contains all extensions, which are used by the platform on startup.
 
-    ```text
-     $vim ../../config/localextensions.xml
-    ```
+   ```text
+    $vim ../../config/localextensions.xml
+   ```
 
-    For b2c functionality add following extensions at the end of `localextensions.xml` file
+   For b2c functionality add following extensions at the end of `localextensions.xml` file
 
-    ```text
-    <extension name='isvpayment' />
-    <extension name='isvpaymentaddon' />
-    <extension name='isvb2cpaymentaddon' />
-    <extension name='isvpaymentsampledata' />
-    <extension name='isvfulfilmentprocess' />
-    <extension name='yb2cacceleratorstorefront' />
-    ```
+   ```text
+   <extension name='isvpayment' />
+   <extension name='isvpaymentaddon' />
+   <extension name='isvb2cpaymentaddon' />
+   <extension name='isvpaymentsampledata' />
+   <extension name='isvfulfilmentprocess' />
+   <extension name='yb2cacceleratorstorefront' />
+   ```
 
-    For b2b functionality add following extensions at the end of `localextensions.xml` file
+   For b2b functionality add following extensions at the end of `localextensions.xml` file
 
-    ```text
-    <extension name='isvpayment' />
-    <extension name='isvpaymentaddon' />
-    <extension name='isvb2bpaymentaddon' />
-    <extension name='isvpaymentsampledata' />
-    <extension name='isvfulfilmentprocess' />
-    <extension name='yb2bacceleratorstorefront' />
-    ```
+   ```text
+   <extension name='isvpayment' />
+   <extension name='isvpaymentaddon' />
+   <extension name='isvb2bpaymentaddon' />
+   <extension name='isvpaymentsampledata' />
+   <extension name='isvfulfilmentprocess' />
+   <extension name='yb2bacceleratorstorefront' />
+   ```
 
-    Remove existing declared extensions from `localextensions.xml` file
+   Remove existing declared extensions from `localextensions.xml` file
 
-    ```text
-    <extension name='yacceleratorfulfilmentprocess' />
-    <extension name='yacceleratorstorefront' />
-    ```
+   ```text
+   <extension name='yacceleratorfulfilmentprocess' />
+   <extension name='yacceleratorstorefront' />
+   ```
 
 6. Payment extensions are built using Java 11, containing the latest java features and fixes. Also in order to customize credentials, related to commands or reporting, merchant specific properties should be added into `local.properties` file
 
-    ```text
-    $vim ../../config/local.properties
-    ```
+   ```text
+   $vim ../../config/local.properties
+   ```
 
-    Add following properties at the end of property file
+   Add following properties at the end of property file
 
-    ```text
-    build.source=11.0
-    build.target=11.0
+   ```text
+   build.source=11.0
+   build.target=11.0
 
-    site.pci.strategy=FLEX
+   site.pci.strategy=FLEX
 
-    # For TEST environment use "apitest.cybersource.com"
-    # For PROD environment use "api.cybersource.com"
-    isv.payment.api.rest.runEnvironment=apitest.cybersource.com
+   # For TEST environment use "apitest.cybersource.com"
+   # For PROD environment use "api.cybersource.com"
+   isv.payment.api.rest.runEnvironment=apitest.cybersource.com
 
-    # HTTP_Signature = http_signature and JWT = jwt
-    isv.payment.api.rest.authenticationType = http_signature
+   # HTTP_Signature = http_signature and JWT = jwt
+   isv.payment.api.rest.authenticationType = http_signature
 
-    # HTTP Parameters
-    # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=http_signature"
-    isv.payment.api.rest.<merchant_id>.merchantKeyId = <merchantKeyId>
-    isv.payment.api.rest.<merchant_id>.merchantsecretKey = <merchantsecretKey>
+   # HTTP Parameters
+   # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=http_signature"
+   isv.payment.api.rest.<merchant_id>.merchantKeyId = <merchantKeyId>
+   isv.payment.api.rest.<merchant_id>.merchantsecretKey = <merchantsecretKey>
 
-    # JWT Parameters
-    # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=jwt"
-    isv.payment.api.rest.<merchant_id>.keyAlias = <merchant_id>
-    isv.payment.api.rest.<merchant_id>.keyPass = <merchant_id>
-    isv.payment.api.rest.<merchant_id>.keyFileName = <merchant_id>
-    # P12 key path. Enter the folder path where the .p12 file is located.
-    isv.payment.api.rest.<merchant_id>.keysDirectory = isvpayment/keys
+   # JWT Parameters
+   # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=jwt"
+   isv.payment.api.rest.<merchant_id>.keyAlias = <merchant_id>
+   isv.payment.api.rest.<merchant_id>.keyPass = <merchant_id>
+   isv.payment.api.rest.<merchant_id>.keyFileName = <merchant_id>
+   # P12 key path. Enter the folder path where the .p12 file is located.
+   isv.payment.api.rest.<merchant_id>.keysDirectory = isvpayment/keys
 
-    ```
+   ```
 
-    > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `api.cybersource.com` on production environments.
+   > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `api.cybersource.com` on production environments.
 
 7. In order to keep provided accelerator storefront clean as is, but with payment functionality included, payment add-ons should be installed
 
-    For b2c:
+   For b2c:
 
-    ```text
-     ant addoninstall -Daddonnames="isvpaymentaddon,isvb2cpaymentaddon" -DaddonStorefront.yacceleratorstorefront="yb2cacceleratorstorefront"
-    ```
+   ```text
+    ant addoninstall -Daddonnames="isvpaymentaddon,isvb2cpaymentaddon" -DaddonStorefront.yacceleratorstorefront="yb2cacceleratorstorefront"
+   ```
 
-    For b2b:
+   For b2b:
 
-    ```text
-    ant addoninstall -Daddonnames="b2bacceleratoraddon,isvpaymentaddon,isvb2bpaymentaddon" -DaddonStorefront.yacceleratorstorefront="yb2bacceleratorstorefront"
-    ```
+   ```text
+   ant addoninstall -Daddonnames="b2bacceleratoraddon,isvpaymentaddon,isvb2bpaymentaddon" -DaddonStorefront.yacceleratorstorefront="yb2bacceleratorstorefront"
+   ```
 
-    Where b2bacceleratoraddon is OOTB SAP Commerce addon for enabling b2b functionality, if you already installed this addon you can omit it in the previous command
+   Where b2bacceleratoraddon is OOTB SAP Commerce addon for enabling b2b functionality, if you already installed this addon you can omit it in the previous command
 
 8. OOTB apparel storefront is configured to respond to DNS names, which should be added into hosts file, this is more reliable than using IP addresses.
 
-    Open hosts file for editing and add the following line
+   Open hosts file for editing and add the following line
 
-    For b2c:
+   For b2c:
 
-    ```text
-     127.0.0.1 apparel-de.local apparel-uk.local
-    ```
+   ```text
+    127.0.0.1 apparel-de.local apparel-uk.local
+   ```
 
-    For b2b:
+   For b2b:
 
-    ```text
-     127.0.0.1 powertools.local
-    ```
+   ```text
+    127.0.0.1 powertools.local
+   ```
 
 9. After all configuration steps are done, the platform is ready to be initialized and started. Initialization is done using ant command, after that platform is started by running the provided server script.
 
-    ```text
-    $ant initialize
-    $./hybrisserver.sh
-    ```
+   ```text
+   $ant initialize
+   $./hybrisserver.sh
+   ```
 
-    In order to check that the platform has started, home page should be accessed, as a result home screen should be displayed
+   In order to check that the platform has started, home page should be accessed, as a result home screen should be displayed
 
-    For b2c use:
+   For b2c use:
 
-    ```text
-    https://apparel-uk.local:9002/yb2cacceleratorstorefront
-    ```
+   ```text
+   https://apparel-uk.local:9002/yb2cacceleratorstorefront
+   ```
 
-    For b2b use:
+   For b2b use:
 
-    ```text
-    https://apparel-uk.local:9002/yb2bacceleratorstorefront
-    ```
+   ```text
+   https://apparel-uk.local:9002/yb2bacceleratorstorefront
+   ```
 
 # Payment services
 
@@ -847,22 +849,22 @@ The custom JSP tag **pciStrategyType** could be used to display the UI fragment 
 
 For Flex Microform, the following configuration properties are defined:
 
-| **Configuration property** | **Description** |
-| --- | --- |
-| isv.payment.flex.microform.sdk.url | The URL for the Flex Microform Javascript SDK |
-| isv.payment.customer.flex.microform.api.key.id  | Customer specific Flex API key ID obtained from your payment provider |
-| isv.payment.customer.flex.microform.shared.secret | Shared secret for Flex API key |
-| isv.payment.customer.flex.microform.api.env | Flex API environment: `SANDBOX` - to use the FLEX API test environment,  `PRODUCTION` - to use the FLEX API live environment. Additional properties can be used to change the host and URI path of the Flex API service, e.g for `SANDBOX` environment use `isv.payment.customer.flex.microform.api.SANDBOX.host` for host location (host and port) and `isv.payment.customer.flex.microform.api.SANDBOX.path` for URI path (`/flex/v1/keys`). Usually only `isv.payment.customer.flex.microform.api.env` property should be configured. |
-| isv.payment.flex.card.type.selection | Possible values true/false. Indicates if the card type selection dropdown in the payment form will be enabled. This is useful when processing payments with cards that are co-branded (e.g. Carte Bancaire), so the user is able to select the card type from the list in the dropdown. |
+| **Configuration property**                        | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| isv.payment.flex.microform.sdk.url                | The URL for the Flex Microform Javascript SDK                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| isv.payment.customer.flex.microform.api.key.id    | Customer specific Flex API key ID obtained from your payment provider                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| isv.payment.customer.flex.microform.shared.secret | Shared secret for Flex API key                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| isv.payment.customer.flex.microform.api.env       | Flex API environment: `SANDBOX` - to use the FLEX API test environment, `PRODUCTION` - to use the FLEX API live environment. Additional properties can be used to change the host and URI path of the Flex API service, e.g for `SANDBOX` environment use `isv.payment.customer.flex.microform.api.SANDBOX.host` for host location (host and port) and `isv.payment.customer.flex.microform.api.SANDBOX.path` for URI path (`/flex/v1/keys`). Usually only `isv.payment.customer.flex.microform.api.env` property should be configured. |
+| isv.payment.flex.card.type.selection              | Possible values true/false. Indicates if the card type selection dropdown in the payment form will be enabled. This is useful when processing payments with cards that are co-branded (e.g. Carte Bancaire), so the user is able to select the card type from the list in the dropdown.                                                                                                                                                                                                                                                 |
 
 For Secure Acceptance, the following configuration properties are defined:
 
-| **Configuration property** | **Description** |
-| --- | --- |
-| isv.payment.secure.acceptance.sop.post.url | The endpoint URL for Secure Acceptance Silent Order POST (SOP) |
-| isv.payment.secure.acceptance.hop.post.url | The endpoint URL for Secure Acceptance Web/Mobile (HOP) |
-| isv.payment.secure.acceptance.hop.subscription.create.post.url | The endpoint URL for Secure Acceptance Web/Mobile token creation |
-| secure.acceptance.{site}.transaction.type | The type of operation to authorize credit card payment for SOP method: [authorization -OR- create_payment_token]. This type of operation is configured at site level. For example: secure.acceptance.apparel-uk.transaction.type=authorizationsecure.acceptance.powertools.transaction.type=create_payment_token |
+| **Configuration property**                                     | **Description**                                                                                                                                                                                                                                                                                                  |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| isv.payment.secure.acceptance.sop.post.url                     | The endpoint URL for Secure Acceptance Silent Order POST (SOP)                                                                                                                                                                                                                                                   |
+| isv.payment.secure.acceptance.hop.post.url                     | The endpoint URL for Secure Acceptance Web/Mobile (HOP)                                                                                                                                                                                                                                                          |
+| isv.payment.secure.acceptance.hop.subscription.create.post.url | The endpoint URL for Secure Acceptance Web/Mobile token creation                                                                                                                                                                                                                                                 |
+| secure.acceptance.{site}.transaction.type                      | The type of operation to authorize credit card payment for SOP method: [authorization -OR- create_payment_token]. This type of operation is configured at site level. For example: secure.acceptance.apparel-uk.transaction.type=authorizationsecure.acceptance.powertools.transaction.type=create_payment_token |
 
 #### Operations
 
@@ -874,17 +876,17 @@ Each Credit Card payment operation is based on a common CJL abstraction that enc
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components defined in CJL is provided for each payment operation:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Authorization | AuthorizationRequestBuilder |
+| **Payment Operation**            | **Request builder implementation\***              |
+| -------------------------------- | ------------------------------------------------- |
+| Authorization                    | AuthorizationRequestBuilder                       |
 | Authorization(Secure Acceptance) | isv.cjl.payment.sa.SecureAcceptanceRequestBuilder |
-| Authorization Reversal | AuthorizationReversalRequestBuilder |
-| Capture | CaptureRequestBuilder |
-| Payment Token Create | PaymentTokenCreateRequestBuilder |
-| Payment Token Delete | PaymentTokenDeleteRequestBuilder |
-| Refund (follow-on) | RefundFollowOnRequestBuilder |
-| Refund (stand alone) | RefundStandaloneRequestBuilder |
-| Void | VoidRequestBuilder |
+| Authorization Reversal           | AuthorizationReversalRequestBuilder               |
+| Capture                          | CaptureRequestBuilder                             |
+| Payment Token Create             | PaymentTokenCreateRequestBuilder                  |
+| Payment Token Delete             | PaymentTokenDeleteRequestBuilder                  |
+| Refund (follow-on)               | RefundFollowOnRequestBuilder                      |
+| Refund (stand alone)             | RefundStandaloneRequestBuilder                    |
+| Void                             | VoidRequestBuilder                                |
 
 \* Payment service request builders are defined within the following package:
 
@@ -894,32 +896,32 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 The table below summarises the credit card payment operations and the corresponding reference implementation components:
 
-| **Payment operation** | **Default implementation component** |
-| --- | --- |
-| Authorization(based on token) | `isv.sap.payment.addon.b2b.facade.impl.IsvB2BAcceleratorCheckoutFacade` `isv.sap.payment.addon.facade.impl.CreditCardPaymentFacadeImpl` |
+| **Payment operation**            | **Default implementation component**                                                                                                                                                                                                              |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Authorization(based on token)    | `isv.sap.payment.addon.b2b.facade.impl.IsvB2BAcceleratorCheckoutFacade` `isv.sap.payment.addon.facade.impl.CreditCardPaymentFacadeImpl`                                                                                                           |
 | Authorization(Secure Acceptance) | `isv.sap.payment.addon.b2c.controllers.pages.checkout.payment.flex.FlexMicroformController` `isv.sap.payment.addon.controllers.pages.checkout.payment.sa.HopController isv.sap.payment.addon.controllers.pages.checkout.payment.sa.SopController` |
-| Capture | `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.CreditCardTakePaymentStrategy` |
-| Payment Token Create | Not implemented as part of RI. Can be tested through beanshell. |
-| Payment Token Delete | Not implemented as part of RI. Can be tested through beanshell. |
-| Authorization Reversal | Not implemented as part of RI. Can be tested through beanshell. |
-| Refund (follow-on) | Not implemented as part of RI. Can be tested through beanshell. |
-| Refund (stand alone) | Not implemented as part of RI. Can be tested through beanshell. |
-| Void | Not implemented as part of RI. Can be tested through beanshell. |
+| Capture                          | `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.CreditCardTakePaymentStrategy`                                                                                                                                                       |
+| Payment Token Create             | Not implemented as part of RI. Can be tested through beanshell.                                                                                                                                                                                   |
+| Payment Token Delete             | Not implemented as part of RI. Can be tested through beanshell.                                                                                                                                                                                   |
+| Authorization Reversal           | Not implemented as part of RI. Can be tested through beanshell.                                                                                                                                                                                   |
+| Refund (follow-on)               | Not implemented as part of RI. Can be tested through beanshell.                                                                                                                                                                                   |
+| Refund (stand alone)             | Not implemented as part of RI. Can be tested through beanshell.                                                                                                                                                                                   |
+| Void                             | Not implemented as part of RI. Can be tested through beanshell.                                                                                                                                                                                   |
 
 #### Data conversion
 
 The conversion from payment service request to a request object specific to credit card payment operation is implemented by:
 
-| **Payment operation** | **Payment service request converter implementation\*** |
-| --- | --- |
-| Authorization | AuthorizationRequestConverter |
-| Authorization reversal | AuthorizationReversalRequestConverter |
-| Capture | CaptureRequestConverter |
-| Payment Token Create | PaymentTokenCreateRequestConverter |
-| Payment Token Delete | PaymentTokenDeleteRequestConverter |
-| Refund (follow-on) | RefundFollowOnRequestConverter |
-| Refund (stand alone) | RefundStandaloneRequestConverter |
-| Void | VoidRequestConverter |
+| **Payment operation**  | **Payment service request converter implementation\*** |
+| ---------------------- | ------------------------------------------------------ |
+| Authorization          | AuthorizationRequestConverter                          |
+| Authorization reversal | AuthorizationReversalRequestConverter                  |
+| Capture                | CaptureRequestConverter                                |
+| Payment Token Create   | PaymentTokenCreateRequestConverter                     |
+| Payment Token Delete   | PaymentTokenDeleteRequestConverter                     |
+| Refund (follow-on)     | RefundFollowOnRequestConverter                         |
+| Refund (stand alone)   | RefundStandaloneRequestConverter                       |
+| Void                   | VoidRequestConverter                                   |
 
 \* Java package:
 
@@ -955,6 +957,7 @@ Visa Secure Remote Commerce (Visa SRC) is Visa’s solution for e-commerce payme
 The implementation of Visa SRC payment service for SAP Commerce extension includes:
 
 - Implementation of payment operations:
+
   - Get Data
   - Authorization
   - Authorization reversal
@@ -970,10 +973,10 @@ The implementation of Visa SRC payment service for SAP Commerce extension includ
 
 The following configuration properties related to Visa SRC payment service are defined in the `project.properties` file of `isvpaymentaddon` :
 
-| **Configuration property** | **Description** |
-| --- | --- |
-| isv.payment.visa.checkout.sdk.url     | Visa SRC JavaScript SDK URL   |
-| isv.payment.visa.checkout.image.url   | Visa SRC button image URL     |
+| **Configuration property**          | **Description**             |
+| ----------------------------------- | --------------------------- |
+| isv.payment.visa.checkout.sdk.url   | Visa SRC JavaScript SDK URL |
+| isv.payment.visa.checkout.image.url | Visa SRC button image URL   |
 
 #### UI Integration
 
@@ -994,14 +997,14 @@ Each Visa SRC payment operation is based on a common CJL abstraction that encaps
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided by CJL for each payment operation:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Get | GetRequestBuilder |
-| Authorization | AuthorizationRequestBuilder |
-| Authorization Reversal | AuthorizationReversalRequestBuilder |
-| Capture | CaptureRequestBuilder |
-| Refund | RefundRequestBuilder |
-| Void | VoidRequestBuilder |
+| **Payment Operation**  | **Request builder implementation\*** |
+| ---------------------- | ------------------------------------ |
+| Get                    | GetRequestBuilder                    |
+| Authorization          | AuthorizationRequestBuilder          |
+| Authorization Reversal | AuthorizationReversalRequestBuilder  |
+| Capture                | CaptureRequestBuilder                |
+| Refund                 | RefundRequestBuilder                 |
+| Void                   | VoidRequestBuilder                   |
 
 \* Payment service request builders are defined within the following package:
 
@@ -1011,27 +1014,27 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 The table below summarises the credit card payment operations and the corresponding reference implementation components:
 
-| **Payment operation** | **Default implementation component** |
-| --- | --- |
-| Get | `isv.sap.payment.addon.facade.impl.VisaCheckoutPaymentFacadeImpl` |
-| Authorization | `isv.sap.payment.addon.facade.impl.VisaCheckoutPaymentFacadeImpl` |
-| Capture | `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.VisaCheckoutTakePaymentStrategy` |
-| Authorization Reversal | Not implemented as part of reference implementation. Can be tested through beanshell. |
-| Refund | Not implemented as part of reference implementation. Can be tested through beanshell. |
-| Void | Not implemented as part of reference implementation. Can be tested through beanshell. |
+| **Payment operation**  | **Default implementation component**                                                          |
+| ---------------------- | --------------------------------------------------------------------------------------------- |
+| Get                    | `isv.sap.payment.addon.facade.impl.VisaCheckoutPaymentFacadeImpl`                             |
+| Authorization          | `isv.sap.payment.addon.facade.impl.VisaCheckoutPaymentFacadeImpl`                             |
+| Capture                | `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.VisaCheckoutTakePaymentStrategy` |
+| Authorization Reversal | Not implemented as part of reference implementation. Can be tested through beanshell.         |
+| Refund                 | Not implemented as part of reference implementation. Can be tested through beanshell.         |
+| Void                   | Not implemented as part of reference implementation. Can be tested through beanshell.         |
 
 #### Conversion layer
 
 The conversion from payment service request to a request object specific to visa SRC payment operation is implemented by:
 
-| **Payment operation** | Payment service request converter implementation |
-| --- | --- |
-| Get | GetRequestConverter |
-| Authorization | AuthorizationRequestConverter |
-| Authorization reversal | AuthorizationReversalRequestConverter |
-| Capture | CaptureRequestConverter |
-| Refund | RefundFollowOnRequestConverter |
-| Void | RefundStandaloneRequestConverter |
+| **Payment operation**  | Payment service request converter implementation |
+| ---------------------- | ------------------------------------------------ |
+| Get                    | GetRequestConverter                              |
+| Authorization          | AuthorizationRequestConverter                    |
+| Authorization reversal | AuthorizationReversalRequestConverter            |
+| Capture                | CaptureRequestConverter                          |
+| Refund                 | RefundFollowOnRequestConverter                   |
+| Void                   | RefundStandaloneRequestConverter                 |
 
 \* Java package:
 
@@ -1061,8 +1064,8 @@ AliPay payment service for SAP Commerce extension includes the following payment
 
 The following configuration properties related to AliPay payment service are defined in the `project.properties` file of `isvpaymentaddon` :
 
-| **Configuration property** | **Description** |
-| --- | --- |
+| **Configuration property**                               | **Description**   |
+| -------------------------------------------------------- | ----------------- |
 | `isv.payment.alternativepayment.alipay.merchanturl.host` | Merchant host URL |
 
 Each AliPay payment operation is based on a common CJL abstraction that encapsulates all required data:
@@ -1074,10 +1077,10 @@ Each AliPay payment operation is based on a common CJL abstraction that encapsul
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided in CJL for each payment operation:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Initiate | InitiateRequestBuilder |
-| Check Status | CheckStatusRequestBuilder |
-| Refund | RefundRequestBuilder |
+| --------------------- | ------------------------------------ |
+| Initiate              | InitiateRequestBuilder               |
+| Check Status          | CheckStatusRequestBuilder            |
+| Refund                | RefundRequestBuilder                 |
 
 \* Common to alternative payments request builders are defined within the following package:
 
@@ -1087,19 +1090,19 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 Once a payment service request is created it is executed through the payment service executor. The table below summarises the payment operations and the corresponding component implementation that create the payment service request and passes it for execution to the payment service executor:
 
-| **Payment operation** | **Default implementation component** |
-| --- | --- |
-| Initiate | isv.sap.payment.addon.strategy.impl.AlipaySaleRequester |
-| Check Status | See "Transaction Check Status" section |
-| Refund | Not implemented as part of RI. Can be tested through beanshell. |
+| **Payment operation** | **Default implementation component**                            |
+| --------------------- | --------------------------------------------------------------- |
+| Initiate              | isv.sap.payment.addon.strategy.impl.AlipaySaleRequester         |
+| Check Status          | See "Transaction Check Status" section                          |
+| Refund                | Not implemented as part of RI. Can be tested through beanshell. |
 
 The conversion from payment service request to a request object specific to AliPay payment operation is implemented by:
 
 | **Payment operation** | **Payment service request converter implementation\*** |
-| --- | --- |
-| Initiate | InitiateRequestConverter |
-| Check Status | CheckStatusRequestConverter |
-| Refund | RefundRequestConverter |
+| --------------------- | ------------------------------------------------------ |
+| Initiate              | InitiateRequestConverter                               |
+| Check Status          | CheckStatusRequestConverter                            |
+| Refund                | RefundRequestConverter                                 |
 
 \* Java package:
 
@@ -1133,11 +1136,11 @@ Aforementioned PayPal payment operations are part of the alternative payments gr
 
 The following configuration properties related to PayPal payment service are defined in the `project.properties` file of `isvpaymentaddon` :
 
-| **Configuration property** | **Description** |
-| --- | --- |
-| isv.payment.paypal.return.url | Merchant return URL |
-| isv.payment.paypal.cancelReturn.url | Merchant cancel payment URL |
-| isv.payment.paypal.sandbox.url | PayPal sandbox URL. Should be replaced through production URL. |
+| **Configuration property**          | **Description**                                                |
+| ----------------------------------- | -------------------------------------------------------------- |
+| isv.payment.paypal.return.url       | Merchant return URL                                            |
+| isv.payment.paypal.cancelReturn.url | Merchant cancel payment URL                                    |
+| isv.payment.paypal.sandbox.url      | PayPal sandbox URL. Should be replaced through production URL. |
 
 Each PayPal payment operation is based on a common CJL abstraction that encapsulates all required data:
 
@@ -1147,19 +1150,19 @@ Each PayPal payment operation is based on a common CJL abstraction that encapsul
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided in CJL for each payment operation:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Authorization | AuthorizationRequestBuilder |
-| Authorization Reversal | AuthorizationReversalRequestBuilder |
-| Billing Agreement | BillingAgreementRequestBuilder |
-| Cancel Order | CancelOrderRequestBuilder |
-| Capture | CaptureRequestBuilder |
-| Check Status | CheckStatusRequestBuilder |
+| **Payment Operation**            | **Request builder implementation\***        |
+| -------------------------------- | ------------------------------------------- |
+| Authorization                    | AuthorizationRequestBuilder                 |
+| Authorization Reversal           | AuthorizationReversalRequestBuilder         |
+| Billing Agreement                | BillingAgreementRequestBuilder              |
+| Cancel Order                     | CancelOrderRequestBuilder                   |
+| Capture                          | CaptureRequestBuilder                       |
+| Check Status                     | CheckStatusRequestBuilder                   |
 | Create Billing Agreement Session | CreateBillingAgreementSessionRequestBuilder |
-| Create Session | CreateSessionRequestBuilder |
-| Order Setup | OrderSetupRequestBuilder |
-| Refund | RefundRequestBuilder |
-| Sale | SaleRequestBuilder |
+| Create Session                   | CreateSessionRequestBuilder                 |
+| Order Setup                      | OrderSetupRequestBuilder                    |
+| Refund                           | RefundRequestBuilder                        |
+| Sale                             | SaleRequestBuilder                          |
 
 \* Common to alternative payments request builders are defined within the following package:
 
@@ -1169,30 +1172,30 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 Once a payment service request is created it is executed through the payment service executor. The table below summarises the payment operations and the corresponding component implementation that create the payment service request and passes it for execution to the payment service executor:
 
-| **Payment operation** | **Default implementation component** |
-| --- | --- |
-| Authorization | `isv.sap.payment.addon.facade.impl.PayPalPaymentFacadeImpl` |
-| Check Status  | |
-| Order Setup   | |
-| Capture       | `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.PayPalTakePaymentStrategy` |
+| **Payment operation** | **Default implementation component**                                                    |
+| --------------------- | --------------------------------------------------------------------------------------- |
+| Authorization         | `isv.sap.payment.addon.facade.impl.PayPalPaymentFacadeImpl`                             |
+| Check Status          |                                                                                         |
+| Order Setup           |                                                                                         |
+| Capture               | `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.PayPalTakePaymentStrategy` |
 
 Remaining PayPal payment operations could be tested through beanshell.
 
 The conversion from payment service request to a request object specific to PayPal payment operation is implemented by:
 
-| **Payment Operation** | **Payment service request converter implementation\*** |
-| --- | --- |
-| Authorization | AuthorizationRequestConverter |
-| Authorization Reversal | AuthorizationReversalRequestConverter |
-| Billing Agreement | BillingAgreementRequestConverter |
-| Cancel Order | CancelOrderRequestConverter |
-| Capture | CaptureRequestConverter |
-| Check Status | CheckStatusRequestConverter |
-| Create Billing Agreement Session | CreateBillingAgreementSessionRequestConverter |
-| Create Session | CreateSessionRequestConverter |
-| Order Setup | OrderSetupRequestConverter |
-| Refund | RefundRequestConverter |
-| Sale | SaleRequestConverter |
+| **Payment Operation**            | **Payment service request converter implementation\*** |
+| -------------------------------- | ------------------------------------------------------ |
+| Authorization                    | AuthorizationRequestConverter                          |
+| Authorization Reversal           | AuthorizationReversalRequestConverter                  |
+| Billing Agreement                | BillingAgreementRequestConverter                       |
+| Cancel Order                     | CancelOrderRequestConverter                            |
+| Capture                          | CaptureRequestConverter                                |
+| Check Status                     | CheckStatusRequestConverter                            |
+| Create Billing Agreement Session | CreateBillingAgreementSessionRequestConverter          |
+| Create Session                   | CreateSessionRequestConverter                          |
+| Order Setup                      | OrderSetupRequestConverter                             |
+| Refund                           | RefundRequestConverter                                 |
+| Sale                             | SaleRequestConverter                                   |
 
 \* Java package:
 
@@ -1222,20 +1225,20 @@ Apple Pay payment service for SAP Commerce extension includes the following paym
 
 The following configuration properties related to Apple Pay payment service are defined in the `project.properties` file of `isvpaymentaddon` :
 
-| **Configuration property** | **Description** |
-| --- | --- |
-| `isv.payment.customer.applepay.decryption.type` | Indicates the type of decryption used when requesting Apple Pay payment authorization. Possible values: ISV_PAYMENT, MERCHANT, ISV_PAYMENT decryption is recommended for PCI compliance. For more information see [Apple Pay Integrations](https://developer.cybersource.com/library/documentation/dev_guides/apple_payments/SO_API/html/Topics/ch_intro.htm) |
-| `isv.payment.customer.applepay.merchant.identifier` | Your Apple Pay merchant ID, see "Configuring Apple Pay" section below |
-| `isv.payment.customer.applepay.<base store code>.initiative.context` | Indicates the Apple Pay domain registered for the given base store, see "Configuring Apple Pay" |
-| `isv.payment.customer.applepay.keystore.location` | This is the relative path to a JKS keystore containing your Apple Pay Merchant Identity certificate and private key (if using ISV_PAYMENT decryption) or Apple Pay Merchant Identity and Payment Processing certificates and private keys (if using MERCHANT decryption). See "Configuring Apple Pay" section below |
-| `isv.payment.customer.applepay.keystore.password` | Password for the referenced keystore above |
-| `isv.payment.customer.applepay.payment.privatekey.alias` | **Required only if using merchant decryption,** alias given to Payment Processing private key |
-| `isv.payment.customer.applepay.payment.privatekey.password` | **Required only if using merchant decryption,** password assigned to Payment Processing private key |
-| `isv.payment.customer.applepay.payment.expiration.time` | **Required only if using merchant decryption,** amount of time in milliseconds that can pass before considering a payment token expired. Payment token won't expire if value <= 0 |
-| `isv.payment.applePay.supported.ssl.protocols` | Supported SSL protocols when requesting Apple Pay session. See [Setting up your server for Apple Pay](https://developer.apple.com/documentation/apple_pay_on_the_web/setting_up_your_server) Pay for more information |
-| `isv.payment.applepay.initiative` | Value for parameter "initiative" in [Requesting Apple Pay Payment Session](https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_js_api/requesting_an_apple_pay_payment_session) |
-| `isv.payment.applePay.merch.decryption.leafOID` | **Required only if using merchant decryption,** custom leaf OID. See [Payment Token Format](https://developer.apple.com/library/archive/documentation/PassKit/Reference/PaymentTokenJSON/PaymentTokenJSON.html) |
-| `isv.payment.applePay.merch.decryption.intermediateOID` | **Required only if using merchant decryption,** custom intermediate OID. See [Payment Token Format](https://developer.apple.com/library/archive/documentation/PassKit/Reference/PaymentTokenJSON/PaymentTokenJSON.html) |
+| **Configuration property**                                           | **Description**                                                                                                                                                                                                                                                                                                                                               |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `isv.payment.customer.applepay.decryption.type`                      | Indicates the type of decryption used when requesting Apple Pay payment authorization. Possible values: ISV_PAYMENT, MERCHANT, ISV_PAYMENT decryption is recommended for PCI compliance. For more information see [Apple Pay Integrations](https://developer.cybersource.com/library/documentation/dev_guides/apple_payments/SO_API/html/Topics/ch_intro.htm) |
+| `isv.payment.customer.applepay.merchant.identifier`                  | Your Apple Pay merchant ID, see "Configuring Apple Pay" section below                                                                                                                                                                                                                                                                                         |
+| `isv.payment.customer.applepay.<base store code>.initiative.context` | Indicates the Apple Pay domain registered for the given base store, see "Configuring Apple Pay"                                                                                                                                                                                                                                                               |
+| `isv.payment.customer.applepay.keystore.location`                    | This is the relative path to a JKS keystore containing your Apple Pay Merchant Identity certificate and private key (if using ISV_PAYMENT decryption) or Apple Pay Merchant Identity and Payment Processing certificates and private keys (if using MERCHANT decryption). See "Configuring Apple Pay" section below                                           |
+| `isv.payment.customer.applepay.keystore.password`                    | Password for the referenced keystore above                                                                                                                                                                                                                                                                                                                    |
+| `isv.payment.customer.applepay.payment.privatekey.alias`             | **Required only if using merchant decryption,** alias given to Payment Processing private key                                                                                                                                                                                                                                                                 |
+| `isv.payment.customer.applepay.payment.privatekey.password`          | **Required only if using merchant decryption,** password assigned to Payment Processing private key                                                                                                                                                                                                                                                           |
+| `isv.payment.customer.applepay.payment.expiration.time`              | **Required only if using merchant decryption,** amount of time in milliseconds that can pass before considering a payment token expired. Payment token won't expire if value <= 0                                                                                                                                                                             |
+| `isv.payment.applePay.supported.ssl.protocols`                       | Supported SSL protocols when requesting Apple Pay session. See [Setting up your server for Apple Pay](https://developer.apple.com/documentation/apple_pay_on_the_web/setting_up_your_server) Pay for more information                                                                                                                                         |
+| `isv.payment.applepay.initiative`                                    | Value for parameter "initiative" in [Requesting Apple Pay Payment Session](https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_js_api/requesting_an_apple_pay_payment_session)                                                                                                                                                           |
+| `isv.payment.applePay.merch.decryption.leafOID`                      | **Required only if using merchant decryption,** custom leaf OID. See [Payment Token Format](https://developer.apple.com/library/archive/documentation/PassKit/Reference/PaymentTokenJSON/PaymentTokenJSON.html)                                                                                                                                               |
+| `isv.payment.applePay.merch.decryption.intermediateOID`              | **Required only if using merchant decryption,** custom intermediate OID. See [Payment Token Format](https://developer.apple.com/library/archive/documentation/PassKit/Reference/PaymentTokenJSON/PaymentTokenJSON.html)                                                                                                                                       |
 
 Each Apple Pay payment operation is based on a common CJL abstraction that encapsulates all required data:
 
@@ -1245,14 +1248,14 @@ Each Apple Pay payment operation is based on a common CJL abstraction that encap
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation\*\*:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Create Session | CreateSessionRequestBuilder |
-| Authorization | AuthorizationRequestBuilder |
-| Authorization Reversal | AuthorizationReversalRequestBuilder |
-| Capture | CaptureRequestBuilder |
-| Refund | RefundFollowOnRequestBuilder |
-| Sale | SaleRequestBuilder |
+| **Payment Operation**  | **Request builder implementation\*** |
+| ---------------------- | ------------------------------------ |
+| Create Session         | CreateSessionRequestBuilder          |
+| Authorization          | AuthorizationRequestBuilder          |
+| Authorization Reversal | AuthorizationReversalRequestBuilder  |
+| Capture                | CaptureRequestBuilder                |
+| Refund                 | RefundFollowOnRequestBuilder         |
+| Sale                   | SaleRequestBuilder                   |
 
 \* Payment service request builders are defined within the following package:
 
@@ -1268,27 +1271,27 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 Once a payment service request is created it is executed through the payment service executor. The table below summarises the payment operations and the corresponding component implementation that create the payment service request and passes it for execution to the payment service executor:
 
-| **Payment operation** | **Default implementation component** |
-| --- | --- |
-| Create Session | Client side: `acceleratoraddon/web/webroot/_ui/responsive/common/js/isvb2cpaymentaddon.js` Server side: `isv.sap.payment.addon.facade.impl.ApplePayPaymentFacadeImpl` |
-| Authorization | `isv.sap.payment.addon.facade.impl.ApplePayPaymentFacadeImpl` |
+| **Payment operation**    | **Default implementation component**                                                                                                                                  |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Create Session           | Client side: `acceleratoraddon/web/webroot/_ui/responsive/common/js/isvb2cpaymentaddon.js` Server side: `isv.sap.payment.addon.facade.impl.ApplePayPaymentFacadeImpl` |
+| Authorization            | `isv.sap.payment.addon.facade.impl.ApplePayPaymentFacadeImpl`                                                                                                         |
 | Payment Token Decryption |
-| Capture |  `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.ApplePayTakePaymentStrategy` |
-| Authorization Reversal |  `isv.sap.payment.fulfilmentprocess.strategy.impl.authorizationreversal.ApplePayAuthorizationReversalStrategy` |
-| Refund |  `isv.sap.payment.fulfilmentprocess.strategy.impl.refund.ApplePayRefundStrategy` |
+| Capture                  | `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.ApplePayTakePaymentStrategy`                                                                             |
+| Authorization Reversal   | `isv.sap.payment.fulfilmentprocess.strategy.impl.authorizationreversal.ApplePayAuthorizationReversalStrategy`                                                         |
+| Refund                   | `isv.sap.payment.fulfilmentprocess.strategy.impl.refund.ApplePayRefundStrategy`                                                                                       |
 
 Sale payment operation could be tested through beanshell.
 
 The conversion from payment service request to a request object specific to Apple Pay payment operation is implemented by:
 
-| **Payment Operation** | **Payment service request converter implementation** |
-| --- | --- |
-| Authorization |  `isv.sap.payment.service.executor.request.converter.applepay.AuthorizationRequestConverter` |
-| Authorization Reversal |  `isv.sap.payment.service.executor.request.converter.creditcard.AuthorizationReversalRequestConverter` |
-| Capture |  `isv.sap.payment.service.executor.request.converter.creditcard.CaptureRequestConverter` |
-| Create Session | `isv.cjl.payment.data.mapper.custom.ApplePayCreateSessionDataConverter` |
-| Refund |  `isv.sap.payment.service.executor.request.converter.creditcard.RefundFollowOnRequestConverter` |
-| Sale | `isv.sap.payment.service.executor.request.converter.applepay.SaleRequestConverter` |
+| **Payment Operation**  | **Payment service request converter implementation**                                                  |
+| ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| Authorization          | `isv.sap.payment.service.executor.request.converter.applepay.AuthorizationRequestConverter`           |
+| Authorization Reversal | `isv.sap.payment.service.executor.request.converter.creditcard.AuthorizationReversalRequestConverter` |
+| Capture                | `isv.sap.payment.service.executor.request.converter.creditcard.CaptureRequestConverter`               |
+| Create Session         | `isv.cjl.payment.data.mapper.custom.ApplePayCreateSessionDataConverter`                               |
+| Refund                 | `isv.sap.payment.service.executor.request.converter.creditcard.RefundFollowOnRequestConverter`        |
+| Sale                   | `isv.sap.payment.service.executor.request.converter.applepay.SaleRequestConverter`                    |
 
 > ![Note](images/note.jpg) Converter implementations are distributed on different packages, this is because only Authorization and Sale operations require custom requests but all other operations are treated as Credit Card operations
 
@@ -1480,10 +1483,10 @@ Google Pay payment service for SAP Commerce extension includes the following pay
 
 The following configuration properties related to Google Pay payment service are defined in the `project.properties` file of `isvpaymentaddon`:
 
-| **Configuration property** | **Description** |
-| --- | --- |
+| **Configuration property**                   | **Description**                                                                                                                                                                                                                                                                                                                                       |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `isv.payment.customer.googlepay.merchant.id` | Once Google Pay production access is achieved, this property should contain the new merchant Id provided by Google (see [https://developers.google.com/pay/api/web/guides/test-and-deploy/request-prod-access](https://developers.google.com/pay/api/web/guides/test-and-deploy/request-prod-access)) For test environments this property is not used |
-| `isv.payment.customer.googlepay.environment` | Indicates the Google Pay environment, possible values: **TEST**, **PRODUCTION** |
+| `isv.payment.customer.googlepay.environment` | Indicates the Google Pay environment, possible values: **TEST**, **PRODUCTION**                                                                                                                                                                                                                                                                       |
 
 Each Google Pay payment operation is based on a common CJL abstraction that encapsulates all required data:
 
@@ -1493,13 +1496,13 @@ Each Google Pay payment operation is based on a common CJL abstraction that enca
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Authorization | AuthorizationRequestBuilder |
-| Authorization Reversal | AuthorizationReversalRequestBuilder |
-| Capture | CaptureRequestBuilder |
-| Refund | RefundFollowOnRequestBuilder |
-| Sale | SaleRequestBuilder |
+| **Payment Operation**  | **Request builder implementation\*** |
+| ---------------------- | ------------------------------------ |
+| Authorization          | AuthorizationRequestBuilder          |
+| Authorization Reversal | AuthorizationReversalRequestBuilder  |
+| Capture                | CaptureRequestBuilder                |
+| Refund                 | RefundFollowOnRequestBuilder         |
+| Sale                   | SaleRequestBuilder                   |
 
 \* Payment service request builders are defined within the following package:
 
@@ -1509,24 +1512,24 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 Once a payment service request is created it is executed through the payment service executor. The table below summarises the payment operations and the corresponding component implementation that create the payment service request and passes it for execution to the payment service executor:
 
-| **Payment operation** | **Default implementation component** |
-| --- | --- |
-| Authorization | `isv.sap.payment.addon.facade.impl.GooglePayPaymentFacadeImpl` |
-| Capture |  `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.GooglePayTakePaymentStrategy` |
-| Authorization Reversal |  `isv.sap.payment.fulfilmentprocess.strategy.impl.authorizationreversal.GooglePayAuthorizationReversalStrategy` |
-| Refund |  `isv.sap.payment.fulfilmentprocess.strategy.impl.refund.GooglePayRefundStrategy` |
+| **Payment operation**  | **Default implementation component**                                                                           |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Authorization          | `isv.sap.payment.addon.facade.impl.GooglePayPaymentFacadeImpl`                                                 |
+| Capture                | `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.GooglePayTakePaymentStrategy`                     |
+| Authorization Reversal | `isv.sap.payment.fulfilmentprocess.strategy.impl.authorizationreversal.GooglePayAuthorizationReversalStrategy` |
+| Refund                 | `isv.sap.payment.fulfilmentprocess.strategy.impl.refund.GooglePayRefundStrategy`                               |
 
 Sale payment operation could be tested through beanshell.
 
 The conversion from payment service request to a request object specific to Google Pay payment operation is implemented by:
 
-| **Payment Operation** | **Payment service request converter implementation** |
-| --- | --- |
-| Authorization |  `isv.sap.payment.service.executor.request.converter.googlepay.AuthorizationRequestConverter` |
-| Authorization Reversal |  `isv.sap.payment.service.executor.request.converter.creditcard.AuthorizationReversalRequestConverter` |
-| Capture |  `isv.sap.payment.service.executor.request.converter.creditcard.CaptureRequestConverter` |
-| Refund |  `isv.sap.payment.service.executor.request.converter.creditcard.RefundFollowOnRequestConverter` |
-| Sale |  `isv.sap.payment.service.executor.request.converter.googlepay.SaleRequestConverter` |
+| **Payment Operation**  | **Payment service request converter implementation**                                                  |
+| ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| Authorization          | `isv.sap.payment.service.executor.request.converter.googlepay.AuthorizationRequestConverter`          |
+| Authorization Reversal | `isv.sap.payment.service.executor.request.converter.creditcard.AuthorizationReversalRequestConverter` |
+| Capture                | `isv.sap.payment.service.executor.request.converter.creditcard.CaptureRequestConverter`               |
+| Refund                 | `isv.sap.payment.service.executor.request.converter.creditcard.RefundFollowOnRequestConverter`        |
+| Sale                   | `isv.sap.payment.service.executor.request.converter.googlepay.SaleRequestConverter`                   |
 
 > ![Note](images/note.jpg) Converter implementations are distributed on different packages, this is because only Authorization and Sale operations require custom requests. All other operations are treated as Credit Card operations
 
@@ -1540,7 +1543,7 @@ The process works in the following way:
 
 1. SummaryCheckoutStepController.java prepares the information used by Google Pay
 2. googlePay.tag includes the JS required for Google Pay, changes in the Google Pay popup should be applied here.
- The method `onPaymentAuthorized` sends the paymentData generated by Google Pay to the back end, where the payment will be processed
+   The method `onPaymentAuthorized` sends the paymentData generated by Google Pay to the back end, where the payment will be processed
 3. GooglePayController.java receives the paymentData from the previous step, then submits it to the payment provider for authorization. If the authorization is successful the order is placed and the user will be redirected to order confirmation page
 
 It is possible to implement different flows such as requesting address information or updating delivery costs directly on the Google Pay popup. Please see [https://developers.google.com/pay/api/web/overview](https://developers.google.com/pay/api/web/overview) for information about Google Pay capabilities.
@@ -1554,6 +1557,7 @@ Klarna payments is an in-line, real-time financing solution for online storefron
 The implementation of Klarna payment service for SAP Commerce extension includes:
 
 - Implementation of payment operations:
+
   - Create Session
   - Update Session
   - Authorization
@@ -1568,12 +1572,12 @@ The implementation of Klarna payment service for SAP Commerce extension includes
 
 The following configuration properties related to Klarna payment service are defined in the `project.properties` file of `isvpaymentaddon` :
 
-| **Configuration property** | **Description** |
-| --- | --- |
-| klarna.sdk.url | Klarna JavaScript SDK URL |
-| klarna.cancel.url | URL that the customer is directed to after canceling the Klarna payment. Not supported by RI |
-| klarna.failure.url | URL that the customer is directed to after Klarna payment fails. Not supported by RI |
-| klarna.success.url | URL that the customer is directed to after successfully completing the Klarna payment. Not supported by RI |
+| **Configuration property** | **Description**                                                                                            |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| klarna.sdk.url             | Klarna JavaScript SDK URL                                                                                  |
+| klarna.cancel.url          | URL that the customer is directed to after canceling the Klarna payment. Not supported by RI               |
+| klarna.failure.url         | URL that the customer is directed to after Klarna payment fails. Not supported by RI                       |
+| klarna.success.url         | URL that the customer is directed to after successfully completing the Klarna payment. Not supported by RI |
 
 The integration of Klarna payment widget with accelerator is performed in the following JSP tag:
 
@@ -1589,15 +1593,15 @@ Each Klarna payment operation is based on a common CJL abstraction that encapsul
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided IN CJL for each payment operation:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Create Session | CreateSessionRequestBuilder |
-| Update Session | UpdateSessionRequestBuilder |
-| Authorization | AuthorizationRequestBuilder |
-| Authorization Reversal | AuthorizationReversalRequestBuilder |
-| Capture | CaptureRequestBuilder |
-| Refund | RefundRequestBuilder |
-| Check Status | CheckStatusRequestBuilder |
+| **Payment Operation**  | **Request builder implementation\*** |
+| ---------------------- | ------------------------------------ |
+| Create Session         | CreateSessionRequestBuilder          |
+| Update Session         | UpdateSessionRequestBuilder          |
+| Authorization          | AuthorizationRequestBuilder          |
+| Authorization Reversal | AuthorizationReversalRequestBuilder  |
+| Capture                | CaptureRequestBuilder                |
+| Refund                 | RefundRequestBuilder                 |
+| Check Status           | CheckStatusRequestBuilder            |
 
 \* Common to alternative payments request builders are defined within the following package:
 
@@ -1607,26 +1611,26 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 Once a payment service request is created it is executed through the payment service executor. The table below summarises the payment operations and the corresponding component implementation that create the payment service request and passes it for execution to the payment service executor:
 
-| **Payment operation** | **Default implementation component** |
-| --- | --- |
-| Create Session | `isv.sap.payment.addon.facade.impl.KlarnaPaymentFacadeImpl` |
-| Update Session |  `isv.sap.payment.addon.facade.impl.KlarnaPaymentFacadeImpl` |
-| Authorization |  `isv.sap.payment.addon.strategy.impl.KlarnaAuthRequester` |
-| Capture |  `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.KlarnaTakePaymentStrategy` |
-| Authorization Reversal,Refund | Not implemented as part of RI. Can be tested through beanshell. |
-| Check Status | See "Transaction Check Status" section |
+| **Payment operation**         | **Default implementation component**                                                    |
+| ----------------------------- | --------------------------------------------------------------------------------------- |
+| Create Session                | `isv.sap.payment.addon.facade.impl.KlarnaPaymentFacadeImpl`                             |
+| Update Session                | `isv.sap.payment.addon.facade.impl.KlarnaPaymentFacadeImpl`                             |
+| Authorization                 | `isv.sap.payment.addon.strategy.impl.KlarnaAuthRequester`                               |
+| Capture                       | `isv.sap.payment.fulfilmentprocess.strategy.impl.takepayment.KlarnaTakePaymentStrategy` |
+| Authorization Reversal,Refund | Not implemented as part of RI. Can be tested through beanshell.                         |
+| Check Status                  | See "Transaction Check Status" section                                                  |
 
 The conversion from payment service request to a request object specific to Klarna payment operation is implemented by:
 
-| **Payment operation** | **Payment service request converter implementation\*** |
-| --- | --- |
-| Create Session | CreateSessionRequestConverter |
-| Update Session | UpdateSessionRequestConverter |
-| Authorization | AuthorizationRequestConverter |
-| Authorization reversal | AuthorizationReversalRequestConverter |
-| Capture | CaptureRequestConverter |
-| Refund | RefundRequestConverter |
-| Check Status | CheckStatusRequestConverter |
+| **Payment operation**  | **Payment service request converter implementation\*** |
+| ---------------------- | ------------------------------------------------------ |
+| Create Session         | CreateSessionRequestConverter                          |
+| Update Session         | UpdateSessionRequestConverter                          |
+| Authorization          | AuthorizationRequestConverter                          |
+| Authorization reversal | AuthorizationReversalRequestConverter                  |
+| Capture                | CaptureRequestConverter                                |
+| Refund                 | RefundRequestConverter                                 |
+| Check Status           | CheckStatusRequestConverter                            |
 
 \* Java package:
 
@@ -1660,8 +1664,8 @@ Aforementioned iDEAL payment operations are part of the alternative payments gro
 
 The following configuration properties related to iDEAL payment service are defined in the `project.properties` file of `isvpaymentaddon` :
 
-| **Configuration property** | **Description** |
-| --- | --- |
+| **Configuration property**                  | **Description**                    |
+| ------------------------------------------- | ---------------------------------- |
 | `isv.payment.alternativepayment.return.url` | Merchant return payment return URL |
 | `isv.payment.alternativepayment.cancel.url` | Merchant cancel payment return URL |
 | `isv.payment.alternativepayment.failed.url` | Merchant failed payment return URL |
@@ -1675,11 +1679,11 @@ Each iDEAL payment operation is based on a common CJL abstraction that encapsula
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided in CJL for each payment operation:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Sale | SaleRequestBuilder |
-| Check Status | CheckStatusRequestBuilder |
-| Refund | RefundRequestBuilder |
-| Options | OptionsRequestBuilder |
+| --------------------- | ------------------------------------ |
+| Sale                  | SaleRequestBuilder                   |
+| Check Status          | CheckStatusRequestBuilder            |
+| Refund                | RefundRequestBuilder                 |
+| Options               | OptionsRequestBuilder                |
 
 \* Common to alternative payments request builders are defined within the following package:
 
@@ -1689,12 +1693,12 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 Once a payment service request is created it is executed through the payment service executor. The table below summarises the payment operations and the corresponding component implementation that create the payment service request and passes it for execution to the payment service executor:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Sale | `isv.sap.payment.addon.strategy.impl.IdealSaleRequester` |
-| Check Status | See "Transaction Check Status" section. |
-| Refund | Not implemented as part of RI. Can be tested through beanshell. |
-| Options | `isv.cjl.payment.service.alternativepayment.AlternativePaymentOptionsService` |
+| **Payment Operation** | **Request builder implementation\***                                          |
+| --------------------- | ----------------------------------------------------------------------------- |
+| Sale                  | `isv.sap.payment.addon.strategy.impl.IdealSaleRequester`                      |
+| Check Status          | See "Transaction Check Status" section.                                       |
+| Refund                | Not implemented as part of RI. Can be tested through beanshell.               |
+| Options               | `isv.cjl.payment.service.alternativepayment.AlternativePaymentOptionsService` |
 
 Options command could be also invoked through the following cron job:
 
@@ -1705,11 +1709,11 @@ isv.sap.payment.cronjob.UpdateAlternativePaymentOptionsJob
 The conversion from payment service request to a request object specific to iDEAL payment operation is implemented by:
 
 | **Payment Operation** | **Payment service request converter implementation\*** |
-| --- | --- |
-| Sale | SaleRequestConverter |
-| Check Status | CheckStatusRequestConverter |
-| Refund | RefundRequestConverter |
-| Options | OptionsRequestConverter |
+| --------------------- | ------------------------------------------------------ |
+| Sale                  | SaleRequestConverter                                   |
+| Check Status          | CheckStatusRequestConverter                            |
+| Refund                | RefundRequestConverter                                 |
+| Options               | OptionsRequestConverter                                |
 
 \* Java package:
 
@@ -1733,8 +1737,8 @@ The implementation of Sofort payment service for SAP Commerce extension includes
 
 The following configuration properties related to Sofort payment service are defined in the `project.properties` file of `isvpaymentaddon` :
 
-| **Configuration property** | **Description** |
-| --- | --- |
+| **Configuration property**                  | **Description**                    |
+| ------------------------------------------- | ---------------------------------- |
 | `isv.payment.alternativepayment.return.url` | Merchant return payment return URL |
 | `isv.payment.alternativepayment.cancel.url` | Merchant cancel payment return URL |
 | `isv.payment.alternativepayment.failed.url` | Merchant failed payment return URL |
@@ -1748,10 +1752,10 @@ Each Sofort payment operation is based on a common CJL abstraction that encapsul
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided in CJL for each payment operation:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Sale | SaleRequestBuilder |
-| Check Status | CheckStatusRequestBuilder |
-| Refund | RefundRequestBuilder |
+| --------------------- | ------------------------------------ |
+| Sale                  | SaleRequestBuilder                   |
+| Check Status          | CheckStatusRequestBuilder            |
+| Refund                | RefundRequestBuilder                 |
 
 \* Common to alternative payments request builders are defined within the following package:
 
@@ -1761,19 +1765,19 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 Once a payment service request is created it is executed through the payment service executor. The table below summarises the payment operations and the corresponding component implementation that create the payment service request and passes it for execution to the payment service executor:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Sale |  isv.sap.payment.addon.strategy.impl.SofortSaleRequester |
-| Check Status | See "Transaction Check Status" section. |
-| Refund | Not implemented as part of RI. Can be tested through beanshell. |
+| **Payment Operation** | **Request builder implementation\***                            |
+| --------------------- | --------------------------------------------------------------- |
+| Sale                  | isv.sap.payment.addon.strategy.impl.SofortSaleRequester         |
+| Check Status          | See "Transaction Check Status" section.                         |
+| Refund                | Not implemented as part of RI. Can be tested through beanshell. |
 
 The conversion from payment service request to a request object specific to Sofort payment operation is implemented by:
 
 | **Payment Operation** | **Payment service request converter implementation\*** |
-| --- | --- |
-| Sale | SaleRequestConverter |
-| Check Status | CheckStatusRequestConverter |
-| Refund | RefundRequestConverter |
+| --------------------- | ------------------------------------------------------ |
+| Sale                  | SaleRequestConverter                                   |
+| Check Status          | CheckStatusRequestConverter                            |
+| Refund                | RefundRequestConverter                                 |
 
 \* Java package:
 
@@ -1799,8 +1803,8 @@ The implementation of Bancontact payment service for SAP Commerce extension incl
 
 The following configuration properties related to Bancontact payment service are defined in the `project.properties` file of `isvpaymentaddon` :
 
-| **Configuration property** | **Description** |
-| --- | --- |
+| **Configuration property**                  | **Description**                    |
+| ------------------------------------------- | ---------------------------------- |
 | `isv.payment.alternativepayment.return.url` | Merchant return payment return URL |
 | `isv.payment.alternativepayment.cancel.url` | Merchant cancel payment return URL |
 | `isv.payment.alternativepayment.failed.url` | Merchant failed payment return URL |
@@ -1814,10 +1818,10 @@ Each Bancontact payment operation is based on a common CJL abstraction that enca
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided in CJL for each payment operation:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Sale | SaleRequestBuilder |
-| Check Status | CheckStatusRequestBuilder |
-| Refund | RefundRequestBuilder |
+| --------------------- | ------------------------------------ |
+| Sale                  | SaleRequestBuilder                   |
+| Check Status          | CheckStatusRequestBuilder            |
+| Refund                | RefundRequestBuilder                 |
 
 \* Common to alternative payments request builders are defined within the following package:
 
@@ -1827,19 +1831,19 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 Once a payment service request is created it is executed through the payment service executor. The table below summarises the payment operations and the corresponding component implementation that create the payment service request and passes it for execution to the payment service executor:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Sale |  `isv.sap.payment.addon.strategy.impl.BancontactSaleRequester` |
-| Check Status | See "Transaction Check Status" section. |
-| Refund | Not implemented as part of RI. Can be tested through beanshell. |
+| **Payment Operation** | **Request builder implementation\***                            |
+| --------------------- | --------------------------------------------------------------- |
+| Sale                  | `isv.sap.payment.addon.strategy.impl.BancontactSaleRequester`   |
+| Check Status          | See "Transaction Check Status" section.                         |
+| Refund                | Not implemented as part of RI. Can be tested through beanshell. |
 
 The conversion from payment service request to a request object specific to Bancontact payment operation is implemented by:
 
 | **Payment Operation** | **Payment service request converter implementation\*** |
-| --- | --- |
-| Sale | SaleRequestConverter |
-| Check Status | CheckStatusRequestConverter |
-| Refund | RefundRequestConverter |
+| --------------------- | ------------------------------------------------------ |
+| Sale                  | SaleRequestConverter                                   |
+| Check Status          | CheckStatusRequestConverter                            |
+| Refund                | RefundRequestConverter                                 |
 
 \* Java package:
 
@@ -1856,6 +1860,7 @@ WeChat Pay is a popular mobile application that Chinese customers use to purchas
 The implementation of WeChat payment service for SAP Commerce extension includes:
 
 - Implementation of payment operations:
+
   - Sale
   - Check Status
   - Refund
@@ -1866,12 +1871,12 @@ The implementation of WeChat payment service for SAP Commerce extension includes
 
 The following configuration properties related to WeChat payment service are defined in the `project.properties` file of `isvpaymentaddon`:
 
-| **Configuration property** | **Description** |
-| --- | --- |
-| `isv.payment.alternativepayment.return.url` | Merchant return payment return URL |
-| `isv.payment.alternativepayment.cancel.url` | Merchant cancel payment return URL |
-| `isv.payment.alternativepayment.failed.url` | Merchant failed payment return URL |
-| `isv.payment.alternativepayment.weChat.sale.timeout` | Represents the period of time (in seconds) during which the sale transaction remains active in the payment provider. |
+| **Configuration property**                                     | **Description**                                                                                                                              |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `isv.payment.alternativepayment.return.url`                    | Merchant return payment return URL                                                                                                           |
+| `isv.payment.alternativepayment.cancel.url`                    | Merchant cancel payment return URL                                                                                                           |
+| `isv.payment.alternativepayment.failed.url`                    | Merchant failed payment return URL                                                                                                           |
+| `isv.payment.alternativepayment.weChat.sale.timeout`           | Represents the period of time (in seconds) during which the sale transaction remains active in the payment provider.                         |
 | `isv.alternativepayment.CHECK_STATUS.request.reconciliationID` | Property used to provide the reconciliation ID. When provided, the value is used as the reconciliation ID when building the payment request. |
 
 Each WeChat payment operation is based on a common CJL abstraction that encapsulates all required data:
@@ -1883,10 +1888,10 @@ Each WeChat payment operation is based on a common CJL abstraction that encapsul
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided in CJL for each payment operation:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Sale | SaleRequestBuilder |
-| Check Status | CheckStatusRequestBuilder |
-| Refund | RefundRequestBuilder |
+| --------------------- | ------------------------------------ |
+| Sale                  | SaleRequestBuilder                   |
+| Check Status          | CheckStatusRequestBuilder            |
+| Refund                | RefundRequestBuilder                 |
 
 \* Common to alternative payments request builders are defined within the following package:
 
@@ -1896,19 +1901,19 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 Once a payment service request is created it is executed through the payment service executor. The table below summarises the payment operations and the corresponding component implementation that create the payment service request and passes it for execution to the payment service executor:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Sale |  `isv.sap.payment.addon.strategy.impl.WeChatSaleRequester` |
-| Check Status | See "Transaction Check Status" section. |
-| Refund |  `isv.sap.payment.fulfilmentprocess.strategy.impl.refund.WeChatPayRefundStrategy` |
+| **Payment Operation** | **Request builder implementation\***                                             |
+| --------------------- | -------------------------------------------------------------------------------- |
+| Sale                  | `isv.sap.payment.addon.strategy.impl.WeChatSaleRequester`                        |
+| Check Status          | See "Transaction Check Status" section.                                          |
+| Refund                | `isv.sap.payment.fulfilmentprocess.strategy.impl.refund.WeChatPayRefundStrategy` |
 
 The conversion from payment service request to a request object specific to WeChat payment operation is implemented by:
 
-| **Payment Operation** | **Payment service request converter implementation** |
-| --- | --- |
-| Sale |  `isv.sap.payment.service.executor.request.converter.alternative.SaleRequestConverter` |
-| Check Status |  `isv.sap.payment.service.executor.request.converter.alternative.CheckStatusRequestConverter` |
-| Refund |  `isv.sap.payment.service.executor.request.converter.alternative.RefundRequestConverter` |
+| **Payment Operation** | **Payment service request converter implementation**                                         |
+| --------------------- | -------------------------------------------------------------------------------------------- |
+| Sale                  | `isv.sap.payment.service.executor.request.converter.alternative.SaleRequestConverter`        |
+| Check Status          | `isv.sap.payment.service.executor.request.converter.alternative.CheckStatusRequestConverter` |
+| Refund                | `isv.sap.payment.service.executor.request.converter.alternative.RefundRequestConverter`      |
 
 > ![Note](images/note.jpg) Converter implementations are distributed on different packages. The implementation for WeChat is the same as for the rest of Alternative payment methods and all the operations are treated as Alternative payment operations.
 
@@ -1928,18 +1933,18 @@ The process works in the following way:
 
 5. The website sends check payment status requests to the '/checkstatus' endpoint with the frequency specified by the following property:
 
-    ```text
-     isv.payment.alternativePayment.checkStatus.WQR.CHECK_STATUS.frequency=5000
-    ```
+   ```text
+    isv.payment.alternativePayment.checkStatus.WQR.CHECK_STATUS.frequency=5000
+   ```
 
 6. The status checks are performed by AlternativePaymentStatusFacadeImpl.java. After performing the payment status check, one of the following response codes is returned to the website:
 
-    | **Status Check Response** | **Response Code Description** |
-    | --- | --- |
-    | PAYMENT_SUCCESS | The payment was successful. |
-    | PAYMENT_PANDING | The payment is still pending and additional check status requests have to be executed. |
-    | CHECK_STATUS_TOO_MANY_ATTEMPTS | The amount of check payment status requests exceeds the configured number. The user gets redirected to the payment error page. |
-    | CHECK_STATUS_ERROR | An unexpected error occurred and the payment could not be completed.The user gets redirected to the payment error page. |
+   | **Status Check Response**      | **Response Code Description**                                                                                                  |
+   | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+   | PAYMENT_SUCCESS                | The payment was successful.                                                                                                    |
+   | PAYMENT_PANDING                | The payment is still pending and additional check status requests have to be executed.                                         |
+   | CHECK_STATUS_TOO_MANY_ATTEMPTS | The amount of check payment status requests exceeds the configured number. The user gets redirected to the payment error page. |
+   | CHECK_STATUS_ERROR             | An unexpected error occurred and the payment could not be completed.The user gets redirected to the payment error page.        |
 
 7. For 'PAYMENT_SUCCESS' responses another request will be sent to the '/return' endpoint to finish the payment and place the order.
 
@@ -1968,10 +1973,10 @@ Both operations are encapsulated through common payment service request:
 
 In order to simplify fraud management operations, a dedicated set of request builder components is provided by CJL for each payment operation:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
+| **Payment Operation**       | **Request builder implementation\***    |
+| --------------------------- | --------------------------------------- |
 | Account Takeover Protection | AccountTakeoverProtectionRequestBuilder |
-| Advanced Fraud Screen | AdvancedFraudScreenRequestBuilder |
+| Advanced Fraud Screen       | AdvancedFraudScreenRequestBuilder       |
 
 \* Payment service request builders are defined within the following package:
 
@@ -1981,10 +1986,10 @@ In order to simplify fraud management operations, a dedicated set of request bui
 
 The conversion from payment service request to a request object specific to fraud service operation is implemented by:
 
-| **Payment operation** | **Payment service request converter implementation\*** |
-| --- | --- |
-| Account Takeover Protection | AccountTakeoverProtectionRequestConverter |
-| Advanced Fraud Screen | AdvancedFraudScreenRequestConverter |
+| **Payment operation**       | **Payment service request converter implementation\*** |
+| --------------------------- | ------------------------------------------------------ |
+| Account Takeover Protection | AccountTakeoverProtectionRequestConverter              |
+| Advanced Fraud Screen       | AdvancedFraudScreenRequestConverter                    |
 
 \* Java package:
 
@@ -2018,10 +2023,10 @@ Conversion check step has been implemented by using two types of reports: On-Dem
 
 There are currently two job that integrate the reporting services:
 
-| **Report type** | **Job component implementation** |
-| --- | --- |
-| On-demand conversion |  isv.sap.payment.cronjob.OnDemandConversionReportPollingJob |
-| Daily conversion |  isv.sap.payment.cronjob.DailyConversionReportPollingJob |
+| **Report type**      | **Job component implementation**                           |
+| -------------------- | ---------------------------------------------------------- |
+| On-demand conversion | isv.sap.payment.cronjob.OnDemandConversionReportPollingJob |
+| Daily conversion     | isv.sap.payment.cronjob.DailyConversionReportPollingJob    |
 
 When a report is retrieved it could be processed by a concrete implementation of (as per example above):
 
@@ -2053,10 +2058,10 @@ Both operations are encapsulated through common payment service request defined 
 
 In order to simplify verification services operations, a dedicated set of request builder components is provided by CJL for each operation:
 
-| **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
+| **Payment Operation**         | **Request builder implementation\***      |
+| ----------------------------- | ----------------------------------------- |
 | Delivery Address Verification | DeliveryAddressVerificationRequestBuilder |
-| Export Compliance | ExportComplianceRequestBuilder |
+| Export Compliance             | ExportComplianceRequestBuilder            |
 
 \* Payment service request builders are defined within the following package:
 
@@ -2066,10 +2071,10 @@ In order to simplify verification services operations, a dedicated set of reques
 
 The conversion from payment service request to a request object specific to verification services operation is implemented by:
 
-| **Payment operation** | **Payment service request converter implementation\*** |
-| --- | --- |
-| Delivery Address Verification | DeliveryAddressVerificationRequestConverter |
-| Export Compliance | ExportComplianceRequestConverter |
+| **Payment operation**         | **Payment service request converter implementation\*** |
+| ----------------------------- | ------------------------------------------------------ |
+| Delivery Address Verification | DeliveryAddressVerificationRequestConverter            |
+| Export Compliance             | ExportComplianceRequestConverter                       |
 
 \* Java package:
 
@@ -2103,9 +2108,9 @@ Each Payer Authentication operation is based on a common CJL abstraction that en
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided by CJL for each payment operation. These builders are defined for Credit Card and Visa SRC payment services:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --- | --- |
-| Enrollment | EnrollmentRequestBuilder |
-| Validate | ValidateRequestBuilder |
+| --------------------- | ------------------------------------ |
+| Enrollment            | EnrollmentRequestBuilder             |
+| Validate              | ValidateRequestBuilder               |
 
 \* Request builders are defined within the following package:
 
@@ -2119,9 +2124,9 @@ isv.cjl.payment.service.executor.request.builder.visacheckout |
 The conversion from payment service request to a request object specific to credit card payment operation is implemented by:
 
 | **Payment operation** | **Payment service request converter implementation\*** |
-| --- | --- |
-| EnrollmentCheck | EnrollmentRequestConverter |
-| Validation | ValidateRequestConverter |
+| --------------------- | ------------------------------------------------------ |
+| EnrollmentCheck       | EnrollmentRequestConverter                             |
+| Validation            | ValidateRequestConverter                               |
 
 \* Java package:
 
@@ -2168,30 +2173,28 @@ Flex Microform implementation is based in Cardinal Cruise Hybrid described in [h
 
 The following configurations are required:
 
-| **Key** | **Description** | **EBC platform**|
-| --- | --- | --- |
-| isv.payment.customer.3ds.<MERCAHNT_ID>.enabled | Possible values true/false  Indicates if 3DS is enabled for the merchant provided in <MERCHANT_ID> | |
-| `isv.payment.customer.3ds.jwt.api.id` | Cardinal API ID (provided by the payment provider) | Payment configuration->Payer Authentication Configuration : `API IdentifierAPI Identifier` |
-| `isv.payment.customer.3ds.jwt.api.key` | Cardinal API key (provided by the payment provider) | Payment configuration->Payer Authentication Configuration : `API Key`|
-| `isv.payment.customer.3ds.jwt.api.orgUnitId` | Cardinal OrgUnitID (provided by the payment provider) |Payment configuration->Payer Authentication Configuration : `Org Unit ID`|
-| `isv.payment.customer.3ds.songbird.url` | Cardinal JS URL <br> -Production: [https://songbird.cardinalcommerce.com/edge/v1/songbird.js](https://songbird.cardinalcommerce.com/edge/v1/songbird.js)<br>- Staging: [https://songbirdstag.cardinalcommerce.com/edge/v1/songbird.js](https://songbirdstag.cardinalcommerce.com/edge/v1/songbird.js) <br>- Sandbox: [https://utilsbox.cardinalcommerce.com/cardinalcruise/v1/songbird.js](https://utilsbox.cardinalcommerce.com/cardinalcruise/v1/songbird.js) | |
-
-
+| **Key**                                        | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                 | **EBC platform**                                                                           |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| isv.payment.customer.3ds.<MERCAHNT_ID>.enabled | Possible values true/false Indicates if 3DS is enabled for the merchant provided in <MERCHANT_ID>                                                                                                                                                                                                                                                                                                                                                               |                                                                                            |
+| `isv.payment.customer.3ds.jwt.api.id`          | Cardinal API ID (provided by the payment provider)                                                                                                                                                                                                                                                                                                                                                                                                              | Payment configuration->Payer Authentication Configuration : `API IdentifierAPI Identifier` |
+| `isv.payment.customer.3ds.jwt.api.key`         | Cardinal API key (provided by the payment provider)                                                                                                                                                                                                                                                                                                                                                                                                             | Payment configuration->Payer Authentication Configuration : `API Key`                      |
+| `isv.payment.customer.3ds.jwt.api.orgUnitId`   | Cardinal OrgUnitID (provided by the payment provider)                                                                                                                                                                                                                                                                                                                                                                                                           | Payment configuration->Payer Authentication Configuration : `Org Unit ID`                  |
+| `isv.payment.customer.3ds.songbird.url`        | Cardinal JS URL <br> -Production: [https://songbird.cardinalcommerce.com/edge/v1/songbird.js](https://songbird.cardinalcommerce.com/edge/v1/songbird.js)<br>- Staging: [https://songbirdstag.cardinalcommerce.com/edge/v1/songbird.js](https://songbirdstag.cardinalcommerce.com/edge/v1/songbird.js) <br>- Sandbox: [https://utilsbox.cardinalcommerce.com/cardinalcruise/v1/songbird.js](https://utilsbox.cardinalcommerce.com/cardinalcruise/v1/songbird.js) |                                                                                            |
 
 The flow is as follows:
 
 1. On checkout, checkoutSummaryPage.jsp injects cardinalCommerce.tag which contains all Cardinal related javascript under the variable CARDINAL_COMMERCE
 
 2. On page load a new JWT will be generated using
-isv.sap.payment.addon.facade.impl.CreditCardPaymentFacadeImpl#createEnrollmentJwt
- The payload in this JWT can be modified by changing the behaviour of "enrollmentPayloadConverter"
+   isv.sap.payment.addon.facade.impl.CreditCardPaymentFacadeImpl#createEnrollmentJwt
+   The payload in this JWT can be modified by changing the behaviour of "enrollmentPayloadConverter"
 
 3. When the user clicks on "Place order" button, Cardinal will be initialized by means of CARDINAL_COMMERCE.initialize, using the JWT previously generated
 
 4. Once initialized, 'payments.setupComplete' event will be triggered. Then the BIN number will be updated using the partial number provided on Flex Microform token creation and the payment process will start invoking CARDINAL_COMMERCE.pay
 
 5. CARDINAL_COMMERCE.pay sends an ajax request to /checkout/payment/flex/attemptPaymentWithoutValidation where a request for the Check Enrollment service is generated. If the card is not enrolled in a validation program, then an authorization request will be sent automatically, placing the order and ending the flow.
- If the card is enrolled, the information will be returned back to the javascript code, where Cardinal.continue will be invoked in order to proceed with the validation.
+   If the card is enrolled, the information will be returned back to the javascript code, where Cardinal.continue will be invoked in order to proceed with the validation.
 
 6. When Cardinal.continue finishes, 'payments.validated' event will be triggered, where a new ajax request to '/checkout/payment/flex/payWithValidation' will be generated. Then the backend will do a new request for authorization and validation services together.
 
@@ -2292,8 +2295,8 @@ The transaction check status is requested on a scheduled basis. Please check the
 
 The following configuration property related to Check Status service is defined in CJL `config.properties`:
 
-| **Configuration property** | **Description** |
-| --- | --- |
+| **Configuration property**                                                              | **Description**                                                                                                                                                                                                                                 |
+| --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `isv.payment.alternativePayment.checkStatus.{apPaymethod}.{paymentOperation}.frequency` | Represents the interval (in seconds) between the check status requests for a specific alternative payment method operation. Note that each interval is relative to the original payment operation and not to the previous check status attempt. |
 
 Let's provide some examples for the sake of simplicity.
@@ -2386,14 +2389,14 @@ isv.sap.payment.model.IsvMerchantModel
 
 It contains following fields:
 
-| **Field** | **Description** |
-| --- | --- |
-| id | Payment provider merchant identifier |
-| userName | The user name to use for the SOAP Toolkit API. In reference implementation corresponds to the merchant identifier |
-| passwordToken | This is a security key for SOAP Toolkit API.For obtaining/configuring it please refer to section **Transaction Keys of** [SOAP Toolkits for Web Services Developer Guide](http://apps.cybersource.com/library/documentation/dev_guides/SOAP_Toolkits/SOAP_toolkits.pdf). |
-| reportingUserName | The user name to use for querying reports. For details, please refer to section **User Permissions** of [Reporting Developer Guide](http://apps.cybersource.com/library/documentation/dev_guides/Reporting_Developers_Guide/reporting_dg.pdf). |
-| reportingPassword | The password to use for querying reports |
-| profiles | Merchant profile (see below) |
+| **Field**         | **Description**                                                                                                                                                                                                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| id                | Payment provider merchant identifier                                                                                                                                                                                                                                     |
+| userName          | The user name to use for the SOAP Toolkit API. In reference implementation corresponds to the merchant identifier                                                                                                                                                        |
+| passwordToken     | This is a security key for SOAP Toolkit API.For obtaining/configuring it please refer to section **Transaction Keys of** [SOAP Toolkits for Web Services Developer Guide](http://apps.cybersource.com/library/documentation/dev_guides/SOAP_Toolkits/SOAP_toolkits.pdf). |
+| reportingUserName | The user name to use for querying reports. For details, please refer to section **User Permissions** of [Reporting Developer Guide](http://apps.cybersource.com/library/documentation/dev_guides/Reporting_Developers_Guide/reporting_dg.pdf).                           |
+| reportingPassword | The password to use for querying reports                                                                                                                                                                                                                                 |
+| profiles          | Merchant profile (see below)                                                                                                                                                                                                                                             |
 
 Merchant is associated (one to many) with payment configuration model:
 
@@ -2403,13 +2406,13 @@ isv.sap.payment.model.IsvMerchantPaymentConfigurationModel
 
 It contains following fields:
 
-| **Field** | **Description** |
-| --- | --- |
-| merchant | Merchant this configuration belongs to |
-| site | Site this configuration is applied for |
-| paymentType | Payment type this configuration is applied for |
-| currency | Currency this configuration is applied for |
-| paymentChannel | Payment channel this configuration is applied for |
+| **Field**                    | **Description**                                      |
+| ---------------------------- | ---------------------------------------------------- |
+| merchant                     | Merchant this configuration belongs to               |
+| site                         | Site this configuration is applied for               |
+| paymentType                  | Payment type this configuration is applied for       |
+| currency                     | Currency this configuration is applied for           |
+| paymentChannel               | Payment channel this configuration is applied for    |
 | authServiceCommerceIndicator | Commerce indicator this configuration is applied for |
 
 Finally, merchant profile:
@@ -2420,13 +2423,13 @@ isv.sap.payment.model.IsvMerchantProfileModel
 
 With following fields:
 
-| **Field** | **Description** |
-| --- | --- |
+| **Field**   | **Description**                                           |
+| ----------- | --------------------------------------------------------- |
 | profileType | Type of merchant configuration profile (e.g. SOP/HOP/VCO) |
-| profileId | Merchant profile identifier |
-| accessKey | Merchant access key (in case of VCO - Visa SRC API key) |
-| secretKey | Merchant secret key (is not used in case of VCO) |
-| merchant | Merchant instance this profile belongs to |
+| profileId   | Merchant profile identifier                               |
+| accessKey   | Merchant access key (in case of VCO - Visa SRC API key)   |
+| secretKey   | Merchant secret key (is not used in case of VCO)          |
+| merchant    | Merchant instance this profile belongs to                 |
 
 > ![Note](images/note.jpg) Merchant configuration for Visa SRC will fall under the profileType VCO
 
@@ -2453,8 +2456,10 @@ INSERT_UPDATE IsvMerchantProfile;id[unique=true];merchant(id);profileType(code);
 ;mid_1_sop;mid_1;SOP;
 ;mid_1_hop;mid_1;HOP;
 ```
+
 The profile data can be obtained in EBC platform in Payment Configuration->Secure Acceptance Settings
- section.
+section.
+
 # Logging and Filtering
 
 SAP Commerce extension logging is based on CJL logging components that provides support for masking and filtering sensitive customer data.
@@ -2637,17 +2642,17 @@ To support Decision Manager device fingerprinting, the following components are 
 
 - Fraud facade
 
-    ```text
-    isv.sap.payment.fraud.FraudFacade
-    //default implementation
-    isv.sap.payment.fraud.DefaultFraudFacade
-    ```
+  ```text
+  isv.sap.payment.fraud.FraudFacade
+  //default implementation
+  isv.sap.payment.fraud.DefaultFraudFacade
+  ```
 
 - Fraud device fingerprint tag
 
-    ```text
-     acceleratoraddon/web/webroot/WEB-INF/tags/responsive/fraud/deviceFingerPrint.tag
-    ```
+  ```text
+   acceleratoraddon/web/webroot/WEB-INF/tags/responsive/fraud/deviceFingerPrint.tag
+  ```
 
 The device fingerprint data is obtained through **FraudFacade** from checkout summary page controller and then submitted to device fingerprint provider (online-metrix.net) through **deviceFingerPrint.tag**.
 
@@ -2813,7 +2818,7 @@ Spock and Groovy libraries are included into the provided package.
 
 Unit Tests are covering and testing Classes in isolation. Isolation is achieved by Mocking all dependencies using standard Mocking API provided with Spock.
 
- > ![Note](images/note.jpg) Please ensure that you are not using Objenesis in Mocks
+> ![Note](images/note.jpg) Please ensure that you are not using Objenesis in Mocks
 
 ```text
  def cart = Mock([useObjenesis: false], CartModel)
@@ -2825,7 +2830,7 @@ All Test Specs have **@UnitTest** annotation and are extending Specification Cla
  @UnitTestclass DefaultReportExecutorSpec extends Specification
 ```
 
- > ![Note](images/note.jpg) To ensure that standard SAP Commerce yunit runner runs whole spec please ensure that at least one test in spec has **@Test** Annotation.
+> ![Note](images/note.jpg) To ensure that standard SAP Commerce yunit runner runs whole spec please ensure that at least one test in spec has **@Test** Annotation.
 
 **Running Tests:**
 
@@ -3242,7 +3247,7 @@ then: "Order is created"
         waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
 ```
 
- > ![Note](images/note.jpg) Transaction and order status checks are performed by browserless requests.
+> ![Note](images/note.jpg) Transaction and order status checks are performed by browserless requests.
 
 #### How to run tests
 
