@@ -1,8 +1,11 @@
 package isv.sap.payment.addon.utils;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
+import org.apache.commons.text.StringEscapeUtils;
 
 import isv.cjl.payment.exception.PaymentException;
 
@@ -37,5 +40,42 @@ public final class HttpRequestUtil
         }
 
         return parameterMap;
+    }
+
+    /**
+     * Validate the paymentData
+     * @param paymentData
+     * @return sanitized data
+     */
+    public static Map<String, Object> validateAndSanitizePaymentData(Map<String, Object> paymentData) {
+        Map<String, Object> sanitizedData = new HashMap<>();
+        for (Map.Entry<String, Object> entry : paymentData.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            // Sanitize value if it is a URL
+            if (value instanceof String && isUrl((String) value)) {
+                //sanitize to prevent malicious URL
+                value = StringEscapeUtils.escapeHtml4((String) value);
+            }
+
+            sanitizedData.put(key, value);
+        }
+
+        return sanitizedData;
+    }
+
+    /**
+     * Checks whether the given value is a URL or not
+     * @param value the value to verify
+     * @return true if the value is a URL
+     */
+    public static boolean isUrl(String value) {
+        try {
+            new URL(value);
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        }
     }
 }

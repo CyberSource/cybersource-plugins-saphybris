@@ -36,7 +36,7 @@
                                 <jsp:include page="/WEB-INF/views/addons/isvpaymentaddon/responsive/pages/checkout/multi/payment/checkoutCardPaymentDetails.jsp"/>
                                 <c:url var="sopFormAction" value="/checkout/payment/sa/sop"/>
                                 <div id="sopIframeCbox">
-                                    <iframe id="sopRequestIframe" src="${sopFormAction}"></iframe>
+                                    <iframe id="sopRequestIframe" src="${sopFormAction}" sandbox></iframe>
                                 </div>
                             </c:otherwise>
                         </c:choose>

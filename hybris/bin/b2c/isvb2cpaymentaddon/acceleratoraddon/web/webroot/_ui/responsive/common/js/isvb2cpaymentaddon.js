@@ -511,6 +511,18 @@ ACC.secureacceptance = {
                 Klarna.Credit.authorize({}, function (res) {
                     KLARNA.authResponse = res;
                     console.log(JSON.stringify(res));
+
+                    //   if (KLARNA.authResponse['approved'] === true) {
+                    //     var alternativePaymentCode = $("input[type='radio'][name='paymentMode']:checked").val();
+                    //     $(".checkout-paymentmethod").after(
+                    //       '<form id="alternativePlaceOrder" action="' + ACC.config.contextPath + '/checkout/payment/ap/pay" method="post">' +
+                    //       '<input type="hidden" name="paymentModeCode" value="' + alternativePaymentCode + '" /> ' +
+                    //       '<input type="hidden" name="klarnaAuthToken" value="' + KLARNA.authResponse['authorization_token'] + '" /> ' +
+                    //       '</form>');
+                    //     $("#alternativePlaceOrder").submit();
+                    //   } else if (KLARNA.authResponse['show_form'] === false) {
+                    //     window.location = ACC.config.contextPath + '/checkout/multi/summary/view/payment/error';
+                    //   }
                     if (KLARNA.authResponse['approved'] === true) {
                         // Safely get the alternative payment code
                         var alternativePaymentCode = $("input[type='radio'][name='paymentMode']:checked").val();

@@ -7,6 +7,7 @@ import de.hybris.platform.core.model.order.CartModel;
 import isv.cjl.payment.service.executor.PaymentServiceResult;
 import isv.cjl.payment.service.executor.request.builder.googlepay.AuthorizationRequestBuilder;
 import isv.sap.payment.addon.facade.GooglePayPaymentFacade;
+import isv.sap.payment.addon.utils.HttpRequestUtil;
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel;
 
 import static isv.cjl.payment.constants.PaymentConstants.CommonFields.ORDER;
@@ -20,10 +21,11 @@ public class GooglePayPaymentFacadeImpl extends AbstractPaymentFacade implements
     @Override
     public boolean authorizeGooglePayPayment(final Map<String, Object> paymentData, final CartModel cart)
     {
+        Map<String, Object> sanitizePaymentData = HttpRequestUtil.validateAndSanitizePaymentData(paymentData);
         final PaymentServiceResult authorizationResult = executeRequest(
                 new AuthorizationRequestBuilder()
                         .setMerchantId(getMerchantService().getCurrentMerchant(GOOGLE_PAY).getId())
-                        .setPaymentData(paymentData)
+                        .setPaymentData(sanitizePaymentData)
                         .addParam(ORDER, cart)
                         .build());
 

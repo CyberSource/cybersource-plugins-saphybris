@@ -1,6 +1,9 @@
 package isv.sap.payment.addon.facade.impl;
 
+import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import de.hybris.platform.core.model.order.CartModel;
 
@@ -14,16 +17,18 @@ import static isv.cjl.payment.constants.PaymentConstants.CommonFields.TRANSACTIO
 import static isv.cjl.payment.constants.PaymentConstants.TransactionStatus.ACCEPT;
 import static isv.cjl.payment.constants.PaymentConstants.TransactionStatus.REVIEW;
 import static isv.cjl.payment.enums.PaymentType.GOOGLE_PAY;
+import isv.sap.payment.addon.utils.HttpRequestUtil;
 
 public class GooglePayPaymentFacadeImpl extends AbstractPaymentFacade implements GooglePayPaymentFacade
 {
     @Override
     public boolean authorizeGooglePayPayment(final Map<String, Object> paymentData, final CartModel cart)
     {
+        Map<String, Object> sanitizePaymentData = HttpRequestUtil.validateAndSanitizePaymentData(paymentData);
         final PaymentServiceResult authorizationResult = executeRequest(
                 new AuthorizationRequestBuilder()
                         .setMerchantId(getMerchantService().getCurrentMerchant(GOOGLE_PAY).getId())
-                        .setPaymentData(paymentData)
+                        .setPaymentData(sanitizePaymentData)
                         .addParam(ORDER, cart)
                         .build());
 

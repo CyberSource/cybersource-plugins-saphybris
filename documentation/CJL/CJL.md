@@ -3,12 +3,11 @@
 ## CJL - Core Java Library <!-- omit in toc -->
 
 **Version 25.1.0**
-January 2025
+March 2025
 
 ## Contents <!-- omit in toc -->
 
 <!-- TOC -->
-
 - [Introduction](#introduction)
   - [Packaging](#packaging)
 - [Installation and Upgrade](#installation-and-upgrade)
@@ -117,18 +116,18 @@ January 2025
 
 ## Recent Revisions to This Document
 
-| Release       | Changes                                                                                                                                                                                                              |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| April 2018    | Initial version                                                                                                                                                                                                      |
-| November 2018 | Added Token Management Service documentation                                                                                                                                                                         |
-| June 2019     | Added documentation for: <br>- New Update Session operation for Klarna, <br>- 3DS 2.x Helper services                                                                                                                |
-| July 2019     | - Introduced an enhancement of configurable mappers, in order to convert request / response between API low level objects and CJL <br>- Adjusted Request converters to use new approach for creating requests        |
-| January 2020  | - Added integration support for REST API using Java Client SDK, Migrated Reporting and Transaction Search from Servlet to REST APIs                                                                                  |
-| February 2020 | - Added support for Google Pay operations                                                                                                                                                                            |
-| March 2020    | - Added WeChat Pay                                                                                                                                                                                                   |
-| May 2020      | - Repackaging with ISV package                                                                                                                                                                                       |
-| March 2021    | - Upgraded Cybersource Transaction Web Service to version 175 <br> - Added cardTypeSelectionIndicator field to support Credit Mutuel-CIC transactions <br> - Upgraded cybersource-rest-client-java to version 0.0.30 |
-| February 2024 | - Upgraded cybersource-rest-client-java to version 0.0.58 and okhttp to 4.12.0                                                                                                                                       |
+| Release | Changes |
+| --- | --- |
+| April 2018    | Initial version |
+| November 2018 | Added Token Management Service documentation |
+| June 2019     | Added documentation for: <br>- New Update Session operation for Klarna, <br>- 3DS 2.x Helper services |
+| July 2019     | - Introduced an enhancement of configurable mappers, in order to convert request / response between API low level objects and CJL <br>- Adjusted Request converters to use new approach for creating requests |
+| January 2020  | - Added integration support for REST API using Java Client SDK, Migrated Reporting and Transaction Search from Servlet to REST APIs |
+| February 2020 | - Added support for Google Pay operations |
+| March 2020    | - Added WeChat Pay |
+| May 2020      | - Repackaging with ISV package |
+| March 2021    | - Upgraded Cybersource Transaction Web Service to version 175 <br> - Added cardTypeSelectionIndicator field to  support Credit Mutuel-CIC transactions <br> - Upgraded cybersource-rest-client-java to version 0.0.30 |
+| February 2024 | - Upgraded cybersource-rest-client-java to version 0.0.58 and okhttp to 4.12.0 |
 
 ## About This Guide
 
@@ -148,10 +147,10 @@ This document is written for merchants who want to use Core Java API for payment
 
 #### Text and Command Conventions
 
-| **Convention** | **Usage**                                                                                                                                                      |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Bold**       | Field and service names in text; for example: Include the **card_accountNumber** field. Items that you are instructed to act upon; for example: **Click Save** |
-| Screen text    | XML elements. Code examples and samples. Text that you enter in an API environment; for example:Set the ccAuthService_run field to true.                       |
+| **Convention** | **Usage** |
+| --- | --- |
+| **Bold** | Field and service names in text; for example: Include the **card_accountNumber** field. Items that you are instructed to act upon; for example: **Click Save** |
+| Screen text | XML elements. Code examples and samples. Text that you enter in an API environment; for example:Set the ccAuthService_run field to true. |
 
 ### Related Documents
 
@@ -166,7 +165,7 @@ This document is written for merchants who want to use Core Java API for payment
 - Level II and Level III Processing Using the Simple Order API ([HTML](http://apps.cybersource.com/library/documentation/dev_guides/Level_2_3_SO_API/html) |[PDF](http://apps.cybersource.com/library/documentation/dev_guides/Level_2_3_SO_API/Level_II_III_SO_API.pdf) )
 - PayPal Express Checkout Using Alternative Payments and the Simple Order API ([PDF](https://apps.cybersource.com/library/documentation/dev_guides/AltPay_PayPal_Express_SO/AltPay_PayPal_Express_SO_API.pdf)) ([HTML](https://apps.cybersource.com/library/documentation/dev_guides/AltPay_PayPal_Express_SO/html))
 - Online Bank Transfers Using the Simple Order API ([HTML](http://apps.cybersource.com/library/documentation/dev_guides/OnlineBankTransfers_SO_API/html) |[PDF](http://apps.cybersource.com/library/documentation/dev_guides/OnlineBankTransfers_SO_API/OnlineBankTransfers_SO_API.pdf) )
-- Authorizations with Payment Network Tokens Using the Simple Order API ([HTML](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/html/index.html) |[PDF](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/Authorizations_PNT_SO_API.pdf))
+- Authorizations with Payment Network Tokens Using the Simple Order API  ([HTML](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/html/index.html) |[PDF](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/Authorizations_PNT_SO_API.pdf))
 - Tax Calculation Service for the Simple Order API ( [HTML](http://apps.cybersource.com/library/documentation/dev_guides/Tax_SO_API/html) | [PDF](http://apps.cybersource.com/library/documentation/dev_guides/Tax_SO_API/Tax_SO_API.pdf))
 - Reporting Developer Guides ( [HTML](https://developer.cybersource.com/api/developer-guides/dita-reporting-rest-api-dev-guide-102718/reporting_api.html))
 - Payer Authentication Using the Simple Order API ( [HTML](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/html/) | [PDF](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf) )
@@ -314,11 +313,11 @@ The CJL and transitive dependencies are provided in a form of JAR files which sh
 
 CJL comes with a set of proprietary packages in the distribution zip file.
 
-`isv-payment-reports:isv.cjl.payment.reports`
+```isv-payment-reports:isv.cjl.payment.reports```
 
 The reporting API client, specific to WSDL version used by the payment provider for reporting services
 
-`sv-payment-schemas:isv.cjl.payment.schemas`
+```sv-payment-schemas:isv.cjl.payment.schemas```
 
 Webservice client, specific for the version of WSDL that us being used by the payment provider
 
@@ -396,17 +395,17 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation:
 
-| **Payment Operation**            | **Request builder implementation\***              |
-| -------------------------------- | ------------------------------------------------- |
-| Authorization                    | AuthorizationRequestBuilder                       |
+| **Payment Operation** | **Request builder implementation\*** |
+| --- | --- |
+| Authorization | AuthorizationRequestBuilder |
 | Authorization(Secure Acceptance) | isv.cjl.payment.sa.SecureAcceptanceRequestBuilder |
-| Authorization Reversal           | AuthorizationReversalRequestBuilder               |
-| Capture                          | CaptureRequestBuilder                             |
-| Payment Token Create             | PaymentTokenCreateRequestBuilder                  |
-| Payment Token Delete             | PaymentTokenDeleteRequestBuilder                  |
-| Refund (follow-on)               | RefundFollowOnRequestBuilder                      |
-| Refund (stand alone)             | RefundStandaloneRequestBuilder                    |
-| Void                             | VoidRequestBuilder                                |
+| Authorization Reversal | AuthorizationReversalRequestBuilder |
+| Capture | CaptureRequestBuilder |
+| Payment Token Create | PaymentTokenCreateRequestBuilder |
+| Payment Token Delete | PaymentTokenDeleteRequestBuilder |
+| Refund (follow-on) | RefundFollowOnRequestBuilder |
+| Refund (stand alone) | RefundStandaloneRequestBuilder |
+| Void | VoidRequestBuilder |
 
 \* Payment service request builders are defined within the following package:
 
@@ -444,16 +443,16 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines Credit Card payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment operation**  | **Transaction Type\*** | **Object Graph Identifier**     |
-| ---------------------- | ---------------------- | ------------------------------- |
-| Refund (follow-on)     | REFUND_FOLLOW_ON       | creditCardRefundFollowOn        |
-| Capture                | CAPTURE                | creditCardCapture               |
-| Payment Token Create   | CREATE_SUBSCRIPTION    | creditCardTokenCreate           |
-| Payment Token Delete   | DELETE_SUBSCRIPTION    | creditCardTokenDelete           |
+| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Refund (follow-on) | REFUND_FOLLOW_ON | creditCardRefundFollowOn |
+| Capture | CAPTURE | creditCardCapture |
+| Payment Token Create | CREATE_SUBSCRIPTION | creditCardTokenCreate |
+| Payment Token Delete | DELETE_SUBSCRIPTION | creditCardTokenDelete |
 | Authorization Reversal | AUTHORIZATION_REVERSAL | creditCardAuthorizationReversal |
-| Refund (standalone)    | REFUND_STANDALONE      | creditCardRefundStandalone      |
-| Authorization          | AUTHORIZATION          | creditCardAuthorization         |
-| Void                   | VOID                   | creditCardVoid                  |
+| Refund (standalone) | REFUND_STANDALONE | creditCardRefundStandalone |
+| Authorization | AUTHORIZATION | creditCardAuthorization |
+| Void | VOID | creditCardVoid |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -481,19 +480,19 @@ isv.cjl.sample.payment.request.converter.creditcard
 
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
-| **Payment Operation**                 | **Object Graph Identifier** | **Sample converter implementation** |
-| ------------------------------------- | --------------------------- | ----------------------------------- |
-| Capture                               | CAPTURE                     | CaptureRequestConverter             |
-| Payment Token Delete                  | TOKEN_DELETE                | PaymentTokenDeleteRequestConverter  |
-| Payment Token Create                  | TOKEN_CREATE                |
-| PaymentTokenCreateRequestConverter    |
-| Authorization Reversal                | AUTHORIZATION_REVERSAL      |
+| **Payment Operation** | **Object Graph Identifier** | **Sample converter implementation** |
+| --- | --- | --- |
+| Capture | CAPTURE | CaptureRequestConverter |
+| Payment Token Delete | TOKEN_DELETE | PaymentTokenDeleteRequestConverter |
+| Payment Token Create | TOKEN_CREATE
+| PaymentTokenCreateRequestConverter |
+| Authorization Reversal | AUTHORIZATION_REVERSAL
 | AuthorizationReversalRequestConverter |
-| Refund (standalone)                   | REFUND_STANDALONE           | RefundStandaloneRequestConverter    |
-| Authorization                         | AUTHORIZATION               | AuthorizationRequestConverter       |
-| Authorization (Secure Acceptance)     | SA_AUTHORIZATION            | SaAuthorizationRequestConverter     |
-| Void                                  | VOID                        | VoidRequestConverter                |
-| Refund (follow-on)                    | REFUND_FOLLOW_ON            | RefundFollowOnRequestConverter      |
+| Refund (standalone) | REFUND_STANDALONE | RefundStandaloneRequestConverter |
+| Authorization | AUTHORIZATION | AuthorizationRequestConverter |
+| Authorization (Secure Acceptance) | SA_AUTHORIZATION | SaAuthorizationRequestConverter |
+| Void | VOID | VoidRequestConverter |
+| Refund (follow-on) | REFUND_FOLLOW_ON | RefundFollowOnRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.CreditCard
 
@@ -513,16 +512,16 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type**   | **Request Mapper Identifier**                | **Response Mapper Identifier**                |
-| ---------------------- | -------------------------------------------- | --------------------------------------------- |
-| CAPTURE                | creditCardCaptureRequestMapper               | creditCardCaptureResponseMapper               |
-| DELETE_SUBSCRIPTION    | creditCardTokenDeleteRequestMapper           | creditCardTokenDeleteResponseMapper           |
-| CREATE_SUBSCRIPTION    | creditCardTokenCreateRequestMapper           | creditCardTokenCreateResponseMapper           |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
+| CAPTURE | creditCardCaptureRequestMapper | creditCardCaptureResponseMapper |
+| DELETE_SUBSCRIPTION | creditCardTokenDeleteRequestMapper | creditCardTokenDeleteResponseMapper |
+| CREATE_SUBSCRIPTION | creditCardTokenCreateRequestMapper | creditCardTokenCreateResponseMapper |
 | AUTHORIZATION_REVERSAL | creditCardAuthorizationReversalRequestMapper | creditCardAuthorizationReversalResponseMapper |
-| REFUND_STANDALONE      | creditCardRefundStandaloneRequestMapper      | creditCardRefundStandaloneResponseMapper      |
-| AUTHORIZATION          | creditCardAuthorizationRequestMapper         | creditCardAuthorizationResponseMapper         |
-| VOID                   | creditCardVoidRequestMapper                  | creditCardVoidResponseMapper                  |
-| REFUND_FOLLOW_ON       | creditCardRefundFollowOnRequestMapper        | creditCardRefundFollowOnResponseMapper        |
+| REFUND_STANDALONE | creditCardRefundStandaloneRequestMapper | creditCardRefundStandaloneResponseMapper |
+| AUTHORIZATION | creditCardAuthorizationRequestMapper | creditCardAuthorizationResponseMapper |
+| VOID | creditCardVoidRequestMapper | creditCardVoidResponseMapper |
+| REFUND_FOLLOW_ON | creditCardRefundFollowOnRequestMapper | creditCardRefundFollowOnResponseMapper |
 
 ### Configuration
 
@@ -568,11 +567,11 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 In order to simplify creation and setup of a Token Management Service request, a dedicated set of request builder components is provided:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --------------------- | ------------------------------------ |
-| Create                | CreateTokenRequestBuilder            |
-| Update                | UpdateTokenRequestBuilder            |
-| Retrieve              | RetrieveTokenRequestBuilder          |
-| Delete                | DeleteTokenRequestBuilder            |
+| --- | --- |
+| Create | CreateTokenRequestBuilder |
+| Update | UpdateTokenRequestBuilder |
+| Retrieve | RetrieveTokenRequestBuilder |
+| Delete | DeleteTokenRequestBuilder |
 
 \* Token Management Service request builders are defined within the following package:
 
@@ -589,11 +588,11 @@ isv.cjl.module.common.ProviderModule
 The following table outlines Token Management Service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
 | **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
-| --------------------- | ---------------------- | --------------------------- |
-| Create                | CREATE_TOKEN           | createToken                 |
-| Update                | UPDATE_TOKEN           | updateToken                 |
-| Retrieve              | RETRIEVE_TOKEN         | retrieveToken               |
-| Delete                | DELETE_TOKEN           | deleteToken                 |
+| --- | --- | --- |
+| Create | CREATE_TOKEN | createToken |
+| Update | UPDATE_TOKEN | updateToken |
+| Retrieve | RETRIEVE_TOKEN | retrieveToken |
+| Delete | DELETE_TOKEN | deleteToken |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -620,11 +619,11 @@ isv.cjl.sample.payment.request.converter.tms
 The following table defines sample implementation and corresponding object graph identifier for each Token Management Service operation converter:
 
 | **Payment Operation** | **Object Graph Identifier\*** | **Sample converter Implementation** |
-| --------------------- | ----------------------------- | ----------------------------------- |
-| Create                | CREATE_TOKEN                  | CreateTokenRequestConverter         |
-| Update                | UPDATE_TOKEN                  | UpdateTokenRequestConverter         |
-| Retrieve              | RETRIEVE_TOKEN                | RetrieveTokenRequestConverter       |
-| Delete                | DELETE                        | DeleteTokenRequestConverter         |
+| --- | --- | --- |
+| Create | CREATE_TOKEN | CreateTokenRequestConverter |
+| Update | UPDATE_TOKEN | UpdateTokenRequestConverter |
+| Retrieve | RETRIEVE_TOKEN | RetrieveTokenRequestConverter |
+| Delete | DELETE | DeleteTokenRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.Tms
 
@@ -645,11 +644,11 @@ isv.cjl.module.common.MapperModule
 The following table outlines commands mappers corresponding to each payment operation:
 
 | **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
-| -------------------- | ----------------------------- | ------------------------------ |
-| CREATE               | createTokenRequestMapper      | createTokenResponseMapper      |
-| UPDATE               | updateTokenRequestMapper      | updateTokenResponseMapper      |
-| Retrieve             | retrieveTokenRequestMapper    | retrieveTokenResponseMapper    |
-| DELETE               | deleteTokenRequestMapper      | deleteTokenResponseMapper      |
+| --- | --- | --- |
+| CREATE | createTokenRequestMapper | createTokenResponseMapper |
+| UPDATE | updateTokenRequestMapper | updateTokenResponseMapper |
+| Retrieve | retrieveTokenRequestMapper | retrieveTokenResponseMapper |
+| DELETE | deleteTokenRequestMapper | deleteTokenResponseMapper |
 
 ### Configuration
 
@@ -690,14 +689,14 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation:
 
-| **Payment Operation**  | **Request builder implementation\*** |
-| ---------------------- | ------------------------------------ |
-| Authorization          | AuthorizationRequestBuilder          |
-| Authorization Reversal | AuthorizationReversalRequestBuilder  |
-| Capture                | CaptureRequestBuilder                |
-| Get                    | GetRequestBuilder                    |
-| Refund                 | RefundRequestBuilder                 |
-| Void                   | VoidRequestBuilder                   |
+| **Payment Operation** | **Request builder implementation\*** |
+| --- | --- |
+| Authorization | AuthorizationRequestBuilder |
+| Authorization Reversal | AuthorizationReversalRequestBuilder |
+| Capture | CaptureRequestBuilder |
+| Get | GetRequestBuilder |
+| Refund | RefundRequestBuilder |
+| Void | VoidRequestBuilder |
 
 \* Payment service request builders are defined within the following package:
 
@@ -713,13 +712,13 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines Visa Checkout payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment operation**  | **Transaction Type\*** | **Object Graph Identifier**       |
-| ---------------------- | ---------------------- | --------------------------------- |
-| Get                    | GET                    | visaCheckoutGet                   |
-| Authorization          | AUTHORIZATION          | visaCheckoutAuthorization         |
-| Capture                | CAPTURE                | visaCheckoutCapture               |
-| Refund                 | REFUND                 | visaCheckoutRefund                |
-| Void                   | VOID                   | visaCheckoutVoid                  |
+| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Get | GET | visaCheckoutGet |
+| Authorization | AUTHORIZATION | visaCheckoutAuthorization |
+| Capture | CAPTURE | visaCheckoutCapture |
+| Refund | REFUND | visaCheckoutRefund |
+| Void | VOID | visaCheckoutVoid |
 | Authorization Reversal | AUTHORIZATION_REVERSAL | visaCheckoutAuthorizationReversal |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
@@ -746,14 +745,14 @@ isv.cjl.sample.payment.request.converter.visacheckout
 
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
-| **Payment Operation**  | **Object Graph Identifier\*** | **Sample converter Implementation**   |
-| ---------------------- | ----------------------------- | ------------------------------------- |
-| Get                    | GET                           | GetRequestConverter                   |
-| Authorization          | AUTHORIZATION                 | AuthorizationRequestConverter         |
-| Capture                | CAPTURE                       | CaptureRequestConverter               |
-| Refund                 | REFUND                        | RefundRequestConverter                |
-| Void                   | VOID                          | VoidRequestConverter                  |
-| Authorization reversal | AUTHORIZATION_REVERSAL        | AuthorizationReversalRequestConverter |
+| **Payment Operation** | **Object Graph Identifier\*** | **Sample converter Implementation** |
+| --- | --- | --- |
+| Get | GET | GetRequestConverter |
+| Authorization | AUTHORIZATION | AuthorizationRequestConverter |
+| Capture | CAPTURE | CaptureRequestConverter |
+| Refund | REFUND | RefundRequestConverter |
+| Void | VOID | VoidRequestConverter |
+| Authorization reversal | AUTHORIZATION_REVERSAL | AuthorizationReversalRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.VisaCheckout
 
@@ -773,13 +772,13 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type**   | **Request Mapper Identifier**                  | **Response Mapper Identifier**                  |
-| ---------------------- | ---------------------------------------------- | ----------------------------------------------- |
-| GET                    | visaCheckoutGetRequestMapper                   | visaCheckoutGetResponseMapper                   |
-| AUTHORIZATION          | visaCheckoutAuthorizationRequestMapper         | visaCheckoutAuthorizationResponseMapper         |
-| CAPTURE                | visaCheckoutCaptureRequestMapper               | visaCheckoutCaptureResponseMapper               |
-| REFUND                 | visaCheckoutRefundRequestMapper                | visaCheckoutRefundResponseMapper                |
-| VOID                   | visaCheckoutVoidRequestMapper                  | visaCheckoutVoidResponseMapper                  |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
+| GET | visaCheckoutGetRequestMapper | visaCheckoutGetResponseMapper |
+| AUTHORIZATION | visaCheckoutAuthorizationRequestMapper | visaCheckoutAuthorizationResponseMapper |
+| CAPTURE | visaCheckoutCaptureRequestMapper | visaCheckoutCaptureResponseMapper |
+| REFUND | visaCheckoutRefundRequestMapper | visaCheckoutRefundResponseMapper |
+| VOID | visaCheckoutVoidRequestMapper | visaCheckoutVoidResponseMapper |
 | AUTHORIZATION_REVERSAL | visaCheckoutAuthorizationReversalRequestMapper | visaCheckoutAuthorizationReversalResponseMapper |
 
 ### Configuration
@@ -821,10 +820,10 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --------------------- | ------------------------------------ |
-| Initiate Payment      | InitiateRequestBuilder               |
-| Check Status          | CheckStatusRequestBuilder            |
-| Refund                | RefundRequestBuilder                 |
+| --- | --- |
+| Initiate Payment | InitiateRequestBuilder |
+| Check Status | CheckStatusRequestBuilder |
+| Refund | RefundRequestBuilder |
 
 \* Payment service request builders are defined within the following package:
 
@@ -840,12 +839,12 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines AliPay payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier**   |
-| --------------------- | ---------------------- | ----------------------------- |
-| Initiate Payment      | INITIATE               | alternativePaymentInitiate    |
-| Check Status          | CHECK_STATUS           | alternativePaymentCheckStatus |
-|  |
-| Refund                | REFUND                 | alternativePaymentRefund      |
+| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Initiate Payment | INITIATE | alternativePaymentInitiate |
+| Check Status | CHECK_STATUS | alternativePaymentCheckStatus
+ |
+| Refund | REFUND | alternativePaymentRefund |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -872,10 +871,10 @@ isv.cjl.sample.payment.request.converter.alternative
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
 | **Payment Operation** | **Object Graph Identifier\*** | **Sample converter Implementation** |
-| --------------------- | ----------------------------- | ----------------------------------- |
-| Initiate Payment      | INITIATE                      | InitiateRequestConverter            |
-| Check status          | CHECK_STATUS                  | CheckStatusRequestConverter         |
-| Refund                | REFUND                        | RefundRequestConverter              |
+| --- | --- | --- |
+| Initiate Payment | INITIATE | InitiateRequestConverter |
+| Check status | CHECK_STATUS | CheckStatusRequestConverter |
+| Refund | REFUND | RefundRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.AlternativePayment
 
@@ -895,11 +894,11 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type** | **Request Mapper Identifier**              | **Response Mapper Identifier**              |
-| -------------------- | ------------------------------------------ | ------------------------------------------- |
-| INITIATE             | alternativePaymentInitiateRequestMapper    | alternativePaymentInitiateResponseMapper    |
-| CHECK_STATUS         | alternativePaymentCheckStatusRequestMapper | alternativePaymentCheckStatusResponseMapper |
-| REFUND               | alternativePaymentRefundRequestMapper      | alternativePaymentRefundResponseMapper      |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
+| INITIATE | alternativePaymentInitiateRequestMapper | alternativePaymentInitiateResponseMapper |
+| CHECK_STATUS | alternativePaymentCheckStatusRequestMapper | alternativePaymentCheckStatusResponseMapper |
+| REFUND | alternativePaymentRefundRequestMapper | alternativePaymentRefundResponseMapper |
 
 ### Configuration
 
@@ -954,19 +953,19 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation:
 
-| **Payment Operation**            | **Request builder implementation\***        |
-| -------------------------------- | ------------------------------------------- |
-| Authorization                    | AuthorizationRequestBuilder                 |
-| Authorization Reversal           | AuthorizationReversalRequestBuilder         |
-| Billing Agreement                | BillingAgreementRequestBuilder              |
-| Cancel Order                     | CancelOrderRequestBuilder                   |
-| Capture                          | CaptureRequestBuilder                       |
-| Check Status                     | CheckStatusRequestBuilder                   |
+| **Payment Operation** | **Request builder implementation\*** |
+| --- | --- |
+| Authorization | AuthorizationRequestBuilder |
+| Authorization Reversal | AuthorizationReversalRequestBuilder |
+| Billing Agreement | BillingAgreementRequestBuilder |
+| Cancel Order | CancelOrderRequestBuilder |
+| Capture | CaptureRequestBuilder |
+| Check Status | CheckStatusRequestBuilder |
 | Create Billing Agreement Session | CreateBillingAgreementSessionRequestBuilder |
-| Create Session                   | CreateSessionRequestBuilder                 |
-| Order Setup                      | OrderSetupRequestBuilder                    |
-| Refund                           | RefundRequestBuilder                        |
-| Sale                             | SaleRequestBuilder                          |
+| Create Session | CreateSessionRequestBuilder |
+| Order Setup | OrderSetupRequestBuilder |
+| Refund | RefundRequestBuilder |
+| Sale | SaleRequestBuilder |
 
 \* Payment service request builders are defined within the following package:
 
@@ -982,19 +981,19 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines PayPal payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment Operation**            | **Transaction Type\***           | **Object Graph Identifier**         |
-| -------------------------------- | -------------------------------- | ----------------------------------- |
-| Create Session                   | CREATE_SESSION                   | payPalCreateSession                 |
+| **Payment Operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Create Session | CREATE_SESSION | payPalCreateSession |
 | Create Billing Agreement Session | CREATE_BILLING_AGREEMENT_SESSION | payPalCreateBillingAgreementSession |
-| Check Status                     | CHECK_STATUS                     | payPalCheckStatus                   |
-| Authorization                    | AUTHORIZATION                    | payPalAuthorization                 |
-| Authorization Reversal           | AUTHORIZATION_REVERSAL           | payPalAuthorizationReversal         |
-| Order Setup                      | ORDER_SETUP                      | payPalOrderSetup                    |
-| Capture                          | CAPTURE                          | payPalCapture                       |
-| Sale                             | SALE                             | payPalSale                          |
-| Refund                           | REFUND                           | payPalRefund                        |
-| Cancel Order                     | CANCEL_ORDER                     | payPalCancelOrder                   |
-| Billing Agreement                | BILLING_AGREEMENT                | payPalBillingAgreement              |
+| Check Status | CHECK_STATUS | payPalCheckStatus |
+| Authorization | AUTHORIZATION | payPalAuthorization |
+| Authorization Reversal | AUTHORIZATION_REVERSAL | payPalAuthorizationReversal |
+| Order Setup | ORDER_SETUP | payPalOrderSetup |
+| Capture | CAPTURE | payPalCapture |
+| Sale | SALE | payPalSale |
+| Refund | REFUND | payPalRefund |
+| Cancel Order | CANCEL_ORDER | payPalCancelOrder |
+| Billing Agreement | BILLING_AGREEMENT | payPalBillingAgreement |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -1020,19 +1019,19 @@ isv.cjl.sample.payment.request.converter.paypal
 
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
-| **Payment Operation**            | **Object Graph Identifier\***    | **Sample converter implementation**           |
-| -------------------------------- | -------------------------------- | --------------------------------------------- |
-| Create Session                   | CREATE_SESSION                   | CreateSessionRequestConverter                 |
+| **Payment Operation** | **Object Graph Identifier\*** | **Sample converter implementation** |
+| --- | --- | --- |
+| Create Session | CREATE_SESSION | CreateSessionRequestConverter |
 | Create Billing Agreement Session | CREATE_BILLING_AGREEMENT_SESSION | CreateBillingAgreementSessionRequestConverter |
-| Check Status                     | CHECK_STATUS                     | CheckStatusRequestConverter                   |
-| Authorization                    | AUTHORIZATION                    | AuthorizationRequestConverter                 |
-| Authorization Reversal           | AUTHORIZATION_REVERSAL           | AuthorizationReversalRequestConverter         |
-| Order Setup                      | ORDER_SETUP                      | OrderSetupRequestConverter                    |
-| Capture                          | CAPTURE                          | CaptureRequestConverter                       |
-| Sale                             | SALE                             | SaleRequestConverter                          |
-| Refund                           | REFUND                           | RefundRequestConverter                        |
-| Cancel Order                     | CANCEL_ORDER                     | CancelOrderRequestConverter                   |
-| Billing Agreement                | BILLING_AGREEMENT                | BillingAgreementRequestConverter              |
+| Check Status | CHECK_STATUS | CheckStatusRequestConverter |
+| Authorization | AUTHORIZATION | AuthorizationRequestConverter |
+| Authorization Reversal | AUTHORIZATION_REVERSAL | AuthorizationReversalRequestConverter |
+| Order Setup | ORDER_SETUP | OrderSetupRequestConverter |
+| Capture | CAPTURE | CaptureRequestConverter |
+| Sale | SALE | SaleRequestConverter |
+| Refund | REFUND | RefundRequestConverter |
+| Cancel Order | CANCEL_ORDER | CancelOrderRequestConverter |
+| Billing Agreement | BILLING_AGREEMENT | BillingAgreementRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.PayPal
 
@@ -1052,19 +1051,19 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type**             | **Request Mapper Identifier**                    | **Response Mapper Identifier**                    |
-| -------------------------------- | ------------------------------------------------ | ------------------------------------------------- |
-| CREATE_SESSION                   | payPalCreateSessionRequestMapper                 | payPalCreateSessionResponseMapper                 |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
+| CREATE_SESSION | payPalCreateSessionRequestMapper | payPalCreateSessionResponseMapper |
 | CREATE_BILLING_AGREEMENT_SESSION | payPalCreateBillingAgreementSessionRequestMapper | payPalCreateBillingAgreementSessionResponseMapper |
-| CHECK_STATUS                     | payPalCheckStatusRequestMapper                   | payPalCheckStatusResponseMapper                   |
-| AUTHORIZATION                    | payPalAuthorizationRequestMapper                 | payPalAuthorizationResponseMapper                 |
-| AUTHORIZATION_REVERSAL           | payPalAuthorizationReversalRequestMapper         | payPalAuthorizationReversalResponseMapper         |
-| ORDER_SETUP                      | payPalOrderSetupRequestMapper                    | payPalOrderSetupResponseMapper                    |
-| CAPTURE                          | payPalCaptureRequestMapper                       | payPalCaptureResponseMapper                       |
-| SALE                             | payPalSaleRequestMapper                          | payPalSaleResponseMapper                          |
-| REFUND                           | payPalRefundRequestMapper                        | payPalRefundResponseMapper                        |
-| CANCEL_ORDER                     | payPalCancelOrderRequestMapper                   | payPalCancelOrderResponseMapper                   |
-| BILLING_AGREEMENT                | payPalBillingAgreementRequestMapper              | payPalBillingAgreementResponseMapper              |
+| CHECK_STATUS | payPalCheckStatusRequestMapper | payPalCheckStatusResponseMapper |
+| AUTHORIZATION | payPalAuthorizationRequestMapper | payPalAuthorizationResponseMapper |
+| AUTHORIZATION_REVERSAL | payPalAuthorizationReversalRequestMapper | payPalAuthorizationReversalResponseMapper |
+| ORDER_SETUP | payPalOrderSetupRequestMapper | payPalOrderSetupResponseMapper |
+| CAPTURE | payPalCaptureRequestMapper | payPalCaptureResponseMapper |
+| SALE | payPalSaleRequestMapper | payPalSaleResponseMapper |
+| REFUND | payPalRefundRequestMapper | payPalRefundResponseMapper |
+| CANCEL_ORDER | payPalCancelOrderRequestMapper | payPalCancelOrderResponseMapper |
+| BILLING_AGREEMENT | payPalBillingAgreementRequestMapper | payPalBillingAgreementResponseMapper |
 
 ### Configuration
 
@@ -1110,14 +1109,14 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation\*\*:
 
-| **Payment Operation**  | **Request builder implementation\*** |
-| ---------------------- | ------------------------------------ |
-| Create Session         | CreateSessionRequestBuilder          |
-| Authorization          | AuthorizationRequestBuilder          |
-| Authorization Reversal | AuthorizationReversalRequestBuilder  |
-| Capture                | CaptureRequestBuilder                |
-| Refund                 | RefundFollowOnRequestBuilder         |
-| Sale                   | SaleRequestBuilder                   |
+| **Payment Operation** | **Request builder implementation\*** |
+| --- | --- |
+| Create Session | CreateSessionRequestBuilder |
+| Authorization | AuthorizationRequestBuilder |
+| Authorization Reversal | AuthorizationReversalRequestBuilder |
+| Capture | CaptureRequestBuilder |
+| Refund | RefundFollowOnRequestBuilder |
+| Sale | SaleRequestBuilder |
 
 \* Payment service request builders are defined within the following package:
 
@@ -1139,14 +1138,14 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines Apple Pay payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment Operation**  | **Transaction Type\*** | **Object Graph Identifier**   |
-| ---------------------- | ---------------------- | ----------------------------- |
-| Create Session         | CREATE_SESSION         | applePayCreateSession         |
-| Authorization          | AUTHORIZATION          | applePayAuthorization         |
+| **Payment Operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Create Session | CREATE_SESSION | applePayCreateSession |
+| Authorization | AUTHORIZATION | applePayAuthorization |
 | Authorization Reversal | AUTHORIZATION_REVERSAL | applePayAuthorizationReversal |
-| Capture                | CAPTURE                | applePayCapture               |
-| Sale                   | SALE                   | applePaySale                  |
-| Refund                 | REFUND_FOLLOW_ON       | applePayRefundFollowOn        |
+| Capture | CAPTURE | applePayCapture |
+| Sale | SALE | applePaySale |
+| Refund | REFUND_FOLLOW_ON | applePayRefundFollowOn |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -1172,14 +1171,14 @@ isv.cjl.sample.payment.request.converter.applepay
 
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
-| **Payment Operation**  | **Object Graph Identifier\*** | **Sample converter implementation**   |
-| ---------------------- | ----------------------------- | ------------------------------------- |
-| Create Session         | CREATE_SESSION                | CreateSessionRequestConverter         |
-| Authorization          | AUTHORIZATION                 | AuthorizationRequestConverter         |
-| Authorization Reversal | AUTHORIZATION_REVERSAL        | AuthorizationReversalRequestConverter |
-| Capture                | CAPTURE                       | CaptureRequestConverter               |
-| Sale                   | SALE                          | SaleRequestConverter                  |
-| Refund                 | REFUND_FOLLOW_ON              | RefundFollowOnRequestConverter        |
+| **Payment Operation** | **Object Graph Identifier\*** | **Sample converter implementation** |
+| --- | --- | --- |
+| Create Session | CREATE_SESSION | CreateSessionRequestConverter |
+| Authorization | AUTHORIZATION | AuthorizationRequestConverter |
+| Authorization Reversal | AUTHORIZATION_REVERSAL | AuthorizationReversalRequestConverter |
+| Capture | CAPTURE | CaptureRequestConverter |
+| Sale | SALE | SaleRequestConverter |
+| Refund | REFUND_FOLLOW_ON | RefundFollowOnRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.ApplePay
 
@@ -1199,14 +1198,14 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type**   | **Request Mapper Identifier**              | **Response Mapper Identifier**              |
-| ---------------------- | ------------------------------------------ | ------------------------------------------- |
-| CREATE_SESSION         | applePayCreateSessionRequestMapper         | applePayCreateSessionResponseMapper         |
-| AUTHORIZATION          | applePayAuthorizationRequestMapper         | applePayAuthorizationResponseMapper         |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
+| CREATE_SESSION | applePayCreateSessionRequestMapper | applePayCreateSessionResponseMapper |
+| AUTHORIZATION | applePayAuthorizationRequestMapper | applePayAuthorizationResponseMapper |
 | AUTHORIZATION_REVERSAL | applePayAuthorizationReversalRequestMapper | applePayAuthorizationReversalResponseMapper |
-| CAPTURE                | applePayCaptureRequestMapper               | applePayCaptureResponseMapper               |
-| SALE                   | applePaySaleRequestMapper                  | applePaySaleResponseMapper                  |
-| REFUND                 | applePayRefundRequestMapper                | applePayRefundResponseMapper                |
+| CAPTURE | applePayCaptureRequestMapper | applePayCaptureResponseMapper |
+| SALE | applePaySaleRequestMapper | applePaySaleResponseMapper |
+| REFUND | applePayRefundRequestMapper | applePayRefundResponseMapper |
 
 ### Configuration
 
@@ -1217,7 +1216,7 @@ Each operation command is configured using default [Hystrix](https://github.com/
 hystrix.command.<object graph identifier>Command.execution.isolation.thread.timeoutInMilliseconds=30000
 ```
 
-Where `<object graph identifier>` takes values from payment operation/transaction type table above (eg. hystrix.command.applePayCreateSessionCommand.execution.isolation.thread.timeoutInMilliseconds=30000)
+Where ```<object graph identifier>``` takes values from payment operation/transaction type table above (eg. hystrix.command.applePayCreateSessionCommand.execution.isolation.thread.timeoutInMilliseconds=30000)
 
 There are also some additional configuration values:
 
@@ -1235,20 +1234,20 @@ isv.payment.applePay.merch.decryption.leafOID=1.2.840.113635.100.6.29
 isv.payment.applePay.merch.decryption.intermediateOID=1.2.840.113635.100.6.2.14
 ```
 
-> ![Important](images/important.jpg) Configurations prefixed with isv.payment.customer. **must\*\*** be overridden\*\* in your implementation, whilst isv.payment.applePay. configs can remain as they are unless Apple Pay does changes in the future
+> ![Important](images/important.jpg) Configurations prefixed with isv.payment.customer. **must**** be overridden** in your implementation, whilst isv.payment.applePay. configs can remain as they are unless Apple Pay does changes in the future
 
-| **Configuration property**                                | **Description**                                                                                                                                                                                                                                                                                         |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| isv.payment.customer.applepay.merchant.identifier         | Your Apple Pay merchant ID, see "Configuring Apple Pay" section below                                                                                                                                                                                                                                   |
-| isv.payment.customer.applepay.keystore.location           | This is the relative path to a JKS keystore containing your Apple Pay Merchant Identity certificate and private key (if using decryption) or Apple Pay Merchant Identity and Payment Processing certificates and private keys (if using merchant decryption). See "Configuring Apple Pay" section below |
-| isv.payment.customer.applepay.keystore.password           | Password for the referenced keystore above                                                                                                                                                                                                                                                              |
-| isv.payment.customer.applepay.payment.privatekey.alias    | **Required only if using merchant decryption,** alias given to Payment Processing private key                                                                                                                                                                                                           |
-| isv.payment.customer.applepay.payment.privatekey.password | **Required only if using merchant decryption,** password assigned to Payment Processing private key                                                                                                                                                                                                     |
-| isv.payment.customer.applepay.payment.expiration.time     | **Required only if using merchant decryption,** amount of time in milliseconds that can pass before considering a payment token expired. Payment token won't expire if value <= 0                                                                                                                       |
-| isv.payment.applePay.supported.ssl.protocols              | Supported SSL protocols when requesting Apple Pay session. See [Setting up your server for Apple Pay](https://developer.apple.com/documentation/apple_pay_on_the_web/setting_up_your_server) Pay for more information                                                                                   |
-| isv.payment.applepay.initiative                           | Value for parameter "initiative" in [Requesting Apple Pay Payment Session](https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_js_api/requesting_an_apple_pay_payment_session)                                                                                                     |
-| isv.payment.applePay.merch.decryption.leafOID             | **Required only if using merchant decryption,** custom leaf OID. See [Payment Token Format](https://developer.apple.com/library/archive/documentation/PassKit/Reference/PaymentTokenJSON/PaymentTokenJSON.html)                                                                                         |
-| isv.payment.applePay.merch.decryption.intermediateOID     | **Required only if using merchant decryption,** custom intermediate OID. See [Payment Token Format](https://developer.apple.com/library/archive/documentation/PassKit/Reference/PaymentTokenJSON/PaymentTokenJSON.html)                                                                                 |
+| **Configuration property** | **Description** |
+| --- | --- |
+| isv.payment.customer.applepay.merchant.identifier | Your Apple Pay merchant ID, see "Configuring Apple Pay" section below |
+| isv.payment.customer.applepay.keystore.location | This is the relative path to a JKS keystore containing your Apple Pay Merchant Identity certificate and private key (if using decryption) or Apple Pay Merchant Identity and Payment Processing certificates and private keys (if using merchant decryption). See "Configuring Apple Pay" section below |
+| isv.payment.customer.applepay.keystore.password | Password for the referenced keystore above |
+| isv.payment.customer.applepay.payment.privatekey.alias | **Required only if using merchant decryption,** alias given to Payment Processing private key |
+| isv.payment.customer.applepay.payment.privatekey.password | **Required only if using merchant decryption,** password assigned to Payment Processing private key |
+| isv.payment.customer.applepay.payment.expiration.time | **Required only if using merchant decryption,** amount of time in milliseconds that can pass before considering a payment token expired. Payment token won't expire if value <= 0 |
+| isv.payment.applePay.supported.ssl.protocols | Supported SSL protocols when requesting Apple Pay session. See [Setting up your server for Apple Pay](https://developer.apple.com/documentation/apple_pay_on_the_web/setting_up_your_server) Pay for more information |
+| isv.payment.applepay.initiative | Value for parameter "initiative" in [Requesting Apple Pay Payment Session](https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_js_api/requesting_an_apple_pay_payment_session) |
+| isv.payment.applePay.merch.decryption.leafOID | **Required only if using merchant decryption,** custom leaf OID. See [Payment Token Format](https://developer.apple.com/library/archive/documentation/PassKit/Reference/PaymentTokenJSON/PaymentTokenJSON.html) |
+| isv.payment.applePay.merch.decryption.intermediateOID | **Required only if using merchant decryption,** custom intermediate OID. See [Payment Token Format](https://developer.apple.com/library/archive/documentation/PassKit/Reference/PaymentTokenJSON/PaymentTokenJSON.html) |
 
 Configuring Apple Pay
 
@@ -1353,13 +1352,13 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation:
 
-| **Payment Operation**  | **Request builder implementation\*** |
-| ---------------------- | ------------------------------------ |
-| Authorization          | AuthorizationRequestBuilder          |
-| Authorization Reversal | AuthorizationReversalRequestBuilder  |
-| Capture                | CaptureRequestBuilder                |
-| Refund                 | RefundFollowOnRequestBuilder         |
-| Sale                   | SaleRequestBuilder                   |
+| **Payment Operation** | **Request builder implementation\*** |
+| --- | --- |
+| Authorization | AuthorizationRequestBuilder |
+| Authorization Reversal | AuthorizationReversalRequestBuilder |
+| Capture | CaptureRequestBuilder |
+| Refund | RefundFollowOnRequestBuilder |
+| Sale | SaleRequestBuilder |
 
 \* Payment service request builders are defined within the following package:
 
@@ -1375,13 +1374,13 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines Google Pay payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment Operation**  | **Transaction Type\*** | **Object Graph Identifier**    |
-| ---------------------- | ---------------------- | ------------------------------ |
-| Authorization          | AUTHORIZATION          | googlePayAuthorization         |
+| **Payment Operation** | **Transaction Type*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Authorization | AUTHORIZATION | googlePayAuthorization |
 | Authorization Reversal | AUTHORIZATION_REVERSAL | googlePayAuthorizationReversal |
-| Capture                | CAPTURE                | googlePayCapture               |
-| Sale                   | SALE                   | googlePaySale                  |
-| Refund                 | REFUND_FOLLOW_ON       | googlePayRefundFollowOn        |
+| Capture | CAPTURE | googlePayCapture |
+| Sale | SALE | googlePaySale |
+| Refund | REFUND_FOLLOW_ON | googlePayRefundFollowOn |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -1407,13 +1406,13 @@ isv.cjl.sample.payment.request.converter.googlepay
 
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
-| **Payment Operation**  | **Object Graph Identifier\*** | **Sample converter implementation**   |
-| ---------------------- | ----------------------------- | ------------------------------------- |
-| Authorization          | AUTHORIZATION                 | AuthorizationRequestConverter         |
-| Authorization Reversal | AUTHORIZATION_REVERSAL        | AuthorizationReversalRequestConverter |
-| Capture                | CAPTURE                       | CaptureRequestConverter               |
-| Sale                   | SALE                          | SaleRequestConverter                  |
-| Refund                 | REFUND_FOLLOW_ON              | RefundFollowOnRequestConverter        |
+| **Payment Operation** | **Object Graph Identifier\*** | **Sample converter implementation** |
+| --- | --- | --- |
+| Authorization | AUTHORIZATION | AuthorizationRequestConverter |
+| Authorization Reversal | AUTHORIZATION_REVERSAL | AuthorizationReversalRequestConverter |
+| Capture | CAPTURE | CaptureRequestConverter |
+| Sale | SALE | SaleRequestConverter |
+| Refund | REFUND_FOLLOW_ON | RefundFollowOnRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.GooglePay
 
@@ -1433,13 +1432,13 @@ The mappings to/from payment service request/response are defined in the followi
 
 The following table outlines commands mappers corresponding to each payment operation (note that some operation reuse credit card mappers since Google Pay is just a mean to transmit credit card data):
 
-| **Transaction Type**   | **Service**                        |
-| ---------------------- | ---------------------------------- |
-| AUTHORIZATION          | GOOGLE_PAY_AUTHORIZATION           |
+| **Transaction Type** | **Service** |
+| --- | --- |
+| AUTHORIZATION | GOOGLE_PAY_AUTHORIZATION |
 | AUTHORIZATION_REVERSAL | CREDIT_CARD_AUTHORIZATION_REVERSAL |
-| CAPTURE                | CREDIT_CARD_CAPTURE                |
-| SALE                   | GOOGLE_PAY_SALE                    |
-| REFUND                 | CREDIT_CARD_REFUND_FOLLOW_ON       |
+| CAPTURE | CREDIT_CARD_CAPTURE |
+| SALE | GOOGLE_PAY_SALE |
+| REFUND | CREDIT_CARD_REFUND_FOLLOW_ON |
 
 ## Klarna
 
@@ -1469,15 +1468,15 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation:
 
-| **Payment Operation**  | **Request builder implementation\*** |
-| ---------------------- | ------------------------------------ |
-| Create Session         | CreateSessionRequestBuilder          |
-| Update Session         | UpdateSessionRequestBuilder          |
-| Authorization          | AuthorizationRequestBuilder          |
-| Authorization Reversal | AuthorizationReversalRequestBuilder  |
-| Capture                | CaptureRequestBuilder                |
-| Refund                 | RefundRequestBuilder                 |
-| Check Status           | CheckStatusRequestBuilder            |
+| **Payment Operation** | **Request builder implementation\*** |
+| --- | --- |
+| Create Session | CreateSessionRequestBuilder |
+| Update Session | UpdateSessionRequestBuilder |
+| Authorization | AuthorizationRequestBuilder |
+| Authorization Reversal | AuthorizationReversalRequestBuilder |
+| Capture | CaptureRequestBuilder |
+| Refund | RefundRequestBuilder |
+| Check Status | CheckStatusRequestBuilder |
 
 \* Common to alternative payments request builders are defined within the following package:
 
@@ -1493,15 +1492,15 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines Klarna payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment operation**  | **Transaction Type\*** | **Object Graph Identifier**     |
-| ---------------------- | ---------------------- | ------------------------------- |
-| Create Session         | CREATE_SESSION         | alternativePaymentCreateSession |
-| Update Session         | UPDATE_SESSION         | alternativePaymentUpdateSession |
-| Authorization          | AUTHORIZATION          | klarnaAuthorization             |
-| Authorization reversal | AUTHORIZATION_REVERSAL | klarnaAuthorizationReversal     |
-| Capture                | CAPTURE                | klarnaCapture                   |
-| Check Status           | CHECK_STATUS           | alternativePaymentCheckStatus   |
-| Refund                 | REFUND                 | alternativePaymentRefund        |
+| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Create Session | CREATE_SESSION | alternativePaymentCreateSession |
+| Update Session | UPDATE_SESSION | alternativePaymentUpdateSession |
+| Authorization | AUTHORIZATION | klarnaAuthorization |
+| Authorization reversal | AUTHORIZATION_REVERSAL | klarnaAuthorizationReversal |
+| Capture | CAPTURE | klarnaCapture |
+| Check Status | CHECK_STATUS | alternativePaymentCheckStatus |
+| Refund | REFUND | alternativePaymentRefund |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -1527,15 +1526,15 @@ isv.cjl.sample.payment.request.converter.alternative
 
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
-| **Payment Operation**  | **Object Graph Identifier** | **Sample converter Implementation**   |
-| ---------------------- | --------------------------- | ------------------------------------- |
-| Create Session         | CREATE_SESSION\*            | CreateSessionRequestConverter         |
-| Update Session         | UPDATE_SESSION\*            | UpdateSessionRequestConverter         |
-| Authorization          | AUTHORIZATION\*\*           | AuthorizationRequestConverter         |
-| Authorization reversal | AUTHORIZATION_REVERSAL\*\*  | AuthorizationReversalRequestConverter |
-| Capture                | CAPTURE\*\*                 | CaptureRequestConverter               |
-| Check status           | CHECK_STATUS\*              | CheckStatusRequestConverter           |
-| Refund                 | REFUND\*                    | RefundRequestConverter                |
+| **Payment Operation** | **Object Graph Identifier** | **Sample converter Implementation** |
+| --- | --- | --- |
+| Create Session | CREATE_SESSION\* | CreateSessionRequestConverter |
+| Update Session | UPDATE_SESSION\* | UpdateSessionRequestConverter |
+| Authorization | AUTHORIZATION\*\* | AuthorizationRequestConverter |
+| Authorization reversal | AUTHORIZATION_REVERSAL\*\* | AuthorizationReversalRequestConverter |
+| Capture | CAPTURE\*\* | CaptureRequestConverter |
+| Check status | CHECK_STATUS\* | CheckStatusRequestConverter |
+| Refund | REFUND\* | RefundRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.AlternativePayment
 
@@ -1557,15 +1556,15 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type**   | **Request Mapper Identifier**                | **Response Mapper Identifier**                |
-| ---------------------- | -------------------------------------------- | --------------------------------------------- |
-| CREATE_SESSION         | alternativePaymentCreateSessionRequestMapper | alternativePaymentCreateSessionResponseMapper |
-| UPDATE_SESSION         | alternativePaymentUpdateSessionRequestMapper | alternativePaymentUpdateSessionResponseMapper |
-| AUTHORIZATION          | klarnaAuthorizationRequestMapper             | klarnaAuthorizationResponseMapper             |
-| AUTHORIZATION_REVERSAL | klarnaAuthorizationReversalRequestMapper     | klarnaAuthorizationReversalResponseMapper     |
-| CAPTURE                | klarnaCaptureRequestMapper                   | klarnaCaptureResponseMapper                   |
-| CHECK_STATUS           | alternativePaymentCheckStatusRequestMapper   | alternativePaymentCheckStatusResponseMapper   |
-| REFUND                 | alternativePaymentRefundRequestMapper        | alternativePaymentRefundResponseMapper        |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
+| CREATE_SESSION | alternativePaymentCreateSessionRequestMapper | alternativePaymentCreateSessionResponseMapper |
+| UPDATE_SESSION | alternativePaymentUpdateSessionRequestMapper | alternativePaymentUpdateSessionResponseMapper |
+| AUTHORIZATION | klarnaAuthorizationRequestMapper | klarnaAuthorizationResponseMapper |
+| AUTHORIZATION_REVERSAL | klarnaAuthorizationReversalRequestMapper | klarnaAuthorizationReversalResponseMapper |
+| CAPTURE | klarnaCaptureRequestMapper | klarnaCaptureResponseMapper |
+| CHECK_STATUS | alternativePaymentCheckStatusRequestMapper | alternativePaymentCheckStatusResponseMapper |
+| REFUND | alternativePaymentRefundRequestMapper | alternativePaymentRefundResponseMapper |
 
 ### Configuration
 
@@ -1617,11 +1616,11 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --------------------- | ------------------------------------ |
-| Sale                  | SaleRequestBuilder                   |
-| Check Status          | CheckStatusRequestBuilder            |
-| Refund                | RefundRequestBuilder                 |
-| Options               | OptionsRequestBuilder                |
+| --- | --- |
+| Sale | SaleRequestBuilder |
+| Check Status | CheckStatusRequestBuilder |
+| Refund | RefundRequestBuilder |
+| Options | OptionsRequestBuilder |
 
 \* Payment service request builders are defined within the following package:
 
@@ -1637,12 +1636,12 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines iDEAL payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier**   |
-| --------------------- | ---------------------- | ----------------------------- |
-| Sale                  | SALE                   | alternativePaymentSale        |
-| Check Status          | CHECK_STATUS           | alternativePaymentCheckStatus |
-| Refund                | REFUND                 | alternativePaymentRefund      |
-| Options               | OPTIONS                | alternativePaymentOptions     |
+| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Sale | SALE | alternativePaymentSale |
+| Check Status | CHECK_STATUS | alternativePaymentCheckStatus |
+| Refund | REFUND | alternativePaymentRefund |
+| Options | OPTIONS | alternativePaymentOptions |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -1669,11 +1668,11 @@ isv.cjl.sample.payment.request.converter.alternative
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
 | **Payment Operation** | **Object Graph Identifier\*** | **Sample converter Implementation** |
-| --------------------- | ----------------------------- | ----------------------------------- |
-| Sale                  | SALE                          | SaleRequestConverter                |
-| Check status          | CHECK_STATUS                  | CheckStatusRequestConverter         |
-| Refund                | REFUND                        | RefundRequestConverter              |
-| Options               | OPTIONS                       | OptionsRequestConverter             |
+| --- | --- | --- |
+| Sale | SALE | SaleRequestConverter |
+| Check status | CHECK_STATUS | CheckStatusRequestConverter |
+| Refund | REFUND | RefundRequestConverter |
+| Options | OPTIONS | OptionsRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.AlternativePayment
 
@@ -1693,12 +1692,12 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type** | **Request Mapper Identifier**              | **Response Mapper Identifier**              |
-| -------------------- | ------------------------------------------ | ------------------------------------------- |
-| SALE                 | alternativePaymentSaleRequestMapper        | alternativePaymentSaleResponseMapper        |
-| CHECK_STATUS         | alternativePaymentCheckStatusRequestMapper | alternativePaymentCheckStatusResponseMapper |
-| REFUND               | alternativePaymentRefundRequestMapper      | alternativePaymentRefundResponseMapper      |
-| OPTIONS              | alternativePaymentOptionsRequestMapper     | alternativePaymentOptionsResponseMapper     |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
+| SALE | alternativePaymentSaleRequestMapper | alternativePaymentSaleResponseMapper |
+| CHECK_STATUS | alternativePaymentCheckStatusRequestMapper | alternativePaymentCheckStatusResponseMapper |
+| REFUND | alternativePaymentRefundRequestMapper | alternativePaymentRefundResponseMapper |
+| OPTIONS | alternativePaymentOptionsRequestMapper | alternativePaymentOptionsResponseMapper |
 
 ### Configuration
 
@@ -1748,10 +1747,10 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --------------------- | ------------------------------------ |
-| Sale                  | SaleRequestBuilder                   |
-| Check Status          | CheckStatusRequestBuilder            |
-| Refund                | RefundRequestBuilder                 |
+| --- | --- |
+| Sale | SaleRequestBuilder |
+| Check Status | CheckStatusRequestBuilder |
+| Refund | RefundRequestBuilder |
 
 \* Payment service request builders are defined within the following package:
 
@@ -1767,11 +1766,11 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines Sofort payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier**   |
-| --------------------- | ---------------------- | ----------------------------- |
-| Sale                  | SALE                   | alternativePaymentSale        |
-| Check Status          | CHECK_STATUS           | alternativePaymentCheckStatus |
-| Refund                | REFUND                 | alternativePaymentRefund      |
+| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Sale | SALE | alternativePaymentSale |
+| Check Status | CHECK_STATUS | alternativePaymentCheckStatus |
+| Refund | REFUND | alternativePaymentRefund |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -1798,10 +1797,10 @@ isv.cjl.sample.payment.request.converter.alternative
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
 | **Payment Operation** | **Object Graph Identifier\*** | **Sample converter Implementation** |
-| --------------------- | ----------------------------- | ----------------------------------- |
-| Sale                  | SALE                          | SaleRequestConverter                |
-| Check status          | CHECK_STATUS                  | CheckStatusRequestConverter         |
-| Refund                | REFUND                        | RefundRequestConverter              |
+| --- | --- | --- |
+| Sale | SALE | SaleRequestConverter |
+| Check status | CHECK_STATUS | CheckStatusRequestConverter |
+| Refund | REFUND | RefundRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.AlternativePayment
 
@@ -1821,11 +1820,11 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type** | **Request Mapper Identifier**              | **Response Mapper Identifier**              |
-| -------------------- | ------------------------------------------ | ------------------------------------------- |
-| SALE                 | alternativePaymentSaleRequestMapper        | alternativePaymentSaleResponseMapper        |
-| CHECK_STATUS         | alternativePaymentCheckStatusRequestMapper | alternativePaymentCheckStatusResponseMapper |
-| REFUND               | alternativePaymentRefundRequestMapper      | alternativePaymentRefundResponseMapper      |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
+| SALE | alternativePaymentSaleRequestMapper | alternativePaymentSaleResponseMapper |
+| CHECK_STATUS | alternativePaymentCheckStatusRequestMapper | alternativePaymentCheckStatusResponseMapper |
+| REFUND | alternativePaymentRefundRequestMapper | alternativePaymentRefundResponseMapper |
 
 ### Configuration
 
@@ -1880,10 +1879,10 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --------------------- | ------------------------------------ |
-| Sale                  | SaleRequestBuilder                   |
-| Check Status          | CheckStatusRequestBuilder            |
-| Refund                | RefundRequestBuilder                 |
+| --- | --- |
+| Sale | SaleRequestBuilder |
+| Check Status | CheckStatusRequestBuilder |
+| Refund | RefundRequestBuilder |
 
 \* Payment service request builders are defined within the following package:
 
@@ -1899,11 +1898,11 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines Bancontact payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier**   |
-| --------------------- | ---------------------- | ----------------------------- |
-| Sale                  | SALE                   | alternativePaymentSale        |
-| Check Status          | CHECK_STATUS           | alternativePaymentCheckStatus |
-| Refund                | REFUND                 | alternativePaymentRefund      |
+| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Sale | SALE | alternativePaymentSale |
+| Check Status | CHECK_STATUS | alternativePaymentCheckStatus |
+| Refund | REFUND | alternativePaymentRefund |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -1930,10 +1929,10 @@ isv.cjl.sample.payment.request.converter.alternative
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
 | **Payment Operation** | **Object Graph Identifier\*** | **Sample converter Implementation** |
-| --------------------- | ----------------------------- | ----------------------------------- |
-| Sale                  | SALE                          | SaleRequestConverter                |
-| Check status          | CHECK_STATUS                  | CheckStatusRequestConverter         |
-| Refund                | REFUND                        | RefundRequestConverter              |
+| --- | --- | --- |
+| Sale | SALE | SaleRequestConverter |
+| Check status | CHECK_STATUS | CheckStatusRequestConverter |
+| Refund | REFUND | RefundRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.AlternativePayment
 
@@ -1953,11 +1952,11 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type** | **Request Mapper Identifier**              | **Response Mapper Identifier**              |
-| -------------------- | ------------------------------------------ | ------------------------------------------- |
-| SALE                 | alternativePaymentSaleRequestMapper        | alternativePaymentSaleResponseMapper        |
-| CHECK_STATUS         | alternativePaymentCheckStatusRequestMapper | alternativePaymentCheckStatusResponseMapper |
-| REFUND               | alternativePaymentRefundRequestMapper      | alternativePaymentRefundResponseMapper      |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
+| SALE | alternativePaymentSaleRequestMapper | alternativePaymentSaleResponseMapper |
+| CHECK_STATUS | alternativePaymentCheckStatusRequestMapper | alternativePaymentCheckStatusResponseMapper |
+| REFUND | alternativePaymentRefundRequestMapper | alternativePaymentRefundResponseMapper |
 
 ### Configuration
 
@@ -2007,10 +2006,10 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --------------------- | ------------------------------------ |
-| Sale                  | SaleRequestBuilder                   |
-| Check Status          | CheckStatusRequestBuilder            |
-| Refund                | RefundRequestBuilder                 |
+| --- | --- |
+| Sale | SaleRequestBuilder |
+| Check Status | CheckStatusRequestBuilder |
+| Refund | RefundRequestBuilder |
 
 \* Payment service request builders are defined within the following package:
 
@@ -2026,11 +2025,11 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines WeChat Pay payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier**   |
-| --------------------- | ---------------------- | ----------------------------- |
-| Sale                  | SALE                   | alternativePaymentSale        |
-| Check Status          | CHECK_STATUS           | alternativePaymentCheckStatus |
-| Refund                | REFUND                 | alternativePaymentRefund      |
+| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Sale | SALE | alternativePaymentSale |
+| Check Status | CHECK_STATUS | alternativePaymentCheckStatus |
+| Refund | REFUND | alternativePaymentRefund |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -2057,10 +2056,10 @@ isv.cjl.sample.payment.request.converter.alternative
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
 | **Payment Operation** | **Object Graph Identifier\*** | **Sample converter Implementation** |
-| --------------------- | ----------------------------- | ----------------------------------- |
-| Sale                  | SALE                          | SaleRequestConverter                |
-| Check status          | CHECK_STATUS                  | CheckStatusRequestConverter         |
-| Refund                | REFUND                        | RefundRequestConverter              |
+| --- | --- | --- |
+| Sale | SALE | SaleRequestConverter |
+| Check status | CHECK_STATUS | CheckStatusRequestConverter |
+| Refund | REFUND | RefundRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.AlternativePayment
 
@@ -2080,11 +2079,11 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type** | **Request Mapper Identifier**              | **Response Mapper Identifier**              |
-| -------------------- | ------------------------------------------ | ------------------------------------------- |
-| SALE                 | alternativePaymentSaleRequestMapper        | alternativePaymentSaleResponseMapper        |
-| CHECK_STATUS         | alternativePaymentCheckStatusRequestMapper | alternativePaymentCheckStatusResponseMapper |
-| REFUND               | alternativePaymentRefundRequestMapper      | alternativePaymentRefundResponseMapper      |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
+| SALE | alternativePaymentSaleRequestMapper | alternativePaymentSaleResponseMapper |
+| CHECK_STATUS | alternativePaymentCheckStatusRequestMapper | alternativePaymentCheckStatusResponseMapper |
+| REFUND | alternativePaymentRefundRequestMapper | alternativePaymentRefundResponseMapper |
 
 ### Configuration
 
@@ -2130,10 +2129,10 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 
 In order to simplify fraud management operations, a dedicated set of request builder components is provided for each payment operation:
 
-| **Payment Operation**       | **Request builder implementation\***    |
-| --------------------------- | --------------------------------------- |
+| **Payment Operation** | **Request builder implementation\*** |
+| --- | --- |
 | Account Takeover Protection | AccountTakeoverProtectionRequestBuilder |
-| Advanced Fraud Screen       | AdvancedFraudScreenRequestBuilder       |
+| Advanced Fraud Screen | AdvancedFraudScreenRequestBuilder |
 
 \* Payment service request builders are defined within the following package:
 
@@ -2149,10 +2148,10 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines fraud management payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment operation**       | **Transaction Type\***      | **Object Graph Identifier** |
-| --------------------------- | --------------------------- | --------------------------- |
-| Account Takeover Protection | ACCOUNT_TAKEOVER_PROTECTION | accountTakeoverProtection   |
-| Advanced Fraud Screen       | ADVANCED_FRAUD_SCREEN       | advancedFraudScreen         |
+| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Account Takeover Protection | ACCOUNT_TAKEOVER_PROTECTION | accountTakeoverProtection |
+| Advanced Fraud Screen | ADVANCED_FRAUD_SCREEN | advancedFraudScreen |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -2178,10 +2177,10 @@ isv.cjl.sample.payment.request.converter.fraud
 
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
-| **Payment Operation**       | **Object Graph Identifier\*** | **Sample converter Implementation**       |
-| --------------------------- | ----------------------------- | ----------------------------------------- |
-| Account Takeover Protection | ACCOUNT_TAKEOVER_PROTECTION   | AccountTakeoverProtectionRequestConverter |
-| Advanced Fraud Screen       | ADVANCED_SCREEN               | AdvancedFraudScreenRequestConverter       |
+| **Payment Operation** | **Object Graph Identifier\*** | **Sample converter Implementation** |
+| --- | --- | --- |
+| Account Takeover Protection | ACCOUNT_TAKEOVER_PROTECTION | AccountTakeoverProtectionRequestConverter |
+| Advanced Fraud Screen | ADVANCED_SCREEN | AdvancedFraudScreenRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.Fraud
 
@@ -2201,10 +2200,10 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type**        | **Request Mapper Identifier**          | **Response Mapper Identifier**          |
-| --------------------------- | -------------------------------------- | --------------------------------------- |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
 | ACCOUNT_TAKEOVER_PROTECTION | accountTakeoverProtectionRequestMapper | accountTakeoverProtectionResponseMapper |
-| ADVANCED_SCREEN             | advancedFraudScreenRequestMapper       | advancedFraudScreenResponseMapper       |
+| ADVANCED_SCREEN | advancedFraudScreenRequestMapper | advancedFraudScreenResponseMapper |
 
 ## Verification Services
 
@@ -2229,10 +2228,10 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 
 In order to simplify creation and setup of a service request, a dedicated set of request builder components is provided service:
 
-| **Verification Service**      | **Request builder implementation\***      |
-| ----------------------------- | ----------------------------------------- |
+| **Verification Service** | **Request builder implementation\*** |
+| --- | --- |
 | Delivery Address Verification | DeliveryAddressVerificationRequestBuilder |
-| Export Compliance             | ExportComplianceRequestBuilder            |
+| Export Compliance | ExportComplianceRequestBuilder |
 
 \* Service request builders are defined within the following package:
 
@@ -2248,10 +2247,10 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines Verification service provider components corresponding to each service including CJL transaction type and object graph identifier:
 
-| **Verification service**      | **Transaction Type\***        | **Object Graph Identifier** |
-| ----------------------------- | ----------------------------- | --------------------------- |
+| **Verification service** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
 | Delivery Address Verification | DELIVERY_ADDRESS_VERIFICATION | deliveryAddressVerification |
-| Export Compliance             | EXPORT_COMPLIANCE             | exportCompliance            |
+| Export Compliance | EXPORT_COMPLIANCE | exportCompliance |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -2277,10 +2276,10 @@ isv.cjl.sample.payment.request.converter.verification
 
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
-| **Verification Service**      | **Object Graph Identifier\*** | **Sample converter Implementation**         |
-| ----------------------------- | ----------------------------- | ------------------------------------------- |
-| Delivery Address Verification | DELIVERY_ADDRESS              | DeliveryAddressVerificationRequestConverter |
-| Export Compliance             | EXPORT_COMPLIANCE             | ExportComplianceRequestConverter            |
+| **Verification Service** | **Object Graph Identifier\*** | **Sample converter Implementation** |
+| --- | --- | --- |
+| Delivery Address Verification | DELIVERY_ADDRESS | DeliveryAddressVerificationRequestConverter |
+| Export Compliance | EXPORT_COMPLIANCE | ExportComplianceRequestConverter |
 
 \* Defined in isv.cjl.module.util.RequestConverterConstants.Verification
 
@@ -2300,10 +2299,10 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type**          | **Request Mapper Identifier**            | **Response Mapper Identifier**            |
-| ----------------------------- | ---------------------------------------- | ----------------------------------------- |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
 | DELIVERY_ADDRESS_VERIFICATION | deliveryAddressVerificationRequestMapper | deliveryAddressVerificationResponseMapper |
-| EXPORT_COMPLIANCE             | exportComplianceRequestMapper            | exportComplianceResponseMapper            |
+| EXPORT_COMPLIANCE | exportComplianceRequestMapper | exportComplianceResponseMapper |
 
 ## Payer Authentication
 
@@ -2327,9 +2326,9 @@ isv.cjl.payment.service.executor.request.PaymentServiceRequest
 In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided for each payment operation. These builders are defined for Credit Card and Visa Checkout payment services:
 
 | **Payment Operation** | **Request builder implementation\*** |
-| --------------------- | ------------------------------------ |
-| Enrollment            | EnrollmentRequestBuilder             |
-| Validate              | ValidateRequestBuilder               |
+| --- | --- |
+| Enrollment | EnrollmentRequestBuilder |
+| Validate | ValidateRequestBuilder |
 
 \* Request builders are defined within the following package:
 
@@ -2348,10 +2347,10 @@ isv.cjl.module.common.ProviderModule
 
 The following table outlines Payer Authentication payment service provider components corresponding to each payment operation including CJL transaction type and object graph identifier:
 
-| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier**                  |
-| --------------------- | ---------------------- | -------------------------------------------- |
-| Enrollment            | ENROLLMENT             | creditCardEnrollment, visaCheckoutEnrollment |
-| Validate              | VALIDATE               | creditCardValidate, visaCheckoutValidate     |
+| **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
+| --- | --- | --- |
+| Enrollment | ENROLLMENT | creditCardEnrollment, visaCheckoutEnrollment |
+| Validate | VALIDATE | creditCardValidate, visaCheckoutValidate |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -2384,9 +2383,9 @@ isv.cjl.sample.payment.request.converter.visacheckout
 The following table defines sample implementation and corresponding object graph identifier for each payment operation:
 
 | **Payment Operation** | **Object Graph Identifier\*** | **Sample converter implementation** |
-| --------------------- | ----------------------------- | ----------------------------------- |
-| Enrollment            | ENROLLMENT                    | EnrollmentRequestConverter          |
-| Validate              | VALIDATE                      | ValidateRequestConverter            |
+| --- | --- | --- |
+| Enrollment | ENROLLMENT | EnrollmentRequestConverter |
+| Validate | VALIDATE | ValidateRequestConverter |
 
 \* Defined in
 
@@ -2413,10 +2412,10 @@ isv.cjl.module.common.MapperModule
 
 The following table outlines commands mappers corresponding to each payment operation:
 
-| **Transaction Type** | **Request Mapper Identifier**                                         | **Response Mapper Identifier**                                          |
-| -------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| ENROLLMENT           | creditCardEnrollmentRequestMapper,visaCheckoutEnrollmentRequestMapper | creditCardEnrollmentResponseMapper,visaCheckoutEnrollmentResponseMapper |
-| VALIDATE             | creditCardValidateRequestMapper,visaCheckoutValidateRequestMapper     | creditCardValidateResponseMapper,visaCheckoutValidateResponseMapper     |
+| **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
+| --- | --- | --- |
+| ENROLLMENT | creditCardEnrollmentRequestMapper,visaCheckoutEnrollmentRequestMapper | creditCardEnrollmentResponseMapper,visaCheckoutEnrollmentResponseMapper |
+| VALIDATE | creditCardValidateRequestMapper,visaCheckoutValidateRequestMapper | creditCardValidateResponseMapper,visaCheckoutValidateResponseMapper |
 
 ### Configuration
 
@@ -2634,10 +2633,10 @@ hystrix.command.singleTransactionReport.execution.isolation.thread.timeoutInMill
 
 The table below maps report types to specific report request handlers and REST APIs consumed:
 
-| **Report Type**           | **Request Handler**                                             | **REST API**                                                                                                                                                                                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ON_DEMAND_CONVERSIONS     | OnDemandConversionRequestHandler                                | [Conversion Details Report API](https://developer.cybersource.com/api/developer-guides/dita-reporting-rest-api-dev-guide-102718/reporting_api/download_ondemand_detail_report.html)                                                                                                                            |
-| DAILY_CONVERSIONS         | DailyConversionRequestHandler                                   | [Report Downloads API](https://developer.cybersource.com/api/developer-guides/dita-reporting-rest-api-dev-guide-102718/reporting_api/download_reports.html)                                                                                                                                                    |
+| **Report Type** | **Request Handler** | **REST API** |
+| --- | --- | --- |
+| ON_DEMAND_CONVERSIONS | OnDemandConversionRequestHandler | [Conversion Details Report API](https://developer.cybersource.com/api/developer-guides/dita-reporting-rest-api-dev-guide-102718/reporting_api/download_ondemand_detail_report.html) |
+| DAILY_CONVERSIONS | DailyConversionRequestHandler | [Report Downloads API](https://developer.cybersource.com/api/developer-guides/dita-reporting-rest-api-dev-guide-102718/reporting_api/download_reports.html) |
 | SINGLE_TRANSACTION_SEARCH | SearchTransactionRequestHandlerTransactionDetailsRequestHandler | [Transaction Search API](https://developer.cybersource.com/api/developer-guides/dita-txn-search-details-rest-api-dev-guide-102718/txn_search_api.html)[Transaction Details API](https://developer.cybersource.com/api/developer-guides/dita-txn-search-details-rest-api-dev-guide-102718/txn_details_api.html) |
 
 Default report request parameters are defined through configuration as follows:
@@ -2739,7 +2738,7 @@ isv.cjl.payment.service.alternativepayment.DefaultAlternativePaymentCheckStatusS
 
 Settings, such as schedule and mapping from check status result to transaction state specific payment method are defined in CJL configuration. For example, below are default settings for a PayPal payment service:
 
-````text
+```text
 # PayPal
 isv.payment.alternativePayment.checkStatus.PPL.AUTHORIZATION.frequency=21600,43200,64800,86400,108000
 isv.payment.alternativePayment.checkStatus.PPL.AUTHORIZATION.transitionMap=AUTHORIZED->APPROVED,FAILED->REJECTED,EXPIRED->REJECTED,PENDING->PENDING
@@ -2764,7 +2763,7 @@ The basic CJL configuration abstraction is given by the following interface:
 
 ```text
 isv.cjl.payment.configuration.service.ConfigurationService
-````
+```
 
 The configuration object is resolved through the following interface:
 
@@ -2961,38 +2960,18 @@ CJL builders are auto-generated by[FreeMaker PreProcessor](http://fmpp.sourcefor
 
 ```json
 {
-  "shortClassName": "AuthorizationType",
-  "packageName": "isv.cjl.payment.service.request",
-  "properties": [
-    {
-      "name": "merchantId",
-      "type": "String",
-      "rules": "required:true, size:30"
-    },
-    {
-      "name": "merchantReferenceCode",
-      "type": "String",
-      "rules": "required:true, size:50"
-    },
-    { "name": "ccAuthServiceRun", "type": "boolean", "rules": "required:true" },
-    {
-      "name": "purchaseTotalsCurrency",
-      "type": "String",
-      "rules": "required:true, size:3, pattern:[A-Z]*"
-    },
-    {
-      "name": "merchantTransactionIdentifier",
-      "type": "String",
-      "rules": "size:15"
-    },
-    { "name": "afsServiceRun", "type": "boolean" },
-    {
-      "name": "billToBuildingNumber",
-      "type": "String",
-      "rules": "size:256, pattern:[\\\\p{L}\\\\p{N}]*"
-    },
-    { "name": "billToCity", "type": "String", "rules": "size:50" }
-  ]
+ "shortClassName":"AuthorizationType",
+ "packageName":"isv.cjl.payment.service.request",
+ "properties": [
+   {"name":"merchantId","type":"String","rules":"required:true, size:30"},
+   {"name":"merchantReferenceCode","type":"String","rules":"required:true, size:50"},
+   {"name":"ccAuthServiceRun","type":"boolean","rules":"required:true"},
+   {"name":"purchaseTotalsCurrency","type":"String","rules":"required:true, size:3, pattern:[A-Z]*"},
+   {"name":"merchantTransactionIdentifier","type":"String","rules":"size:15"},
+   {"name":"afsServiceRun","type":"boolean"},
+   {"name":"billToBuildingNumber","type":"String","rules":"size:256, pattern:[\\\\p{L}\\\\p{N}]*"},
+   {"name":"billToCity","type":"String","rules":"size:50"}
+   ]
 }
 ```
 
@@ -3096,6 +3075,7 @@ During release 2.3.0 was introduced a new concept of declarative mapping between
 Default configuration is located in the "transaction-config.json" file, and contains a list of services with request / response field mappings and validations, that will be passed or received and transform accordingly to this schema. Sample mapping is below and self descriptive.
 
 ```json
+
 [
   {
     "service": "PAYPAL_CAPTURE",
@@ -3150,6 +3130,7 @@ isv.payment.customer.transaction.configuration=custom-transaction-config.json
 At the moment there are two types of customizations which are supported: replace and merge. An example is provided below.
 
 ```json
+
 [
   {
     "weight": 1,
@@ -3274,7 +3255,7 @@ static CardInfo createVisaCard() {
 
 - **Transaction Creators** - creators of real transaction that should be generated as prerequisites
 
-````text
+```text
 def createSubscription(order, authTransaction) {
         def request = new PaymentTokenCreateRequestBuilder()
                 .setMerchantId(MERCHANT_ID)
@@ -3300,7 +3281,7 @@ def request = builder
         .addParam('order', order)
         .addParam('transaction', authTransaction)
         .build()
-````
+```
 
 - Executing the request
 
@@ -3318,7 +3299,7 @@ Verification that result data contains expected data:
 
 ### Test example
 
-````text
+```text
 class CaptureIntegrationSpec extends AbstractIntegrationSpec{
 
     CaptureRequestBuilder builder
@@ -3400,7 +3381,7 @@ isv.payment.customer.payment.type.ALTERNATIVE_PAYMENT.merchantId=
 isv.payment.customer.payment.type.VISA_CHECKOUT.merchantId=
 isv.payment.customer.alternative.payment.method.KLI.merchantId=
 isv.payment.customer.alternative.payment.method.PPL.merchantId=
-````
+```
 
 Test configuration file can be found here:
 

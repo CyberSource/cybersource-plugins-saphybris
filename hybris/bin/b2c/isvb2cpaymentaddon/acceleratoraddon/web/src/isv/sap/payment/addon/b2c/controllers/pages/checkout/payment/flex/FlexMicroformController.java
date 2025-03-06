@@ -38,6 +38,9 @@ import static isv.sap.payment.constants.IsvPaymentConstants.ReasonCode.ENROLLED_
 import static isv.sap.payment.constants.IsvPaymentConstants.ReasonCode.NOT_ENROLLED_CODE;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
+//OLH: For Reflected XSS fix. Used to sanitize some text
+import org.apache.commons.text.StringEscapeUtils;
+
 @Controller
 @RequestMapping(path = "/checkout/payment/flex")
 public class FlexMicroformController extends AbstractCheckoutController
@@ -82,10 +85,14 @@ public class FlexMicroformController extends AbstractCheckoutController
     public ResponseEntity verifyToken(@RequestBody final String flexToken, final HttpSession session)
     {
         final String captureContext = (String) session.getAttribute(FLEX_CAPTURE_CONTEXT_ATTRIBUTE);
+        //OLH: For Reflected XSS fix. I don't think this method is vulnerable to XSS since the flexToken its not a user's input to the response but part of the response from Cybersource.
+        // To be extra safe, we can sanitize it before passing to the flexService.verifyAndGet() method below. The method does not seem to perform any validation or sanitization.
+        String sanitizedFlexToken = StringEscapeUtils.escapeHtml4(flexToken);
 
         checkNotNull(captureContext);
 
-        return flexService.verifyAndGet(captureContext, flexToken)
+        //OLH: For Reflected XSS fix
+        return flexService.verifyAndGet(captureContext, sanitizedFlexToken)//OLH: Use sanitize value
                 .map(transientToken -> ResponseEntity.ok(transientToken.getId()))
                 .orElse(ResponseEntity.status(UNPROCESSABLE_ENTITY).build());
     }
@@ -124,11 +131,14 @@ public class FlexMicroformController extends AbstractCheckoutController
     {
         checkArgument(StringUtils.isNotBlank(referenceId), "referenceId is missing");
         checkArgument(StringUtils.isNotBlank(transientToken), "transientToken is missing");
+        // OLH: Sanitize the flexToken to prevent XSS
+        String sanitizedTransientToken = StringEscapeUtils.escapeHtml4(transientToken);
+        String sanitizedReferenceId = StringEscapeUtils.escapeHtml4(referenceId);
 
         try
         {
             final IsvPaymentTransactionEntryModel enrollmentTransaction = creditCardPaymentFacade
-                    .enrollCreditCard(referenceId, transientToken);
+                    .enrollCreditCard(sanitizedReferenceId, sanitizedTransientToken);//OLH: Use the sanitized values
             final Map<String, String> properties = enrollmentTransaction.getProperties();
 
             final String responseCode = properties.get("payerAuthEnrollReplyReasonCode");

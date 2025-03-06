@@ -27,6 +27,7 @@ import static isv.cjl.payment.constants.PaymentConstants.CommonFields.TRANSACTIO
 import static isv.cjl.payment.constants.PaymentConstants.TransactionStatus.ACCEPT;
 import static isv.cjl.payment.constants.PaymentConstants.TransactionStatus.REVIEW;
 import static java.util.Objects.isNull;
+import org.apache.commons.text.StringEscapeUtils;
 
 public class VisaCheckoutPaymentFacadeImpl extends AbstractPaymentFacade implements VisaCheckoutPaymentFacade
 {
@@ -100,9 +101,11 @@ public class VisaCheckoutPaymentFacadeImpl extends AbstractPaymentFacade impleme
 
     private IsvPaymentTransactionEntryModel performVCAuthorization(final CartModel sessionCart, final String callId)
     {
+         //OLH: Fix SSRF
+         String sanitizedCallId = StringEscapeUtils.escapeHtml4(callId);
         final PaymentServiceResult vcAuthorizationResult = executeRequest(
                 new AuthorizationRequestBuilder()
-                        .setVcOrderId(callId)
+                        .setVcOrderId(sanitizedCallId)
                         .setMerchantId(getMerchantID(isv.cjl.payment.enums.PaymentType.VISA_CHECKOUT))
                         .addParam(ORDER, sessionCart)
                         .build());
@@ -112,9 +115,11 @@ public class VisaCheckoutPaymentFacadeImpl extends AbstractPaymentFacade impleme
 
     private IsvPaymentTransactionEntryModel performGetVCData(final CartModel sessionCart, final String callId)
     {
+         //OLH: Fix SSRF
+         String sanitizedCallId = StringEscapeUtils.escapeHtml4(callId);
         final PaymentServiceResult getVCDataResult = executeRequest(
                 new GetRequestBuilder()
-                        .setVcOrderId(callId)
+                        .setVcOrderId(sanitizedCallId)
                         .setMerchantId(getMerchantID(isv.cjl.payment.enums.PaymentType.VISA_CHECKOUT))
                         .addParam(ORDER, sessionCart)
                         .build());

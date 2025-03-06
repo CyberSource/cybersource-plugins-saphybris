@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import isv.sap.payment.addon.constants.IsvPaymentAddonConstants;
 import isv.sap.payment.addon.facade.KlarnaPaymentFacade;
 import isv.sap.payment.addon.utils.AjaxResponse;
+//OLH: Used to sanitize some text
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * Concrete controller for Klarna payment service.
@@ -36,9 +38,9 @@ public class KlarnaController
         try
         {
             final String sessionId = klarnaPaymentFacade.createKlarnaSession(cartService.getSessionCart());
-
+            
             return AjaxResponse.success()
-                    .put(IsvPaymentAddonConstants.AlternativePayments.KLARNA_SESSION_ID, sessionId);
+                    .put(IsvPaymentAddonConstants.AlternativePayments.KLARNA_SESSION_ID, sessionId)
         }
         catch (final Exception ex)
         {
