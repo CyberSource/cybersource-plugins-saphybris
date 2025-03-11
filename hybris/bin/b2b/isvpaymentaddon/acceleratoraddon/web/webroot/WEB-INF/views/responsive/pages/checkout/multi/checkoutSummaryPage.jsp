@@ -57,7 +57,7 @@
                     <jsp:include page="payment/checkoutCardPaymentDetails.jsp"/>
                     <c:url var="sopFormAction" value="/checkout/payment/sa/sop"/>
                     <div id="sopIframeCbox">
-                        <iframe id="sopRequestIframe" src="${sopFormAction}"></iframe>
+                        <iframe id="sopRequestIframe" src="${sopFormAction}" sandbox ></iframe>
                     </div>
                 </isv:pciStrategyType>
 
@@ -73,7 +73,7 @@
                         <div class="checkout-weChatPaymentDetails m-2">
                             <div class="row m-2">
                                 <div class="col-xs-12  w-100 border-0">
-                                    <iframe id="weChatPaymentQRIframe" src="" style="height: 304px;"></iframe>
+                                    <iframe id="weChatPaymentQRIframe" src="" style="height: 304px;" sandbox ></iframe>
                                 </div>
                             </div>
                             <div class="row m-2">

@@ -11,6 +11,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import isv.sap.payment.commerceservices.order.dao.PaymentCartDao;
+import isv.sap.payment.utils.LogUtils;
 
 import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParameterNotNull;
 
@@ -43,7 +44,7 @@ public class DefaultPaymentCartService implements PaymentCartService
         }
         catch (final Exception e)
         {
-            LOG.warn("Cannot get cart for given code [{}], error message: {}", guid, e.getMessage(), e);
+            LOG.warn("Cannot get cart for given code [{}], error message: {}", LogUtils.encode(guid), e.getMessage());
             return null;
         }
     }
@@ -62,11 +63,11 @@ public class DefaultPaymentCartService implements PaymentCartService
                 }
                 catch (final UnsupportedOperationException e)
                 {
-                    LOG.warn("model lock is not supported by database", e);
+                    LOG.warn("model lock is not supported by database: " + e.getMessage());
                 }
                 catch (final Exception e)
                 {
-                    LOG.warn("cannot get cart lock, it is possible it was already converted to order", e);
+                    LOG.warn("cannot get cart lock, it is possible it was already converted to order: " + e.getMessage());
                     return;
                 }
 

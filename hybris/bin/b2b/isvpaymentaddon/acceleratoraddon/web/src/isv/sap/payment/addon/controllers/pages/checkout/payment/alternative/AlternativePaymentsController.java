@@ -31,6 +31,7 @@ import static de.hybris.platform.acceleratorstorefrontcommons.controllers.util.G
 import static java.util.Optional.empty;
 import static org.apache.commons.lang.StringUtils.containsIgnoreCase;
 import static org.springframework.http.ResponseEntity.ok;
+import org.apache.commons.text.StringEscapeUtils;
 
 @Controller
 @RequestMapping(path = "/checkout/payment/ap")
@@ -161,13 +162,15 @@ public class AlternativePaymentsController extends AbstractCheckoutController
 
     private String resolveMerchantUrl(final String url)
     {
+        //OLH: Sanitize URL to prevent malicious URL causing SSRF
+        String sanitizedUrl = StringEscapeUtils.escapeHtml4(url);
         if (containsIgnoreCase(url, "alipay"))
         {
-            final String paramsUrl = url.substring(url.indexOf('?'));
+            final String paramsUrl = sanitizedUrl.substring(sanitizedUrl.indexOf('?'));
             final String merchantHost = configurationService.getConfiguration().getString(ALIPAY_MERCHANT_URL_HOST);
             return merchantHost + paramsUrl;
         }
-        return url;
+        return sanitizedUrl;
     }
 
     public void setCartService(final CartService cartService)

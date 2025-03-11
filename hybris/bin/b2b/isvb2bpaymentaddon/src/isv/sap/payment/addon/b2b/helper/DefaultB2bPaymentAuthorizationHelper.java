@@ -21,6 +21,7 @@ import static isv.sap.payment.model.IsvMerchantPaymentConfigurationModel.CURRENC
 import static isv.sap.payment.model.IsvMerchantPaymentConfigurationModel.PAYMENTCHANNEL;
 import static isv.sap.payment.model.IsvMerchantPaymentConfigurationModel.PAYMENTTYPE;
 import static isv.sap.payment.model.IsvMerchantPaymentConfigurationModel.SITE;
+import org.apache.commons.text.StringEscapeUtils;
 
 public class DefaultB2bPaymentAuthorizationHelper implements B2bPaymentAuthorizationHelper
 {
@@ -52,8 +53,9 @@ public class DefaultB2bPaymentAuthorizationHelper implements B2bPaymentAuthoriza
             final CartModel cart,
             final String authServiceCommerceIndicator)
     {
-        final String subscriptionId = subscriptionEntry.getProperties().get(SUBSCRIPTION_ID_KEY);
-        final String merchantId = subscriptionEntry.getProperties().get(MERCHANT_ID_KEY);
+        
+        final String subscriptionId = StringEscapeUtils.escapeHtml4(subscriptionEntry.getProperties().get(SUBSCRIPTION_ID_KEY));
+        final String merchantId = StringEscapeUtils.escapeHtml4(subscriptionEntry.getProperties().get(MERCHANT_ID_KEY));
 
         final PaymentServiceRequest request = new AuthorizationRequestBuilder()
                 .addParam("order", cart)

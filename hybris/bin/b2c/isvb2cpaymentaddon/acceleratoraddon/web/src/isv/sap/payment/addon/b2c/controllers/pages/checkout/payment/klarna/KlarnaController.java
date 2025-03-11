@@ -36,7 +36,7 @@ public class KlarnaController
         try
         {
             final String sessionId = klarnaPaymentFacade.createKlarnaSession(cartService.getSessionCart());
-
+            
             return AjaxResponse.success()
                     .put(IsvPaymentAddonConstants.AlternativePayments.KLARNA_SESSION_ID, sessionId);
         }

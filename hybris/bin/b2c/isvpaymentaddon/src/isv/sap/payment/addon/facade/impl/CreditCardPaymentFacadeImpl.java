@@ -52,6 +52,7 @@ import static isv.sap.payment.constants.IsvPaymentConstants.CreditCardRequestFie
 import static isv.sap.payment.constants.IsvPaymentConstants.ReasonCode.ENROLLED_CODE;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * A custom implementation of payment facade that, on top of {@link DefaultPaymentFacade}
@@ -210,11 +211,13 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
 
     private IsvPaymentTransactionEntryModel doFlexCreditCardAuthorization(final CartModel cart, final String flexToken)
     {
+         //OLH: Fix SSRF
+         String sanitizedFlexToken = StringEscapeUtils.escapeHtml4(flexToken);
         final PaymentServiceResult authorizationResult = executeRequest(
                 new isv.cjl.payment.service.executor.request.builder.creditcard.AuthorizationRequestBuilder()
                         .setMerchantId(getMerchantService().getCurrentMerchant(CREDIT_CARD).getId())
                         .addParam(ORDER, cart)
-                        .addParam(FLEX_TOKEN, flexToken)
+                        .addParam(FLEX_TOKEN, sanitizedFlexToken)
                         .setAuthValidateServiceRun(false)
                         .build()
         );
