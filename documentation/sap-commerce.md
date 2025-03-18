@@ -3,7 +3,7 @@
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 25.1.0**
+**Version 25.2.0**
 March 2025
 
 ## Contents <!-- omit in toc -->
@@ -161,6 +161,7 @@ March 2025
 | March 2021    | 3.2.0                        | - SAP Commerce upgrade to 2011 |
 | February 2024 | 24.1.0                       | - Upgraded Cybersource REST Client SDK to version 0.0.58 |
 | March 2025    | 25.1.0                       | - Dependencies version upgraded <br>- Security Scan Fixes <br>- Changed the authentication mechanism for SOAP API to P12 Authentication |
+| March 2025    | 25.2.0                       | - Microform v2 upgrade |
 
 ### Audience and Purpose
 
@@ -311,7 +312,7 @@ All technical installation concepts in this document are initial draft provided 
 The following components are required:
 
 1. SAP Commerce platform release v2011
-2. sap-commerce-payment-plugin-25.1.0.zip
+2. sap-commerce-payment-plugin-25.2.0.zip
 3. Java 11
 4. Required Dependencies installed in maven repository
 

@@ -93,9 +93,6 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
     @Value("${klarna.sdk.url}")
     private String klarnaSDKUrl;
 
-    @Value("${isv.payment.flex.microform.sdk.url}")
-    private String flexSDKUrl;
-
     @Value("${isv.payment.flex.card.type.selection}")
     private boolean flexCardTypeSelection;
 
@@ -265,7 +262,6 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
     {
         if (checkoutPciStrategy.getSubscriptionPciOption().equals(FLEX))
         {
-                model.addAttribute("flexSdkUrl", flexSDKUrl);
                 model.addAttribute("flexCardTypeSelection", flexCardTypeSelection);
 
         }

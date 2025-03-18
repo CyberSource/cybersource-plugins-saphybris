@@ -109,7 +109,7 @@
     <c:url value="/checkout/payment/flex/verifyToken" var="flexVerifyTokenEndpointUrl"/>
 
     <flex:microform
-            flexSdkUrl="${flexSdkUrl}"
+            
             flexNewJwkEndpointUrl="${flexNewJwkEndpointUrl}"
             flexVerifyTokenEndpointUrl="${flexVerifyTokenEndpointUrl}"
             flexCardNumberContainerSelector="#flexCardNumber-container"
