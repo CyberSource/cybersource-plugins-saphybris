@@ -78,15 +78,13 @@ public class FlexMicroformController extends AbstractCheckoutController
         final Map<String, String> captureContext = flexService.createKey(targetOrigin);
 
         session.setAttribute(FLEX_CAPTURE_CONTEXT_ATTRIBUTE, captureContext.get("captureContext"));
-
-        // session.setAttribute("clientLiberary", captureContext.get("clientLiberary"));
-        // session.setAttribute("clientLibraryIntegrity",captureContext.get("clientLibraryIntegrity"));
+        
+        //RCH: To be extra safe, we can sanitize inputs to AjaxResponse.
         return AjaxResponse.success()
-                        .put("captureContext", captureContext.get("captureContext"))
-                        .put("clientLibrary", captureContext.get("clientLibrary"))
-.put("clientLibraryIntegrity", captureContext.get("clientLibraryIntegrity"));
+                .put("captureContext", StringEscapeUtils.escapeHtml4(captureContext.get("captureContext")))
+                .put("clientLibrary", StringEscapeUtils.escapeHtml4(captureContext.get("clientLibrary")))
+                .put("clientLibraryIntegrity", StringEscapeUtils.escapeHtml4(captureContext.get("clientLibraryIntegrity")));
 
-        // return captureContext.get("captureContext");
     }
 
     @PostMapping(value = "/verifyToken", consumes = MediaType.APPLICATION_JSON_VALUE)
