@@ -2,7 +2,7 @@
 
 ## CJL - Core Java Library <!-- omit in toc -->
 
-**Version 25.1.0**
+**Version 25.2.0**
 March 2025
 
 ## Contents <!-- omit in toc -->
