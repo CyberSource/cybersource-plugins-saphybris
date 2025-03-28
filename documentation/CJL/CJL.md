@@ -2,7 +2,7 @@
 
 ## CJL - Core Java Library <!-- omit in toc -->
 
-**Version 25.2.0**
+**Version 25.3.0**
 March 2025
 
 ## Contents <!-- omit in toc -->
@@ -161,7 +161,7 @@ This document is written for merchants who want to use Core Java API for payment
 - Secure Acceptance Hosted Checkout Integration Guide ([HTML](https://developer.cybersource.com/library/documentation/dev_guides/Secure_Acceptance_Hosted_Checkout/html/index.html))
 - Visa Checkout Using the Simple Order API ([HTML](http://apps.cybersource.com/library/documentation/dev_guides/VCO_SO_API/html/) |[PDF](http://apps.cybersource.com/library/documentation/dev_guides/VCO_SO_API/Visa_Checkout_SO_API.pdf) )
 - Credit Card Services Using the Simple Order API ([PDF](http://apps.cybersource.com/library/documentation/dev_guides/CC_Svcs_SO_API/Credit_Cards_SO_API.pdf) )
-- Flex Microform Implementation Guide ( [HTML](https://developer.cybersource.com/api/developer-guides/dita-flex/SAFlexibleToken/FlexMicroform.html))
+- Microform Implementation Guide ( [HTML](https://developer.cybersource.com/docs/cybs/en-us/digital-accept-flex/developer/all/rest/digital-accept-flex/microform-integ-v2.html))
 - Level II and Level III Processing Using the Simple Order API ([HTML](http://apps.cybersource.com/library/documentation/dev_guides/Level_2_3_SO_API/html) |[PDF](http://apps.cybersource.com/library/documentation/dev_guides/Level_2_3_SO_API/Level_II_III_SO_API.pdf) )
 - PayPal Express Checkout Using Alternative Payments and the Simple Order API ([PDF](https://apps.cybersource.com/library/documentation/dev_guides/AltPay_PayPal_Express_SO/AltPay_PayPal_Express_SO_API.pdf)) ([HTML](https://apps.cybersource.com/library/documentation/dev_guides/AltPay_PayPal_Express_SO/html))
 - Online Bank Transfers Using the Simple Order API ([HTML](http://apps.cybersource.com/library/documentation/dev_guides/OnlineBankTransfers_SO_API/html) |[PDF](http://apps.cybersource.com/library/documentation/dev_guides/OnlineBankTransfers_SO_API/OnlineBankTransfers_SO_API.pdf) )
@@ -429,7 +429,7 @@ isv.cjl.payment.service.flex.FlexService
 isv.cjl.payment.security.service.DefaultFlexService
 ```
 
-The public key is used on a the client side to initiate the Microform Flex API and to validate a token passed back through the cardholder's browser. The wirings are defined through the following [Google Guice](https://github.com/google/guice) module:
+The public key is used on a the client side to initiate the Microform API and to validate a token passed back through the cardholder's browser. The wirings are defined through the following [Google Guice](https://github.com/google/guice) module:
 
 ```text
 isv.cjl.module.common.FlexMicroformModule

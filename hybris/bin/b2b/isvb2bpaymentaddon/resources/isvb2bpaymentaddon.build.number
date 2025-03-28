@@ -5,5 +5,5 @@ name=isvb2bpaymentaddon
 builddate=20210318 1419
 releasedate=20210318 1509
 vendor=isv.sap
-version=25.2.0
+version=25.3.0
 version.api=2011
