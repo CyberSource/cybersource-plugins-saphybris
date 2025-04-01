@@ -711,7 +711,7 @@ Sample converter components convert a minimal set of required request data and a
 
 Credit card payment services allow to process payment cards from different brands through a single secure connection.
 
-The implementation of Credit Card payment service in SAp Commerce plugin provides the following operations:
+The implementation of Credit Card payment service in SAP Commerce plugin provides the following operations:
 
 - Authorization
 - Authorization Reversal
@@ -1950,7 +1950,7 @@ The process works in the following way:
 ## Message Level Encryption
 
 ### Description
-Message-Level Encryption (MLE) enables you to store information or communicate with other parties while helping to prevent uninvolved parties from understanding the stored information. MLE is optional and supported only for payments services.
+Message-Level Encryption (MLE) enables you to store information or communicate with other parties while helping to prevent uninvolved parties from understanding the stored information. If enabled, the SAP Commerce plugin encrypts the entire request body before transmission. MLE is optional and supported only for payments services.
 
 | **Configuration property** | **Description** |
 | --- | --- |
