@@ -3,7 +3,8 @@ package isv.sap.payment.addon.b2c.controllers.pages.checkout.payment.flex;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-
+// import org.apache.commons.lang3.ObjectUtils;
+ 
 import com.cybersource.flex.sdk.CaptureContext;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCheckoutController;
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
@@ -40,6 +41,7 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 //OLH: For Reflected XSS fix. Used to sanitize some text
 import org.apache.commons.text.StringEscapeUtils;
+import isv.sap.payment.addon.utils.AjaxResponse;
 
 @Controller
 @RequestMapping(path = "/checkout/payment/flex")
@@ -67,18 +69,22 @@ public class FlexMicroformController extends AbstractCheckoutController
 
     @GetMapping(value = "/newJwk", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String newJwk(final HttpSession session, final UriComponentsBuilder uriComponentsBuilder)
+    public AjaxResponse newJwk(final HttpSession session, final UriComponentsBuilder uriComponentsBuilder)
     {
         final String targetOrigin = uriComponentsBuilder
                 .replacePath(null).replaceQuery(null).userInfo(null).fragment(null)
                 .build()
                 .toUriString();
+        final Map<String, String> captureContext = flexService.createKey(targetOrigin);
 
-        final CaptureContext captureContext = flexService.createKey(targetOrigin);
+        session.setAttribute(FLEX_CAPTURE_CONTEXT_ATTRIBUTE, captureContext.get("captureContext"));
+        
+        //RCH: To be extra safe, we can sanitize inputs to AjaxResponse.
+        return AjaxResponse.success()
+                .put("captureContext", StringEscapeUtils.escapeHtml4(captureContext.get("captureContext")))
+                .put("clientLibrary", StringEscapeUtils.escapeHtml4(captureContext.get("clientLibrary")))
+                .put("clientLibraryIntegrity", StringEscapeUtils.escapeHtml4(captureContext.get("clientLibraryIntegrity")));
 
-        session.setAttribute(FLEX_CAPTURE_CONTEXT_ATTRIBUTE, captureContext.toString());
-
-        return captureContext.toString();
     }
 
     @PostMapping(value = "/verifyToken", consumes = MediaType.APPLICATION_JSON_VALUE)

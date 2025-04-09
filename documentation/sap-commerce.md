@@ -3,7 +3,7 @@
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 25.1.0**
+**Version 25.3.0**
 March 2025
 
 ## Contents <!-- omit in toc -->
@@ -60,6 +60,8 @@ March 2025
     - [Description](#description-10)
     - [Implementation details](#implementation-details-10)
     - [Checkout experience](#checkout-experience-2)
+  - [Message Level Encryption](#message-level-encryption)
+    - [Description](#description-11)
 - [Business Services](#business-services)
   - [Fraud Management](#fraud-management)
     - [Description](#description-11)
@@ -161,6 +163,8 @@ March 2025
 | March 2021    | 3.2.0                        | - SAP Commerce upgrade to 2011 |
 | February 2024 | 24.1.0                       | - Upgraded Cybersource REST Client SDK to version 0.0.58 |
 | March 2025    | 25.1.0                       | - Dependencies version upgraded <br>- Security Scan Fixes <br>- Changed the authentication mechanism for SOAP API to P12 Authentication |
+| March 2025    | 25.2.0                       | - Microform v2 upgrade |
+| March 2025    | 25.3.0                       | - Message Level Encryption Support |
 
 ### Audience and Purpose
 
@@ -249,10 +253,10 @@ More details on SAP Commerce accelerators: <https://help.sap.com/viewer/4c33bf18
 
 As part of reference functionality, the following features are supported:
 
-| Feature                                     | CJL 3.0.3 | SAP B2C | SAP B2B | Description                                         |
+| Feature                                     | CJL 3.0.5 | SAP B2C | SAP B2B | Description                                         |
 |---------------------------------------------|-----------|---------|---------|-----------------------------------------------------|
 | SA SOP                                      | Y         | Y       | Y       | Secure Acceptance Silent Order Post                 |
-| Flex Microform v.0.11                       | Y         | Y       | N       | Secure field - PCI compliant                        |
+| Microform v2                                | Y         | Y       | N       | Secure field - PCI compliant                        |
 | SA WM (HOP)                                 | Y         | Y       | Y       | Secure Acceptance Web Mobile (Hosted Order Page)    |
 | SO Auth                                     | Y         | Y       | N       | SimpleOrder Auth - serverside auhtorization token   |
 | Payer Authentication (+RBPA) "Enrollment"   | Y         | N       | N       | Payer authentication a part of Auth call via SO API |
@@ -311,7 +315,7 @@ All technical installation concepts in this document are initial draft provided 
 The following components are required:
 
 1. SAP Commerce platform release v2011
-2. sap-commerce-payment-plugin-25.1.0.zip
+2. sap-commerce-payment-plugin-25.3.0.zip
 3. Java 11
 4. Required Dependencies installed in maven repository
 
@@ -321,12 +325,12 @@ The following components are required:
 
 #### Description <!-- omit in toc -->
 
-The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-3.0.3.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
+The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-3.0.5.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
 
 Following errors will be thrown during SAP Commerce build:
 
 ```text
-[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:3.0.3: Could not find artifact isv.payment.cjl:isv-payment-api:jar:3.0.3 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
+[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:3.0.5: Could not find artifact isv.payment.cjl:isv-payment-api:jar:3.0.5 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
 ```
 
 #### Solution <!-- omit in toc -->
@@ -336,10 +340,10 @@ The "isvpayment" extension comes with all the library binaries included in "hybr
 As a quick local build solution the dependency can be installed in local maven repository and retrieved as a cached dependency as per <https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html>.
 
 ```text
-$mvn install:install-file -Dfile=isv-payment-api-3.0.3.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=3.0.3 -Dpackaging=jar
+$mvn install:install-file -Dfile=isv-payment-api-3.0.5.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=3.0.5 -Dpackaging=jar
 ```
 
-Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.3.jar".
+Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.5.jar".
 
 > ![Note](images/note.jpg) According to SAP documentation:  The ant updateMavenDependencies task deletes all *.jar files from the lib folder by default. Only libraries listed in unmanaged-dependencies.txt files are not deleted.
 
@@ -707,7 +711,7 @@ Sample converter components convert a minimal set of required request data and a
 
 Credit card payment services allow to process payment cards from different brands through a single secure connection.
 
-The implementation of Credit Card payment service in SAp Commerce plugin provides the following operations:
+The implementation of Credit Card payment service in SAP Commerce plugin provides the following operations:
 
 - Authorization
 - Authorization Reversal
@@ -719,7 +723,7 @@ The implementation of Credit Card payment service in SAp Commerce plugin provide
 
 The following implementations are provided for **credit card authorization operation** :
 
-- Flex Microform (enabled by default)
+- Microform (enabled by default)
 - Secure Acceptance Web/Mobile
 - Secure Acceptance Silent Order POST
 
@@ -729,21 +733,21 @@ Additionally, SAp Commerce plugin supports credit card authorization by using Si
 
 ### Implementation details
 
-#### Authorization with Flex Microform <!-- omit in toc -->
+#### Authorization with Microform <!-- omit in toc -->
 
-With Flex Microform, the capture of card number is fully outsourced to the payment provider, which can qualify merchants for SAQ A-based assessments. Flex Microform provides the most secure method for tokenizing card data. Sensitive data is encrypted on the customer's device before HTTPS transmission to the payment provider. This method mitigates any compromise of the HTTPS connection through a man in the middle attack.
+With Microform, the capture of card number is fully outsourced to the payment provider, which can qualify merchants for SAQ A-based assessments. Microform provides the most secure method for tokenizing card data. Sensitive data is encrypted on the customer's device before HTTPS transmission to the payment provider. This method mitigates any compromise of the HTTPS connection through a man in the middle attack.
 
-For more details, please refer to [Flex Microform Implementation Guide](https://developer.cybersource.com/api/developer-guides/dita-flex/SAFlexibleToken/FlexMicroform.html).
+For more details, please refer to [Microform Implementation Guide](https://developer.cybersource.com/docs/cybs/en-us/digital-accept-flex/developer/all/rest/digital-accept-flex/microform-integ-v2.html).
 
-The following controller is provided as part of Flex Microform implementation:
+The following controller is provided as part of Microform implementation:
 
 ```text
 isv.sap.payment.addon.b2c.controllers.pages.checkout.payment.flex.FlexMicroformController
 ```
 
-The `isvpaymentaddon` provides the following components for integrating Flex Microform into UI:
+The `isvpaymentaddon` provides the following components for integrating Microform into UI:
 
-- JSP tag to integrate Flex Microform SDK to page
+- JSP tag to integrate Microform SDK to page
 
 ```text
 webroot/WEB-INF/tags/responsive/payment/flex/microform.tag
@@ -755,7 +759,7 @@ webroot/WEB-INF/tags/responsive/payment/flex/microform.tag
 webroot/WEB-INF/views/responsive/pages/checkout/multi/payment/flexCardPaymentDetails.jsp
 ```
 
-- Handlers, listeners and styling options for Flex Microform
+- Handlers, listeners and styling options for Microform
 
 ```text
 webroot/_ui/responsive/pages/js/checkout/multi/payment/flexCardPaymentDetails.js
@@ -763,7 +767,7 @@ webroot/_ui/responsive/pages/js/checkout/multi/payment/flexCardPaymentDetails.js
 
 The latter contains all the integration logic between the credit card details form and **microform.tag**.
 
-The following diagram describes the flow and actors/components involved for Flex Microform implementation:
+The following diagram describes the flow and actors/components involved for Microform implementation:
 
 ![Flex Microform](images/flex-microform.png)
 
@@ -819,7 +823,7 @@ For both, Secure Acceptance Web/Mobile and Secure Acceptance Silent Order POST t
 
 The implementation for credit card authorization operation can be switched dynamically by changing SAP Commerce Accelerator `site.pci.strategy` configuration property to one of the following:
 
-- **FLEX** - to enable Flex Microform
+- **FLEX** - to enable Microform
 - **HOP** - to enable Secure Acceptance Web/Mobile
 - **SOP** - to enable Secure Acceptance Silent Order POST
 
@@ -846,11 +850,10 @@ The custom JSP tag **pciStrategyType** could be used to display the UI fragment 
 </isv:pciStrategyType>
 ```
 
-For Flex Microform, the following configuration properties are defined:
+For Microform, the following configuration properties are defined:
 
 | **Configuration property** | **Description** |
 | --- | --- |
-| isv.payment.flex.microform.sdk.url | The URL for the Flex Microform Javascript SDK |
 | isv.payment.customer.flex.microform.api.key.id  | Customer specific Flex API key ID obtained from your payment provider |
 | isv.payment.customer.flex.microform.shared.secret | Shared secret for Flex API key |
 | isv.payment.customer.flex.microform.api.env | Flex API environment: `SANDBOX` - to use the FLEX API test environment,  `PRODUCTION` - to use the FLEX API live environment. Additional properties can be used to change the host and URI path of the Flex API service, e.g for `SANDBOX` environment use `isv.payment.customer.flex.microform.api.SANDBOX.host` for host location (host and port) and `isv.payment.customer.flex.microform.api.SANDBOX.path` for URI path (`/flex/v1/keys`). Usually only `isv.payment.customer.flex.microform.api.env` property should be configured. |
@@ -932,7 +935,7 @@ isv.sap.payment.service.executor.request.converter.creditcard
 
 ### Applicability and limitations
 
-Only Flex Microform, Secure Acceptance Web/Mobile and Silent Order POST are implemented as part of SAP Commerce reference implementation.
+Only Microform, Secure Acceptance Web/Mobile and Silent Order POST are implemented as part of SAP Commerce reference implementation.
 
 See "Payer Authentication" section from current document for payer Check Enrolment and Validation operations (a.k.a. 3D secure).
 
@@ -1944,6 +1947,15 @@ The process works in the following way:
 
 7. For 'PAYMENT_SUCCESS' responses another request will be sent to the '/return' endpoint to finish the payment and place the order.
 
+## Message Level Encryption
+
+### Description
+Message-Level Encryption (MLE) enables you to store information or communicate with other parties while helping to prevent uninvolved parties from understanding the stored information. If enabled, the SAP Commerce plugin encrypts the entire request body before transmission. MLE is optional and supported only for payments services.
+
+| **Configuration property** | **Description** |
+| --- | --- |
+| `isv.payment.mle.enabled` | Possible values true/false. Disabled by default |
+
 # Business Services
 
 ## Fraud Management
@@ -2162,9 +2174,9 @@ Under some scenarios, the payment provider response for 3DS has the field "payer
 </filter>
 ```
 
-Enabling 3DS 2.x for Flex Microform
+Enabling 3DS 2.x for Microform
 
-Flex Microform implementation is based in Cardinal Cruise Hybrid described in [https://cardinaldocs.atlassian.net/wiki/spaces/CC/pages/360668/Cardinal+Cruise+Hybrid](https://cardinaldocs.atlassian.net/wiki/spaces/CC/pages/360668/Cardinal+Cruise+Hybrid)
+Microform implementation is based in Cardinal Cruise Hybrid described in [https://cardinaldocs.atlassian.net/wiki/spaces/CC/pages/360668/Cardinal+Cruise+Hybrid](https://cardinaldocs.atlassian.net/wiki/spaces/CC/pages/360668/Cardinal+Cruise+Hybrid)
 [http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf)
 
 The following configurations are required:
