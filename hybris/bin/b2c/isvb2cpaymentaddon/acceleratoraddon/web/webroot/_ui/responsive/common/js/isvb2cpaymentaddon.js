@@ -392,9 +392,6 @@ ACC.secureacceptance = {
                 }
 
                 if (isValidFormData(formFieldsToValidate) && ACC.secureacceptance.termsAndConditionsChecked()) {
-                    if (CARDINAL_COMMERCE.is3dsEnabled) {
-                        CARDINAL_COMMERCE.initialize();
-                    }
                     MICROFORM.tokenize();
                 }
             }

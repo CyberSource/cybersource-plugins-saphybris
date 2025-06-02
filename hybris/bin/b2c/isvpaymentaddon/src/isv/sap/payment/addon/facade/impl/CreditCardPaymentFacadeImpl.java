@@ -30,13 +30,11 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
-import io.jsonwebtoken.Claims;
 
 import isv.cjl.payment.data.enrollment.OrderData;
 import isv.cjl.payment.enums.TransactionMode;
 import isv.cjl.payment.exception.PaymentException;
 import isv.cjl.payment.service.executor.PaymentServiceResult;
-import isv.cjl.payment.service.jwt.JwtService;
 import isv.sap.payment.addon.facade.CreditCardPaymentFacade;
 import isv.sap.payment.addon.facade.PaymentInfoFacade;
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel;
@@ -48,7 +46,7 @@ import static isv.cjl.payment.constants.PaymentConstants.CommonFields.TRANSACTIO
 import static isv.cjl.payment.constants.PaymentConstants.TransactionStatus.ACCEPT;
 import static isv.cjl.payment.constants.PaymentConstants.TransactionStatus.REVIEW;
 import static isv.cjl.payment.enums.PaymentType.CREDIT_CARD;
-import static isv.sap.payment.constants.IsvPaymentConstants.CreditCardRequestFields.FLEX_TOKEN;
+import static isv.sap.payment.constants.IsvPaymentConstants.CreditCardRequestFields.*;
 import static isv.sap.payment.constants.IsvPaymentConstants.ReasonCode.ENROLLED_CODE;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
@@ -83,9 +81,6 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
 
     @Resource(name = "extPaymentInfoFacade")
     private PaymentInfoFacade paymentInfoFacade;
-
-    @Resource(name = "isv.sap.payment.jwtService")
-    private JwtService jwtService;
 
     @Resource
     private CustomerNameStrategy customerNameStrategy;
@@ -241,20 +236,9 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
 
     @Override
     public boolean authorizeFlexCreditCardPayment(final CartModel cart, final String flexToken,
-            final String authJwt)
+            final String transactionId)
     {
-        final Claims decodedJwt = jwtService
-                .decodeJwt(authJwt, getSiteConfigService().getProperty("isv.payment.customer.3ds.jwt.api.key"));
-
-        final String transactionId = ofNullable(decodedJwt.get("Payload"))
-                .map(payload -> ((Map) payload).get("Payment"))
-                .map(payload -> (String) ((Map) payload).get("ProcessorTransactionId")).orElse(null);
-
-        final Integer errorNumber = ofNullable(decodedJwt.get("Payload"))
-                .map(payload -> (Integer) ((Map) payload).get("ErrorNumber"))
-                .orElse(null);
-
-        if (isNotBlank(transactionId) && Objects.equals(0, errorNumber))
+        if (isNotBlank(transactionId))
         {
             final IsvPaymentTransactionEntryModel authorizationEntry = doFlexCreditCardAuthorizationWithValidation(
                     cart, flexToken, transactionId);
@@ -293,18 +277,7 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
     }
 
     @Override
-    public String createEnrollmentJwt()
-    {
-        final OrderData payload = enrollmentPayloadConverter
-                .convert(cartService.getSessionCart());
-
-        return jwtService
-                .createEnrollmentJwt(getSiteConfigService().getProperty("isv.payment.customer.3ds.jwt.api.key"),
-                        payload);
-    }
-
-    @Override
-    public IsvPaymentTransactionEntryModel enrollCreditCard(final String referenceId, final String transientToken)
+    public IsvPaymentTransactionEntryModel enrollCreditCard(final String referenceId, final String transientToken, final String browserCookiesAccepted, final String browserScreenHeight, final String browserScreenWidth, final String serviceReturnURL)
     {
         final PaymentServiceResult enrollmentResult = executeRequest(
                 new isv.cjl.payment.service.executor.request.builder.creditcard.EnrollmentRequestBuilder()
@@ -313,8 +286,24 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
                         .setMerchantId(getMerchantID(CREDIT_CARD))
                         .addParam(ORDER, cartService.getSessionCart())
                         .addParam(FLEX_TOKEN, transientToken)
+                        .addParam(HTTP_BROWSER_COOKIES_ACCEPTED, browserCookiesAccepted)
+                        .addParam(HTTP_BROWSER_SCREEN_HEIGHT, browserScreenHeight)
+                        .addParam(HTTP_BROWSER_SCREEN_WEIGHT, browserScreenWidth)
+                        .addParam(ENROLL_SERVICE_RETURN_URL, serviceReturnURL)
                         .build());
         return enrollmentResult.getData(TRANSACTION);
+    }
+
+     @Override
+    public IsvPaymentTransactionEntryModel setUpCreditCard(final String transientToken)
+    {
+        final PaymentServiceResult setUpResult = executeRequest(
+                new isv.cjl.payment.service.executor.request.builder.creditcard.SetUpRequestBuilder()
+                        .addParam(FLEX_TOKEN, transientToken)
+                        .setMerchantId(getMerchantID(CREDIT_CARD))
+                        .addParam(ORDER, cartService.getSessionCart())
+                        .build());
+        return setUpResult.getData(TRANSACTION);
     }
 
     @Override

@@ -112,7 +112,7 @@
                     MICROFORM.waitBegin();
  
                     var flex = new Flex(MICROFORM.captureContext);
-                    var microform = flex.microform({styles: MICROFORM.onGetStyles()});
+                    var microform = flex.microform('card', {styles: MICROFORM.onGetStyles()});
  
                     var number = microform.createField('number', {placeholder: 'Enter card number'});
                     var securityCode = microform.createField('securityCode', {placeholder: '***'});

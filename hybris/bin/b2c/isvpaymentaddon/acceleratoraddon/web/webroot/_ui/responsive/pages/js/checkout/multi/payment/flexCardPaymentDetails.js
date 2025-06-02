@@ -38,8 +38,9 @@ if (typeof MICROFORM !== "undefined") {
         $('#card_flexToken').val(transientToken);
 
         if (CARDINAL_COMMERCE.is3dsEnabled) {
-            if (CARDINAL_COMMERCE.initialized) {
-                CARDINAL_COMMERCE.pay(transientToken)
+            if (CARDINAL_COMMERCE.setUp) {
+                CARDINAL_COMMERCE.showSpinner();
+                CARDINAL_COMMERCE.setUp(transientToken)
             } else {
                 CARDINAL_COMMERCE.flexToken = transientToken;
             }

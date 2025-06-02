@@ -2,8 +2,8 @@
 
 ## CJL - Core Java Library <!-- omit in toc -->
 
-**Version 25.3.0**
-March 2025
+**Version 25.4.0**
+May 2025
 
 ## Contents <!-- omit in toc -->
 
@@ -168,7 +168,7 @@ This document is written for merchants who want to use Core Java API for payment
 - Authorizations with Payment Network Tokens Using the Simple Order API  ([HTML](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/html/index.html) |[PDF](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/Authorizations_PNT_SO_API.pdf))
 - Tax Calculation Service for the Simple Order API ( [HTML](http://apps.cybersource.com/library/documentation/dev_guides/Tax_SO_API/html) | [PDF](http://apps.cybersource.com/library/documentation/dev_guides/Tax_SO_API/Tax_SO_API.pdf))
 - Reporting Developer Guides ( [HTML](https://developer.cybersource.com/api/developer-guides/dita-reporting-rest-api-dev-guide-102718/reporting_api.html))
-- Payer Authentication Using the Simple Order API ( [HTML](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/html/) | [PDF](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf) )
+- Payer Authentication Using the Simple Order API ( [HTML](https://developer.cybersource.com/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth/pa-about-guide.html) | [PDF](https://developer.cybersource.com/content/dam/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth.pdf) )
 - Verification Services Using the Simple Order API ( [HTML](http://apps.cybersource.com/library/documentation/dev_guides/Verification_Svcs_SO_API/html/) | [PDF](http://apps.cybersource.com/library/documentation/dev_guides/Verification_Svcs_SO_API/Verification_Svcs_SO_API.pdf) )
 - REST API Reference ( [HTML](https://developer.cybersource.com/api-reference-assets/index.html) )
 
@@ -2308,12 +2308,13 @@ The following table outlines commands mappers corresponding to each payment oper
 
 ### Description
 
-Identity protection is based on Payer Authentication services for credit card, including Visa Checkout. Payer authentication provides the following services:
+Identity protection is based on Payer Authentication services for credit card. Payer authentication provides the following services:
 
+- Setup - configuring and implementing 3-D Secure to verify customer identities and enhance transaction security.
 - Check Enrollment: Determines whether the customer is enrolled in one of the card authentication programs.
 - Validate Authentication: Ensures that the authentication that you receive from the issuing bank is valid
 
-For more details, please refer to [Payer Authentication Using the Simple Order API](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf)integration guide.
+For more details, please refer to [Payer Authentication Using the Simple Order API](https://developer.cybersource.com/content/dam/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth.pdf)integration guide.
 
 ### Implementation details
 
@@ -2327,6 +2328,7 @@ In order to simplify creation and setup of a payment service request, a dedicate
 
 | **Payment Operation** | **Request builder implementation\*** |
 | --- | --- |
+| Setup | SetUpRequestBuilder |
 | Enrollment | EnrollmentRequestBuilder |
 | Validate | ValidateRequestBuilder |
 
@@ -2335,8 +2337,6 @@ In order to simplify creation and setup of a payment service request, a dedicate
 ```text
 // for Credit Card payment service
 isv.cjl.payment.service.executor.request.builder.creditcard
-// for Visa Checkout payment service
-isv.cjl.payment.service.executor.request.builder.visacheckout
 ```
 
 The payment service request is executed through an instance of PaymentServiceExecutor, which dispatches the request to an instance of PaymentServiceProvider component defined through the following [Google Guice](https://github.com/google/guice) module:
@@ -2349,8 +2349,9 @@ The following table outlines Payer Authentication payment service provider compo
 
 | **Payment operation** | **Transaction Type\*** | **Object Graph Identifier** |
 | --- | --- | --- |
-| Enrollment | ENROLLMENT | creditCardEnrollment, visaCheckoutEnrollment |
-| Validate | VALIDATE | creditCardValidate, visaCheckoutValidate |
+| Setup | SETUP | creditCardSetUp |
+| Enrollment | ENROLLMENT | creditCardEnrollment  |
+| Validate | VALIDATE | creditCardValidate |
 
 \* Defined in isv.cjl.payment.enums.PaymentTransactionType
 
@@ -2365,8 +2366,6 @@ The bindings for Payer Authentication conversion layer are defined through dedic
 ```text
 // for Credit Card payment  service
 isv.cjl.module.converter.CreditCardRequestConverterModule
-// for Visa Checkout payment  service
-isv.cjl.module.converter.VisaCheckoutRequestConverterModule
 ```
 
 The example of implementation is defined within the following packages:
@@ -2374,8 +2373,6 @@ The example of implementation is defined within the following packages:
 ```text
 // for Credit Card payment  service
 isv.cjl.sample.payment.request.converter.creditcard
-// for Visa Checkout payment  service
-isv.cjl.sample.payment.request.converter.visacheckout
 ```
 
 > ![Important](images/important.jpg) The implementation of conversion layer in CJL is provided just to run integration tests and includes only a minimal set of data. A corresponding request converter component should be overridden accordingly by the implementation.
@@ -2384,6 +2381,7 @@ The following table defines sample implementation and corresponding object graph
 
 | **Payment Operation** | **Object Graph Identifier\*** | **Sample converter implementation** |
 | --- | --- | --- |
+| Setup | SETUP | SetUpRequestConverter |
 | Enrollment | ENROLLMENT | EnrollmentRequestConverter |
 | Validate | VALIDATE | ValidateRequestConverter |
 
@@ -2392,8 +2390,6 @@ The following table defines sample implementation and corresponding object graph
 ```text
 // for Credit Card payment  service
 isv.cjl.module.util.RequestConverterConstants.CreditCard
-// for Visa Checkout payment  service
-isv.cjl.module.util.RequestConverterConstants.VisdaCheckout
 ```
 
 > ![Note](images/note.jpg) For request converters object graph identifiers there are corresponding constants defined in isv.cjl.module.util.RequestConverterConstants class. It is encouraged to reference these constants rather than string literals in your code.
@@ -2414,6 +2410,7 @@ The following table outlines commands mappers corresponding to each payment oper
 
 | **Transaction Type** | **Request Mapper Identifier** | **Response Mapper Identifier** |
 | --- | --- | --- |
+| SETUP | creditCardSetUpRequestMapper | creditCardSetUpResponseMapper |
 | ENROLLMENT | creditCardEnrollmentRequestMapper,visaCheckoutEnrollmentRequestMapper | creditCardEnrollmentResponseMapper,visaCheckoutEnrollmentResponseMapper |
 | VALIDATE | creditCardValidateRequestMapper,visaCheckoutValidateRequestMapper | creditCardValidateResponseMapper,visaCheckoutValidateResponseMapper |
 
@@ -2433,36 +2430,6 @@ hystrix.command.creditCardRefundFollowOnCommand.execution.isolation.thread.timeo
 hystrix.command.creditCardVoidCommand.execution.isolation.thread.timeoutInMilliseconds=10000
 ```
 
-### 3DS 2.x Helper services
-
-When using 3DS 2.x, data transfer to Cardinal is done using JWT. CJL provides a utility service that can be used to create and decode Cardinal JWTs
-
-```text
-isv.cjl.payment.service.jwt.DefaultJwtService
-```
-
-This service relies in the following configuration properties, which are provided by the PSP:
-
-```text
-isv.payment.customer.3ds.jwt.api.orgUnitIdisv.payment.customer.3ds.jwt.api.id
-```
-
-DefaultJwtService receives Cardinal api key as parameter since the same Cardinal api ID can have multiple keys with different configurations.
-
-For more details about Cardinal, please refer to their documentation [https://cardinaldocs.atlassian.net/wiki/spaces/CC/overview](https://cardinaldocs.atlassian.net/wiki/spaces/CC/overview)
-
-When using multiple MIDs with different 3DS configurations
-
-isv.cjl.payment.service.MerchantService#is3dsEnabled can be useful.
-
-It relies in the configuration property
-
-```text
-isv.payment.customer.3ds.<MERCHANT_ID>.enabled
-```
-
-This property allows the values true/false and can be configured for each MID individually replacing <MERCHANT_ID> by your MID. If the configuration for certain MID is missing, then "true" is taken as default.
-
 ## REST API Integration
 
 ### Description
@@ -2480,7 +2447,7 @@ CJL consumes HTTP REST APIs using [Java SDK](https://github.com/CyberSource/cybe
 Java SDK is included in CJL as a dependency:
 
 ```text
- compile 'com.cybersource:cybersource-rest-client-java:0.0.58'
+ compile 'com.cybersource:cybersource-rest-client-java:0.0.75'
 ```
 
 The dependency above brings in transitively two supporting libraries:

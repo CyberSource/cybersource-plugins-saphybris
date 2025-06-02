@@ -48,7 +48,7 @@ public interface CreditCardPaymentFacade extends PaymentFacade
      * @param flexToken Flex Microforms token
      * @return true if authorization succeeded, false otherwise
      */
-    boolean authorizeFlexCreditCardPayment(final CartModel cart, final String flexToken, final String authJwt);
+    boolean authorizeFlexCreditCardPayment(final CartModel cart, final String flexToken, final String transactionId);
 
     /**
      * Authorizes credit card payment using Flex Microforms token for a given cart.
@@ -63,12 +63,6 @@ public interface CreditCardPaymentFacade extends PaymentFacade
     boolean authorizeFlexCreditCardPayment(final CartModel cart, final String flexToken,
             final IsvPaymentTransactionEntryModel enrollmentTransaction);
 
-    /**
-     * Creates a new JWT (tokens must be regenerated even if the last one has not expired)
-     *
-     * @return new JWT
-     */
-    String createEnrollmentJwt();
 
     /**
      * Does the check enrollment request for the given payment information
@@ -77,7 +71,15 @@ public interface CreditCardPaymentFacade extends PaymentFacade
      * @param transientToken Flex microform token
      * @return
      */
-    IsvPaymentTransactionEntryModel enrollCreditCard(final String referenceId, final String transientToken);
+    IsvPaymentTransactionEntryModel enrollCreditCard(final String referenceId, final String transientToken, final String browserCookiesAccepted, final String browserScreenHeight, final String browserScreenWidth, final String serviceReturnURL);
+
+  /**
+     * Does the setup request for the given payment information
+     *
+     * @param transientToken Flex microform token
+     * @return
+     */
+    IsvPaymentTransactionEntryModel setUpCreditCard(final String transientToken);
 
     /**
      * Checks if 3DS is enabled for the current merchant

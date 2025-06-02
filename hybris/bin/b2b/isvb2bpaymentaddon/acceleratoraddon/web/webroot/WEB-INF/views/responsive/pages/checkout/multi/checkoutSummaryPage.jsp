@@ -69,8 +69,8 @@
                         </form:form>
                     </div>
 
-                    <script type="application/javascript">
-                        var isvB2BPaymentMethod = '${cartData.paymentType.code}';
+                     <script type="application/javascript">
+                        var isvB2BPaymentMethod = '<spring:escapeBody javaScriptEscape="true">${cartData.paymentType.code}</spring:escapeBody>';
                     </script>
 
                 </ycommerce:testId>

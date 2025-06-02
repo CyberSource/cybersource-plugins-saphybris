@@ -20,6 +20,14 @@ public final class IsvPaymentConstants extends GeneratedIsvPaymentConstants //NO
 
         public static final String CARD_INFO = "card";
 
+        public static final String HTTP_BROWSER_COOKIES_ACCEPTED = "billToHttpBrowserCookiesAccepted";
+
+        public static final String HTTP_BROWSER_SCREEN_HEIGHT = "billToHttpBrowserScreenHeight";
+
+        public static final String HTTP_BROWSER_SCREEN_WEIGHT = "billToHttpBrowserScreenWidth";
+
+        public static final String ENROLL_SERVICE_RETURN_URL = "payerAuthEnrollServiceReturnURL";
+
         private CreditCardRequestFields()
         {
             // EMPTY

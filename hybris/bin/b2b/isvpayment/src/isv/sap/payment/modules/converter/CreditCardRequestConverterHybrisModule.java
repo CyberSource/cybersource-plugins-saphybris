@@ -14,6 +14,7 @@ import static isv.cjl.module.util.ModuleUtil.CONVERTER;
 import static isv.cjl.module.util.RequestConverterConstants.CreditCard.AUTHORIZATION;
 import static isv.cjl.module.util.RequestConverterConstants.CreditCard.AUTHORIZATION_REVERSAL;
 import static isv.cjl.module.util.RequestConverterConstants.CreditCard.CAPTURE;
+import static isv.cjl.module.util.RequestConverterConstants.CreditCard.SET_UP;
 import static isv.cjl.module.util.RequestConverterConstants.CreditCard.ENROLLMENT;
 import static isv.cjl.module.util.RequestConverterConstants.CreditCard.REFUND_FOLLOW_ON;
 import static isv.cjl.module.util.RequestConverterConstants.CreditCard.REFUND_STANDALONE;
@@ -54,6 +55,9 @@ public class CreditCardRequestConverterHybrisModule extends CreditCardRequestCon
     @Resource(name = "isv.sap.payment.converter.creditcard.refundStandaloneRequestConverter")
     private Converter<PaymentServiceRequest, Request> refundStandaloneRequestConverter;
 
+    @Resource(name = "isv.sap.payment.converter.creditcard.setUpRequestConverter")
+    private Converter<PaymentServiceRequest, Request> setUpRequestConverter;
+
     @Resource(name = "isv.sap.payment.converter.creditcard.enrollmentRequestConverter")
     private Converter<PaymentServiceRequest, Request> enrollmentRequestConverter;
 
@@ -75,6 +79,7 @@ public class CreditCardRequestConverterHybrisModule extends CreditCardRequestCon
         bind(CONVERTER).annotatedWith(named(TOKEN_DELETE)).toInstance(paymentTokenDeleteRequestConverter);
         bind(CONVERTER).annotatedWith(named(REFUND_FOLLOW_ON)).toInstance(refundFollowOnRequestConverter);
         bind(CONVERTER).annotatedWith(named(REFUND_STANDALONE)).toInstance(refundStandaloneRequestConverter);
+        bind(CONVERTER).annotatedWith(named(SET_UP)).toInstance(setUpRequestConverter);
         bind(CONVERTER).annotatedWith(named(ENROLLMENT)).toInstance(enrollmentRequestConverter);
         bind(CONVERTER).annotatedWith(named(VALIDATE)).toInstance(validateRequestConverter);
         bind(CONVERTER).annotatedWith(named(TAX)).toInstance(taxRequestConverter);

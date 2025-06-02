@@ -3,8 +3,8 @@
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 25.3.0**
-March 2025
+**Version 25.4.0**
+May 2025
 
 ## Contents <!-- omit in toc -->
 <!-- TOC -->
@@ -165,6 +165,7 @@ March 2025
 | March 2025    | 25.1.0                       | - Dependencies version upgraded <br>- Security Scan Fixes <br>- Changed the authentication mechanism for SOAP API to P12 Authentication |
 | March 2025    | 25.2.0                       | - Microform v2 upgrade |
 | March 2025    | 25.3.0                       | - Message Level Encryption Support |
+| May 2025      | 25.4.0                       | - Disable Card BIN for Transient Token <br>- Payer Authentication upgraded to Cardinal Cruise Direct |
 
 ### Audience and Purpose
 
@@ -227,7 +228,7 @@ Ecommerce Platform plugin comes with Core Java library documentation which is th
 - Authorizations with Payment Network Tokens Using the Simple Order API  ([HTML](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/html/index.html) |[PDF](https://developer.cybersource.com/library/documentation/dev_guides/Authorizations_PNT_SO_API/Authorizations_PNT_SO_API.pdf))
 - Tax Calculation Service for the Simple Order API ( [HTML](http://apps.cybersource.com/library/documentation/dev_guides/Tax_SO_API/html) | [PDF](http://apps.cybersource.com/library/documentation/dev_guides/Tax_SO_API/Tax_SO_API.pdf))
 - Reporting Developer Guides ( [HTML](https://developer.cybersource.com/api/developer-guides/dita-reporting-rest-api-dev-guide-102718/reporting_api.html))
-- Payer Authentication Using the Simple Order API ( [HTML](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/html/) | [PDF](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf) )
+- Payer Authentication Using the Simple Order API ( [HTML](https://developer.cybersource.com/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth/pa-about-guide.html) | [PDF](https://developer.cybersource.com/content/dam/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth.pdf) )
 - Verification Services Using the Simple Order API ( [HTML](http://apps.cybersource.com/library/documentation/dev_guides/Verification_Svcs_SO_API/html/) | [PDF](http://apps.cybersource.com/library/documentation/dev_guides/Verification_Svcs_SO_API/Verification_Svcs_SO_API.pdf) )
 - Cybersource REST API Reference ( [HTML](https://developer.cybersource.com/api-reference-assets/index.html) )
 
@@ -253,7 +254,7 @@ More details on SAP Commerce accelerators: <https://help.sap.com/viewer/4c33bf18
 
 As part of reference functionality, the following features are supported:
 
-| Feature                                     | CJL 3.0.5 | SAP B2C | SAP B2B | Description                                         |
+| Feature                                     | CJL 3.0.6 | SAP B2C | SAP B2B | Description                                         |
 |---------------------------------------------|-----------|---------|---------|-----------------------------------------------------|
 | SA SOP                                      | Y         | Y       | Y       | Secure Acceptance Silent Order Post                 |
 | Microform v2                                | Y         | Y       | N       | Secure field - PCI compliant                        |
@@ -315,7 +316,7 @@ All technical installation concepts in this document are initial draft provided 
 The following components are required:
 
 1. SAP Commerce platform release v2011
-2. sap-commerce-payment-plugin-25.3.0.zip
+2. sap-commerce-payment-plugin-25.4.0.zip
 3. Java 11
 4. Required Dependencies installed in maven repository
 
@@ -325,12 +326,12 @@ The following components are required:
 
 #### Description <!-- omit in toc -->
 
-The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-3.0.5.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
+The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-3.0.6.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
 
 Following errors will be thrown during SAP Commerce build:
 
 ```text
-[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:3.0.5: Could not find artifact isv.payment.cjl:isv-payment-api:jar:3.0.5 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
+[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:3.0.6: Could not find artifact isv.payment.cjl:isv-payment-api:jar:3.0.6 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
 ```
 
 #### Solution <!-- omit in toc -->
@@ -340,10 +341,10 @@ The "isvpayment" extension comes with all the library binaries included in "hybr
 As a quick local build solution the dependency can be installed in local maven repository and retrieved as a cached dependency as per <https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html>.
 
 ```text
-$mvn install:install-file -Dfile=isv-payment-api-3.0.5.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=3.0.5 -Dpackaging=jar
+$mvn install:install-file -Dfile=isv-payment-api-3.0.6.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=3.0.6 -Dpackaging=jar
 ```
 
-Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.5.jar".
+Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.6.jar".
 
 > ![Note](images/note.jpg) According to SAP documentation:  The ant updateMavenDependencies task deletes all *.jar files from the lib folder by default. Only libraries listed in unmanaged-dependencies.txt files are not deleted.
 
@@ -937,7 +938,7 @@ isv.sap.payment.service.executor.request.converter.creditcard
 
 Only Microform, Secure Acceptance Web/Mobile and Silent Order POST are implemented as part of SAP Commerce reference implementation.
 
-See "Payer Authentication" section from current document for payer Check Enrolment and Validation operations (a.k.a. 3D secure).
+See "Payer Authentication" section from current document for payer Setup , Enrolment and Validation operations (a.k.a. 3D secure).
 
 ## Token Management Service
 
@@ -1047,7 +1048,7 @@ isv.sap.payment.service.executor.request.converter.visacheckout
 
 ### Applicability and limitations
 
-See "Payer Authentication" section from current document for payer Check Enrolment and Validation operations (a.k.a. 3D secure).
+See "Payer Authentication" section from current document for payer Setup ,Enrolment and Validation operations (a.k.a. 3D secure).
 
 ## AliPay
 
@@ -2100,8 +2101,9 @@ There is currently no reference implementation in SAP Commerce extension for Ver
 
 ### Description
 
-Identity protection is based on Payer Authentication services for credit card (and Visa SRC). Payer authentication provides the following services:
+Identity protection is based on Payer Authentication services for credit card. Payer authentication provides the following services:
 
+- Setup - configuring and implementing 3-D Secure to verify customer identities and enhance transaction security.
 - Check Enrollment - determines whether the customer is enrolled in one of the card authentication programs.
 - Validate Authentication - ensures that the authentication that you receive from the issuing bank is valid
 
@@ -2113,11 +2115,12 @@ Each Payer Authentication operation is based on a common CJL abstraction that en
  isv.cjl.payment.service.executor.request.PaymentServiceRequest
 ```
 
-In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided by CJL for each payment operation. These builders are defined for Credit Card and Visa SRC payment services:
+In order to simplify creation and setup of a payment service request, a dedicated set of request builder components is provided by CJL for each payment operation. These builders are defined for Credit Card payment services:
 
 | **Payment Operation** | **Request builder implementation\*** |
 | --- | --- |
-| Enrollment | EnrollmentRequestBuilder |
+| Setup | SetUpRequestBuilder |
+| EnrollmentCheck | EnrollmentRequestBuilder |
 | Validate | ValidateRequestBuilder |
 
 \* Request builders are defined within the following package:
@@ -2125,14 +2128,13 @@ In order to simplify creation and setup of a payment service request, a dedicate
 ```text
 //for Credit Card payment service
 isv.cjl.payment.service.executor.request.builder.creditcard
-//for Visa SRC payment service
-isv.cjl.payment.service.executor.request.builder.visacheckout |
 ```
 
 The conversion from payment service request to a request object specific to credit card payment operation is implemented by:
 
 | **Payment operation** | **Payment service request converter implementation\*** |
 | --- | --- |
+| Setup | SetUpRequestConverter |
 | EnrollmentCheck | EnrollmentRequestConverter |
 | Validation | ValidateRequestConverter |
 
@@ -2141,13 +2143,11 @@ The conversion from payment service request to a request object specific to cred
 ```text
 //for Credit Card payment service
 isv.sap.payment.service.executor.request.converter.creditcard
-//for Visa SRC payment service
-isv.sap.payment.service.executor.request.converter.visacheckout
 ```
 
 > ![Important](images/important.jpg) Each converter operates on a minimal set of required request fields. In case a larger set of data is due to be sent, then the corresponding request converter component should be overridden accordingly.
 
-For more details, please refer to [Payer Authentication Using the Simple Order API](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf)integration guide or "Payer Authentication" section from CJL documentation.
+For more details, please refer to [Payer Authentication Using the Simple Order API](https://developer.cybersource.com/content/dam/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth.pdf)integration guide or "Payer Authentication" section from CJL documentation.
 
 ### Applicability and limitations
 
@@ -2159,7 +2159,7 @@ When using SOP or HOP, the payment provider takes care of the heavy lifting. In 
 
 Once Cardinal is configured, proceed to "Payment Configuration" > "Secure Acceptance". Select your profile, then go to "Payment Settings" tab, click on edit, select 3DS 2 under "Payer Authentication 3DS Version" section, save and promote the profile.
 
-Now your MID is configured for 3DS. You can see some testing scenarios and additional information in [http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf)
+Now your MID is configured for 3DS. You can see some testing scenarios and additional information in [https://developer.cybersource.com/content/dam/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth.pdf](https://developer.cybersource.com/content/dam/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth.pdf)
 
 Under some scenarios, the payment provider response for 3DS has the field "payer_authentication_proof_xml" which contains plain XML. The content on this field is stripped out by default in SAP Commerce due to XSSFilter, causing problems in the signature validation for that request. In order to bypass this problem you can modify your web.xml file replacing the existing XSSFilter by
 
@@ -2176,39 +2176,29 @@ Under some scenarios, the payment provider response for 3DS has the field "payer
 
 Enabling 3DS 2.x for Microform
 
-Microform implementation is based in Cardinal Cruise Hybrid described in [https://cardinaldocs.atlassian.net/wiki/spaces/CC/pages/360668/Cardinal+Cruise+Hybrid](https://cardinaldocs.atlassian.net/wiki/spaces/CC/pages/360668/Cardinal+Cruise+Hybrid)
-[http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf)
+Microform implementation is based in Cardinal Cruise Direct
+[https://developer.cybersource.com/content/dam/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth.pdf](https://developer.cybersource.com/content/dam/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth.pdf)
 
 The following configurations are required:
 
 | **Key** | **Description** | **EBC platform**|
 | --- | --- | --- |
 | isv.payment.customer.3ds.<MERCAHNT_ID>.enabled | Possible values true/false  Indicates if 3DS is enabled for the merchant provided in <MERCHANT_ID> | |
-| `isv.payment.customer.3ds.jwt.api.id` | Cardinal API ID (provided by the payment provider) | Payment configuration->Payer Authentication Configuration : `API IdentifierAPI Identifier` |
-| `isv.payment.customer.3ds.jwt.api.key` | Cardinal API key (provided by the payment provider) | Payment configuration->Payer Authentication Configuration : `API Key`|
-| `isv.payment.customer.3ds.jwt.api.orgUnitId` | Cardinal OrgUnitID (provided by the payment provider) |Payment configuration->Payer Authentication Configuration : `Org Unit ID`|
-| `isv.payment.customer.3ds.songbird.url` | Cardinal JS URL <br> -Production: [https://songbird.cardinalcommerce.com/edge/v1/songbird.js](https://songbird.cardinalcommerce.com/edge/v1/songbird.js)<br>- Staging: [https://songbirdstag.cardinalcommerce.com/edge/v1/songbird.js](https://songbirdstag.cardinalcommerce.com/edge/v1/songbird.js) <br>- Sandbox: [https://utilsbox.cardinalcommerce.com/cardinalcruise/v1/songbird.js](https://utilsbox.cardinalcommerce.com/cardinalcruise/v1/songbird.js) | |
-
-
 
 The flow is as follows:
 
 1. On checkout, checkoutSummaryPage.jsp injects cardinalCommerce.tag which contains all Cardinal related javascript under the variable CARDINAL_COMMERCE
 
-2. On page load a new JWT will be generated using
-isv.sap.payment.addon.facade.impl.CreditCardPaymentFacadeImpl#createEnrollmentJwt
- The payload in this JWT can be modified by changing the behaviour of "enrollmentPayloadConverter"
+2. When the user clicks on "Place order" button, Setup service will be triggered by means of CARDINAL_COMMERCE.setUp it sends an ajax request to /checkout/payment/flex/attemptPaymentSetUp where a request for setup service is generated, based on response and using response fields device data collection form will be created and submitted.
 
-3. When the user clicks on "Place order" button, Cardinal will be initialized by means of CARDINAL_COMMERCE.initialize, using the JWT previously generated
+3. Once data collected successfully through window event listener enrollment service will be triggered by means of CARDINAL_COMMERCE.pay
 
-4. Once initialized, 'payments.setupComplete' event will be triggered. Then the BIN number will be updated using the partial number provided on Flex Microform token creation and the payment process will start invoking CARDINAL_COMMERCE.pay
+4. CARDINAL_COMMERCE.pay sends an ajax request to /checkout/payment/flex/attemptPaymentWithoutValidation where a request for the Check Enrollment service is generated. If the card is not enrolled in a validation program, then an authorization request will be sent automatically, placing the order and ending the flow.
+If the card is enrolled, the information will be returned back to the javascript code, where step up form will be created and submitted in order to proceed with the customer validation.
 
-5. CARDINAL_COMMERCE.pay sends an ajax request to /checkout/payment/flex/attemptPaymentWithoutValidation where a request for the Check Enrollment service is generated. If the card is not enrolled in a validation program, then an authorization request will be sent automatically, placing the order and ending the flow.
- If the card is enrolled, the information will be returned back to the javascript code, where Cardinal.continue will be invoked in order to proceed with the validation.
+5. On successful customer validation transactionId will be received to the endpoint /payerAuthHelper, with transactionId validation service will be triggered by means of CARDINAL_COMMERCE.validation it sends an ajax request to /checkout/payment/flex/payWithValidation. Then the backend will do a new request for authorization and validation services together.
 
-6. When Cardinal.continue finishes, 'payments.validated' event will be triggered, where a new ajax request to '/checkout/payment/flex/payWithValidation' will be generated. Then the backend will do a new request for authorization and validation services together.
-
-> ![Important](images/important.jpg) Some authorization/reject scenarios in the flow mentioned above should be used as an example and be customized accordingly to the needs of each business. We highly recommend to look into the different test case scenarios for 3DS in [http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf](http://apps.cybersource.com/library/documentation/dev_guides/Payer_Authentication_SO_API/Payer_Authentication_SO_API.pdf) and adjust the logic to your needs when different actions can be done for a transaction (eg. Test Case 2.12a)
+> ![Important](images/important.jpg) Some authorization/reject scenarios in the flow mentioned above should be used as an example and be customized accordingly to the needs of each business. We highly recommend to look into the different test case scenarios for 3DS in [https://developer.cybersource.com/content/dam/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth.pdf](https://developer.cybersource.com/content/dam/docs/cybs/en-us/payer-authentication/developer/all/so/payer-auth.pdf) and adjust the logic to your needs when different actions can be done for a transaction (eg. Test Case 2.12a)
 
 ## Reporting
 
