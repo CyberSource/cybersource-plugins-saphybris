@@ -20,8 +20,7 @@ import static isv.cjl.payment.constants.PaymentConstants.CommonFields.ORDER;
 import static isv.cjl.payment.constants.PaymentConstants.Enrollment.PAYER_AUTH_ENROLL_SERVICE_TRANSACTION_MODE;
 import static isv.cjl.payment.constants.PaymentRequestParamConstants.*;
 import static isv.cjl.payment.constants.PaymentServiceConstants.CreditCard.ENROLLMENT;
-import static isv.sap.payment.constants.IsvPaymentConstants.CreditCardRequestFields.CARD_INFO;
-import static isv.sap.payment.constants.IsvPaymentConstants.CreditCardRequestFields.FLEX_TOKEN;
+import static isv.sap.payment.constants.IsvPaymentConstants.CreditCardRequestFields.*;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
@@ -39,6 +38,10 @@ public class EnrollmentRequestConverter extends AbstractRequestConverter
 
         final PaymentTransaction enrollmentRequest = requestFactory.request(ENROLLMENT)
                 .addParam(MERCHANT_ID, source.getRequiredParam(MERCHANT_ID))
+                .addParam(HTTP_BROWSER_COOKIES_ACCEPTED, source.getRequiredParam("billToHttpBrowserCookiesAccepted"))
+                .addParam(HTTP_BROWSER_SCREEN_HEIGHT, source.getRequiredParam("billToHttpBrowserScreenHeight"))
+                .addParam(HTTP_BROWSER_SCREEN_WEIGHT, source.getRequiredParam("billToHttpBrowserScreenWidth"))
+                .addParam(ENROLL_SERVICE_RETURN_URL, source.getRequiredParam("payerAuthEnrollServiceReturnURL"))
                 .addParam(MERCHANT_REFERENCE_CODE, order.getGuid())
                 .addParam(PURCHASE_TOTALS_CURRENCY, order.getCurrency().getIsocode())
                 .addParam(PURCHASE_TOTALS_GRAND_TOTAL_AMOUNT, BigDecimal.valueOf(order.getTotalPrice()))

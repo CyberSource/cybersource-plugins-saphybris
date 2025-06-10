@@ -163,6 +163,9 @@
             <value code="OPTIONS">
                 <description>Options service - retrieves a list of bank option IDs and bank names</description>
             </value>
+            <value code="SET_UP">
+                <description>set up service -  checks that the customer in a card authentication program</description>
+            </value>
             <value code="ENROLLMENT">
                 <description>Enrollment service -  checks that the customer is enrolled in a card authentication program</description>
             </value>

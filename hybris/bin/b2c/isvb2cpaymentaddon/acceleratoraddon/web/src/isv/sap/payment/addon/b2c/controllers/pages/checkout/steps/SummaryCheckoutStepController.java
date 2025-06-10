@@ -96,9 +96,6 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
     @Value("${isv.payment.flex.card.type.selection}")
     private boolean flexCardTypeSelection;
 
-    @Value("${isv.payment.customer.3ds.songbird.url}")
-    private String songbirdUrl;
-
     @Value("${isv.payment.customer.googlepay.merchant.id}")
     private String googlePayMerchantId;
 
@@ -152,7 +149,6 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
         model.addAttribute("deliveryAddress", cartData.getDeliveryAddress());
         model.addAttribute("deliveryMode", cartData.getDeliveryMode());
         model.addAttribute("paymentInfo", cartData.getPaymentInfo());
-        model.addAttribute("songbirdUrl", songbirdUrl);
 
         //final boolean is3dsEnabled = creditCardPaymentFacade.is3dsEnabled();
         boolean is3dsEnabled = false;
@@ -163,10 +159,6 @@ public class SummaryCheckoutStepController extends AbstractCheckoutStepControlle
             is3dsEnabled = true;
         }
         model.addAttribute("is3dsEnabled", is3dsEnabled);
-        if (is3dsEnabled && FLEX.equals(checkoutPciStrategy.getSubscriptionPciOption()))
-        {
-            model.addAttribute("jwt", creditCardPaymentFacade.createEnrollmentJwt());
-        }
 
         prepareVisaCheckoutData(model);
 

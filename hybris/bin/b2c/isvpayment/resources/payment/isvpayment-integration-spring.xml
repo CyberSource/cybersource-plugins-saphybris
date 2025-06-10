@@ -16,9 +16,6 @@
                    static-field="isv.cjl.module.util.ConfigurationConstants.Reporting.DAILY_CONVERSION_REPORT_TIME_SERVICE" />
     <util:constant id="APPLE_PAY_DECRYPTION_SERVICE"
                    static-field="isv.cjl.module.util.ConfigurationConstants.ApplePay.APPLE_PAY_DECRYPTION_SERVICE" />
-    <util:constant id="JWT_SERVICE"
-                   static-field="isv.cjl.module.util.ConfigurationConstants.Jwt.JWT_SERVICE" />
-
 
     <alias name="isv.sap.payment.defaultPaymentServiceExecutor" alias="isv.sap.payment.paymentServiceExecutor"/>
     <bean id="isv.sap.payment.defaultPaymentServiceExecutor" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
@@ -115,14 +112,6 @@
             <value type="java.lang.Class">isv.cjl.payment.service.applepay.ApplePayDecryptionService</value>
         </property>
         <property name="annotatedWith" ref="APPLE_PAY_DECRYPTION_SERVICE" />
-    </bean>
-
-    <alias name="isv.sap.payment.defaultJwtService" alias="isv.sap.payment.jwtService"/>
-    <bean id="isv.sap.payment.defaultJwtService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
-        <property name="beanClass">
-            <value type="java.lang.Class">isv.cjl.payment.service.jwt.JwtService</value>
-        </property>
-        <property name="annotatedWith" ref="JWT_SERVICE" />
     </bean>
 
     <alias name="isv.cjl.payment.utils.defaultPaymentHelper" alias="isv.cjl.payment.utils.paymentHelper"/>

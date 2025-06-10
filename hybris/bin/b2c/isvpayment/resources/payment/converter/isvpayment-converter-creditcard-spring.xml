@@ -31,6 +31,9 @@
     <alias name="isv.sap.payment.converter.creditcard.defaultRefundStandaloneRequestConverter" alias="isv.sap.payment.converter.creditcard.refundStandaloneRequestConverter"/>
     <bean id="isv.sap.payment.converter.creditcard.defaultRefundStandaloneRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.RefundStandaloneRequestConverter"/>
 
+    <alias name="isv.sap.payment.converter.creditcard.defaultSetUpRequestConverter" alias="isv.sap.payment.converter.creditcard.setUpRequestConverter"/>
+    <bean id="isv.sap.payment.converter.creditcard.defaultSetUpRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.SetUpRequestConverter"/>
+
     <alias name="isv.sap.payment.converter.creditcard.defaultEnrollmentRequestConverter" alias="isv.sap.payment.converter.creditcard.enrollmentRequestConverter"/>
     <bean id="isv.sap.payment.converter.creditcard.defaultEnrollmentRequestConverter" class="isv.sap.payment.service.executor.request.converter.creditcard.EnrollmentRequestConverter"/>
 

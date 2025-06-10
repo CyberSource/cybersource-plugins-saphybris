@@ -27,7 +27,7 @@ import de.hybris.platform.payment.model.PaymentTransactionModel
 import de.hybris.platform.servicelayer.dto.converter.Converter
 import de.hybris.platform.servicelayer.model.ModelService
 import de.hybris.platform.site.BaseSiteService
-import io.jsonwebtoken.Claims
+//import io.jsonwebtoken.Claims
 import org.junit.Test
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -43,7 +43,7 @@ import isv.cjl.payment.service.MerchantService
 import isv.cjl.payment.service.executor.PaymentServiceExecutor
 import isv.cjl.payment.service.executor.PaymentServiceResult
 import isv.cjl.payment.service.executor.request.PaymentServiceRequest
-import isv.cjl.payment.service.jwt.JwtService
+// import isv.cjl.payment.service.jwt.JwtService
 import isv.sap.payment.addon.facade.impl.CreditCardPaymentFacadeImpl
 import isv.sap.payment.model.IsvPaymentInfoModel
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel
@@ -60,7 +60,7 @@ class CreditCardPaymentFacadeSpec extends Specification
     PaymentResponseInterpretationStrategy paymentResponseInterpretationStrategy = Mock()
     CreateSubscriptionResultValidationStrategy createSubscriptionResultValidationStrategy = Mock()
     SiteConfigService siteConfigService = Mock()
-    JwtService jwtService = Mock()
+    // JwtService jwtService = Mock()
 
     MerchantService merchantService = Mock()
     SiteBaseUrlResolutionService siteBaseUrlResolutionService = Mock()
@@ -84,7 +84,7 @@ class CreditCardPaymentFacadeSpec extends Specification
                                                  cartService: cartService,
                                                  modelService: modelService,
                                                  siteConfigService: siteConfigService,
-                                                 jwtService: jwtService,
+                                                //  jwtService: jwtService,
                                                  paymentDataConverter: paymentDataConverter,
                                                  paymentSubscriptionResultDataConverter: paymentSubscriptionResultDataConverter,
                                                  checkoutCustomerStrategy: checkoutCustomerStrategy,
@@ -226,7 +226,7 @@ class CreditCardPaymentFacadeSpec extends Specification
         PaymentConstants.TransactionStatus.REJECT | _
         PaymentConstants.TransactionStatus.ERROR  | _
     }
-
+    /*
     @Test
     def 'authorizeFlexCreditCardPayment: Should return return false if jwt is not valid'()
     {
@@ -246,7 +246,8 @@ class CreditCardPaymentFacadeSpec extends Specification
 
         !result
     }
-
+*/
+/*
     @Test
     @Unroll
     def 'authorizeFlexCreditCardPayment: Should return return transaction result if jwt is valid'(ccAuthorizationTransactionStatus, expected)
@@ -274,7 +275,9 @@ class CreditCardPaymentFacadeSpec extends Specification
         PaymentConstants.TransactionStatus.REJECT | false
         PaymentConstants.TransactionStatus.ERROR  | false
     }
+     */
 
+/*
     @Test
     def 'createEnrollmentJwt should invoke CJL service'()
     {
@@ -290,6 +293,7 @@ class CreditCardPaymentFacadeSpec extends Specification
         1 * siteConfigService.getProperty('isv.payment.customer.3ds.jwt.api.key') >> '1234'
         1 * jwtService.createEnrollmentJwt('1234', orderData)
     }
+    */
 
     @Test
     def 'begin create payment should return empty data if null subscription'()

@@ -38,6 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static isv.sap.payment.constants.IsvPaymentConstants.ReasonCode.ENROLLED_CODE;
 import static isv.sap.payment.constants.IsvPaymentConstants.ReasonCode.NOT_ENROLLED_CODE;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
+import org.springframework.ui.Model;
 
 //OLH: For Reflected XSS fix. Used to sanitize some text
 import org.apache.commons.text.StringEscapeUtils;
@@ -79,7 +80,6 @@ public class FlexMicroformController extends AbstractCheckoutController
 
         session.setAttribute(FLEX_CAPTURE_CONTEXT_ATTRIBUTE, captureContext.get("captureContext"));
         
-        //RCH: To be extra safe, we can sanitize inputs to AjaxResponse.
         return AjaxResponse.success()
                 .put("captureContext", StringEscapeUtils.escapeHtml4(captureContext.get("captureContext")))
                 .put("clientLibrary", StringEscapeUtils.escapeHtml4(captureContext.get("clientLibrary")))
@@ -127,27 +127,77 @@ public class FlexMicroformController extends AbstractCheckoutController
 
         return REDIRECT_PREFIX + URL_PAYMENT_FAILED;
     }
+    @ResponseBody
+    @PostMapping(path = "/attemptPaymentSetUp", produces = MediaType.APPLICATION_JSON_VALUE)
+    public AjaxResponse setUp(
+            @RequestParam final String transientToken
+    )
+    {
+        checkArgument(StringUtils.isNotBlank(transientToken), "transientToken is missing");
+        String sanitizedTransientToken = StringEscapeUtils.escapeHtml4(transientToken);
+
+        try
+        {
+            final IsvPaymentTransactionEntryModel setUpTransaction = creditCardPaymentFacade
+                    .setUpCreditCard(sanitizedTransientToken);
+            final Map<String, String> properties = setUpTransaction.getProperties();
+            if("ACCEPT".equals(properties.get("decision")))
+            {
+                 return AjaxResponse.success()
+                    .put("decision",properties.get("decision") )
+                    .put("requestID", properties.get("requestID"))
+                    .put("deviceDataCollectionURL",properties.get("deviceDataCollectionURL"))
+                    .put("accessToken",properties.get("accessToken"))
+                    .put("referenceID",properties.get("referenceID"));
+            }
+            else
+            {
+                LOG.warn("Cart [{}]: Received invalid setup code [{}]. Payment should not proceed",
+                        cartService.getSessionCart().getCode(), properties.get("decision"));
+            }
+        }
+        catch (final Exception ex)
+        {
+            LOG.error("Cart [{}]: Exception when trying to enroll/authorize credit card",
+                    cartService.getSessionCart().getCode(), ex);
+        }
+        return AjaxResponse.fail()
+                .put("redirectUrl", URL_PAYMENT_FAILED);
+    }
 
     @ResponseBody
     @PostMapping(path = "/attemptPaymentWithoutValidation", produces = MediaType.APPLICATION_JSON_VALUE)
     public AjaxResponse payWithoutValidation(
             @RequestParam final String referenceId,
-            @RequestParam final String transientToken
-    )
+            @RequestParam final String transientToken,
+            @RequestParam final String browserCookieAccepted,
+            @RequestParam final String browserScreenHeight,
+            @RequestParam final String browserScreenWidth,
+            @RequestParam final String serviceReturnUrl,
+            final UriComponentsBuilder uriComponentsBuilder)
     {
+        final String targetOrigin = uriComponentsBuilder
+                .replacePath(null).replaceQuery(null).userInfo(null).fragment(null)
+                .build()
+                .toUriString();
         checkArgument(StringUtils.isNotBlank(referenceId), "referenceId is missing");
         checkArgument(StringUtils.isNotBlank(transientToken), "transientToken is missing");
-        // OLH: Sanitize the flexToken to prevent XSS
+        checkArgument(StringUtils.isNotBlank(browserCookieAccepted), "User browser cookie accepted is missing");
+        checkArgument(StringUtils.isNotBlank(browserScreenHeight), "User browser screen height is missing");
+        checkArgument(StringUtils.isNotBlank(browserScreenWidth), "User browser screen width is missing");
         String sanitizedTransientToken = StringEscapeUtils.escapeHtml4(transientToken);
         String sanitizedReferenceId = StringEscapeUtils.escapeHtml4(referenceId);
-
+        String sanitizedBrowserCookieAccepted = StringEscapeUtils.escapeHtml4(browserCookieAccepted);
+        String sanitizedBrowserScreenHeight = StringEscapeUtils.escapeHtml4(browserScreenHeight);
+        String sanitizedBrowserScreenWidth = StringEscapeUtils.escapeHtml4(browserScreenWidth);
+        String sanitizedServiceReturnUrl = StringEscapeUtils.escapeHtml4(serviceReturnUrl);
         try
         {
             final IsvPaymentTransactionEntryModel enrollmentTransaction = creditCardPaymentFacade
-                    .enrollCreditCard(sanitizedReferenceId, sanitizedTransientToken);//OLH: Use the sanitized values
+                    .enrollCreditCard(sanitizedReferenceId, sanitizedTransientToken, sanitizedBrowserCookieAccepted,sanitizedBrowserScreenHeight,sanitizedBrowserScreenWidth,targetOrigin+sanitizedServiceReturnUrl+"/checkout/payment/flex/payerAuthHelper");
             final Map<String, String> properties = enrollmentTransaction.getProperties();
 
-            final String responseCode = properties.get("payerAuthEnrollReplyReasonCode");
+            final String responseCode = properties.get("reasonCode");
             if (NOT_ENROLLED_CODE.equals(responseCode))
             {
                 final String redirectUrl = payAndPlaceOrder(transientToken, null, enrollmentTransaction);
@@ -160,9 +210,9 @@ public class FlexMicroformController extends AbstractCheckoutController
             {
                 return AjaxResponse.success()
                         .put("responseCode", ENROLLED_CODE)
-                        .put("acsUrl", properties.get("payerAuthEnrollReplyAcsURL"))
-                        .put("payload", properties.get("payerAuthEnrollReplyPaReq"))
-                        .put("transactionId", properties.get("payerAuthEnrollReplyAuthenticationTransactionID"));
+                        .put("stepUpUrl", properties.get("payerAuthEnrollReplyStepUpUrl"))
+                        .put("accessToken", properties.get("payerAuthEnrollReplyAccessToken"))
+                        .put("paReq", properties.get("payerAuthEnrollReplyPaReq"));
             }
             else
             {
@@ -180,17 +230,26 @@ public class FlexMicroformController extends AbstractCheckoutController
                 .put("redirectUrl", URL_PAYMENT_FAILED);
     }
 
+    @PostMapping(path = "/payerAuthHelper")
+    public String payerAuthHelper(@RequestParam(name = "TransactionId") final String transactionId, final Model model)
+    {
+        String sanitizedTransactionId = StringEscapeUtils.escapeHtml4(transactionId);
+        model.addAttribute("transactionId", sanitizedTransactionId);
+        return "addon:/isvpaymentaddon/pages/checkout/multi/payment/payerAuthHelper";    
+    }
+
     @ResponseBody
     @PostMapping(path = "/payWithValidation", produces = MediaType.APPLICATION_JSON_VALUE)
     public AjaxResponse pay(@RequestParam(name = "transientToken") final String transientToken,
-            @RequestParam(name = "authJwt") final String authJwt)
+            @RequestParam(name = "transactionId") final String transactionId)
     {
         checkArgument(StringUtils.isNotBlank(transientToken), "transientToken is missing");
-        checkArgument(StringUtils.isNotBlank(authJwt), "authJwt is missing");
-
+        checkArgument(StringUtils.isNotBlank(transactionId), "transactionId is missing");
+        String sanitizedTransientToken = StringEscapeUtils.escapeHtml4(transientToken);
+        String sanitizedTransactionId = StringEscapeUtils.escapeHtml4(transactionId);
         try
         {
-            final String redirectUrl = payAndPlaceOrder(transientToken, authJwt, null);
+            final String redirectUrl = payAndPlaceOrder(sanitizedTransientToken, sanitizedTransactionId, null);
 
             return AjaxResponse.success().put("redirectUrl", redirectUrl);
         }
@@ -202,16 +261,16 @@ public class FlexMicroformController extends AbstractCheckoutController
         }
     }
 
-    private String payAndPlaceOrder(final String transientToken, final String authJwt,
+    private String payAndPlaceOrder(final String transientToken, final String transactionId,
             final IsvPaymentTransactionEntryModel enrollmentTransaction)
     {
         final CartModel cart = cartService.getSessionCart();
 
         boolean authorizationSucceeded;
-        if (authJwt != null)
+        if (transactionId != null)
         {
             authorizationSucceeded = creditCardPaymentFacade
-                    .authorizeFlexCreditCardPayment(cart, transientToken, authJwt);
+                    .authorizeFlexCreditCardPayment(cart, transientToken, transactionId);
         }
         else if (enrollmentTransaction != null)
         {

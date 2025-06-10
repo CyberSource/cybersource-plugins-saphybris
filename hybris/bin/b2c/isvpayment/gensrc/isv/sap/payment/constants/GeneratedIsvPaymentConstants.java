@@ -120,6 +120,7 @@ public class GeneratedIsvPaymentConstants
 		public static class PaymentTransactionType
 		{
 			public static final String OPTIONS = "OPTIONS".intern();
+			public static final String SET_UP = "SET_UP".intern();
 			public static final String ENROLLMENT = "ENROLLMENT".intern();
 			public static final String VALIDATE = "VALIDATE".intern();
 			public static final String ORDER_SETUP = "ORDER_SETUP".intern();
