@@ -20,34 +20,19 @@ driver = {
 
 environments {
     dev {
-        hac = 'https://apparel-uk.local:9002/'
-        ukSite = 'https://apparel-uk.local:9002/'
-        deSite = 'https://apparel-de.local:9002/'
-        b2bSite = 'https://powertools.local:9002/'
+        ukSite = 'https://apparel-uk.local:9002/yb2cacceleratorstorefront/en/'
+        hac = 'https://localhost:9002/'
+        deSite = 'https://apparel-de.local:9002/yb2cacceleratorstorefront/de/'
+        b2bSite = 'https://powertools.local:9002/yb2bacceleratorstorefront/powertools/en/USD/'
     }
 
     remote {
-        hac =
-        ukSite =
-        deSite =
-        b2bSite =
+        ukSite = ''
+        hac = ''
+        deSite = ''
+        b2bSite = ''
     }
 }
 
-logins {
-    vco {
-        email = <Registered VCO email>
-        reject_email = <VCO email that should fail DM>
-        password = <Common password for both VCO accounts>
-        address = <Address Line 1 set up in VCO accounts>
-    }
-    paypal {
-        email = <Sandbox PayPal email>
-        password = <PayPal password>
-    }
-    google {
-        email = <Google account email>
-        password = <Google account password>
-    }
-}
+
 

@@ -9,5 +9,6 @@ class StatusModule extends Module
         cancelled { $('input', value: 'canceled') }
         failure { $('input', value: 'failed') }
         open { $('input', value: 'open') }
+        expired { $('input', value: 'expired') }
     }
 }

@@ -1,6 +1,7 @@
 package isv.sap.payment.spec.b2c.creditcard
 
 import org.junit.experimental.categories.Category
+import spock.lang.Unroll
 
 import isv.sap.payment.pageobject.page.LoginPage
 import isv.sap.payment.pageobject.page.OrderConfirmationPage
@@ -10,7 +11,7 @@ import isv.sap.payment.pageobject.page.checkout.B2cCheckoutPage
 import isv.sap.payment.spec.IsvGebSpec
 import isv.sap.payment.suite.Regression
 import isv.sap.payment.suite.Smoke
-import isv.sap.payment.suite.category.CreditCard
+import isv.sap.payment.suite.category.b2c.CreditCardSOP
 
 import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.*
 import static isv.sap.payment.data.constants.PaymentConstants.PaymentMethod.CREDIT_CARD
@@ -19,8 +20,9 @@ import static isv.sap.payment.data.constants.TransactionStatus.COMPLETED
 import static isv.sap.payment.data.constants.TransactionStatus.DECLINE
 import static isv.sap.payment.data.constants.TransactionType.AUTHORIZATION
 import static isv.sap.payment.data.constants.TransactionType.CAPTURE
+import static isv.sap.payment.data.constants.TransactionStatus.ORDER_SPLIT
 
-@Category(CreditCard)
+@Category(CreditCardSOP)
 class CreditCardSopSpec extends IsvGebSpec
 {
     void setupSpec()
@@ -31,15 +33,18 @@ class CreditCardSopSpec extends IsvGebSpec
     void setup()
     {
         useUkSite()
+        api.importDefaultCurrency(data)
     }
 
     @Regression
+    @Unroll
     'should create order for SOP (registered user)'()
     {
         given: 'A cart with product and addresses'
+        api.setPaymentAcceptanceTypeSale()
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 
         when: 'User starts Payment'
         to(B2cCheckoutPage)
@@ -57,23 +62,27 @@ class CreditCardSopSpec extends IsvGebSpec
 
         and: 'Order is completed'
         waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
-        waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+        waitFor { api.getOrderStatus(orderNumber) == ORDER_SPLIT }
 
         where: 'Following cards are used'
         type                    | number     | cvv
-        SOP_SELECTOR_VISA       | VISA       | PIN_3_DIGITS
-        SOP_SELECTOR_MASTERCARD | MASTERCARD | PIN_3_DIGITS
-        SOP_SELECTOR_AMEX       | AMEX       | PIN_4_DIGITS
-        SOP_SELECTOR_MAESTRO    | MAESTRO    | PIN_3_DIGITS
-    }
+          SOP_SELECTOR_VISA       | VISA       | PIN_3_DIGITS
+          SOP_SELECTOR_MASTERCARD | MASTERCARD | PIN_3_DIGITS
+          SOP_SELECTOR_AMEX       | AMEX       | PIN_4_DIGITS
+          SOP_SELECTOR_MAESTRO    | MAESTRO    | PIN_3_DIGITS
+          SOP_SELECTOR_DINERS     | DINERS     | PIN_3_DIGITS
+          SOP_SELECTOR_DISCOVER   | DISCOVER   | PIN_3_DIGITS
+          SOP_SELECTOR_CARTESBANCAIRES | CARTESBANCAIRES |PIN_3_DIGITS
+   }
 
     @Smoke
     'should create order for SOP with 3d secure 2'()
     {
         given: 'A cart with product and addresses'
+        api.setPaymentAcceptanceTypeSale()
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 
         when: 'User starts Payment'
         to(B2cCheckoutPage)
@@ -95,16 +104,17 @@ class CreditCardSopSpec extends IsvGebSpec
 
         and: 'Order is completed'
         waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
-        waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+        waitFor { api.getOrderStatus(orderNumber) == ORDER_SPLIT }
     }
 
     @Regression
     'should not create order for SOP with wrong 3d secure 2'()
     {
         given: 'A cart with product and addresses'
+        api.setPaymentAcceptanceTypeSale()
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 
         when: 'User starts Payment'
         to(B2cCheckoutPage)
@@ -129,6 +139,7 @@ class CreditCardSopSpec extends IsvGebSpec
     'should create order for SOP (guest user)'()
     {
         given: 'Checkout is started and shipping address and method is selected'
+        api.setPaymentAcceptanceTypeSale()
         to(ProductDescriptionPage, data.product)
                 .addProductToCart()
                 .checkoutAsGuest()
@@ -160,7 +171,7 @@ class CreditCardSopSpec extends IsvGebSpec
         given: 'A cart with product and addresses'
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 
         when: 'User starts Payment'
         to(B2cCheckoutPage)

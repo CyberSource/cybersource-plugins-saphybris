@@ -1,3 +1,4 @@
+
 package isv.sap.payment.driver
 
 import org.openqa.selenium.WebDriver
@@ -6,40 +7,45 @@ import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 
 @SuppressWarnings('UnusedObject')
-class DriverFactory
-{
-    WebDriver createDriver(browser)
-    {
-        switch (browser)
-        {
-            case ('chrome'):
-                new ChromeDriver(createChromeOptions())
-                break
-            case ('chrome-headless'):
-                new ChromeDriver(createChromeOptions(true))
-                break
-            case ('firefox'):
-                new FirefoxDriver()
-                break
+class DriverFactory {
+
+    WebDriver createDriver(String browser) {
+        String nullDevice = System.getProperty("os.name").toLowerCase().contains("win") ? "NUL" : "/dev/null"
+        System.setProperty("webdriver.chrome.silentOutput", "true")
+        System.setProperty("webdriver.chrome.logfile", nullDevice)
+
+        switch (browser) {
+            case 'chrome':
+                return new ChromeDriver(createChromeOptions())
+            case 'chrome-headless':
+                return new ChromeDriver(createChromeOptions(true))
+            case 'firefox':
+                return new FirefoxDriver()
             default:
-                new ChromeDriver(createChromeOptions())
+                return new ChromeDriver(createChromeOptions())
         }
     }
 
-    private ChromeOptions createChromeOptions(boolean headless = false)
-    {
+    private ChromeOptions createChromeOptions(boolean headless = false) {
         ChromeOptions options = new ChromeOptions()
-        //AGRESSIVE: options.setPageLoadStrategy(PageLoadStrategy.NONE); // https://www.skptricks.com/2018/08/timed-out-receiving-message-from-renderer-selenium.html
-        //https://stackoverflow.com/questions/51959986/how-to-solve-selenium-chromedriver-timed-out-receiving-message-from-renderer-exc
-        options.addArguments('start-maximized') // https://stackoverflow.com/a/26283818/1689770
-        options.addArguments('enable-automation') // https://stackoverflow.com/a/43840128/1689770
-        options.addArguments('--no-sandbox') //https://stackoverflow.com/a/50725918/1689770
-        options.addArguments('--disable-infobars') //https://stackoverflow.com/a/43840128/1689770
-        options.addArguments('--disable-dev-shm-usage') //https://stackoverflow.com/a/50725918/1689770
-        options.addArguments('--disable-browser-side-navigation') //https://stackoverflow.com/a/49123152/1689770
-        options.addArguments('--disable-gpu')
-        options.addArguments('--window-size=1920,1080')
-        options.setHeadless(headless)
-        options
+        options.addArguments("--ignore-certificate-errors")         // Ignores SSL certificate errors
+        options.addArguments("start-maximized")                     // Starts browser maximized (deprecated; may not work in headless mode)
+        options.addArguments("enable-automation")                   // Enables automation-related switches
+        options.addArguments("--no-sandbox")                        // Disables sandboxing (required in some CI environments)
+        options.addArguments("--disable-infobars")                  // Disables "Chrome is being controlled by automated test software" infobar
+        options.addArguments("--disable-dev-shm-usage")             // Uses disk instead of /dev/shm for shared memory (helps in Docker)
+        options.addArguments("--disable-browser-side-navigation")   // Disables side navigation (older workaround for bugs)
+        options.addArguments("--disable-gpu")                       // Disables GPU hardware acceleration (important for headless in some environments)
+        options.addArguments("--window-size=1920,1080")             // Sets a specific window size
+
+        if (headless) {
+            // Enables headless mode using the new headless implementation
+            options.addArguments("--headless=new")
+        }
+        // Hides the "Chrome is being controlled by automated test software" message
+        options.setExperimentalOption("excludeSwitches", ["enable-automation"])
+        // Prevents detection of automation by disabling Blink feature flags related to automation
+        options.addArguments("--disable-blink-features=AutomationControlled")
+        return options
     }
 }

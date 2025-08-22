@@ -11,7 +11,7 @@ import isv.sap.payment.pageobject.page.paypal.PayPalPage
 import isv.sap.payment.spec.IsvGebSpec
 import isv.sap.payment.suite.Regression
 import isv.sap.payment.suite.Smoke
-import isv.sap.payment.suite.category.PayPal
+import isv.sap.payment.suite.category.b2b.PayPal
 
 import static isv.sap.payment.data.constants.PaymentConstants.PaymentMethod.PAY_PAL
 import static isv.sap.payment.data.constants.TransactionStatus.ACCEPT
@@ -23,6 +23,8 @@ import static isv.sap.payment.data.constants.TransactionType.CAPTURE
 import static isv.sap.payment.data.constants.TransactionType.CHECK_STATUS
 import static isv.sap.payment.data.constants.TransactionType.CREATE_SESSION
 import static isv.sap.payment.data.constants.TransactionType.ORDER_SETUP
+import static isv.sap.payment.data.constants.TransactionStatus.ORDER_SPLIT
+import static isv.sap.payment.data.constants.TransactionStatus.WAITING_FOR_PAYMENT
 
 @Category(PayPal)
 class PayPalSpec extends IsvGebSpec
@@ -33,11 +35,12 @@ class PayPalSpec extends IsvGebSpec
     }
 
     @Smoke
-    'should create order'()
+    'should create order with Sale'()
     {
         given: 'The checkout is started'
+        api.setPaymentAcceptanceTypeSale()
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
         to(ProductDescriptionPage, data.product)
                 .addProductToCart()
                 .checkoutB2B()
@@ -67,13 +70,53 @@ class PayPalSpec extends IsvGebSpec
         and: 'Order is completed'
         waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
         api.getTransactionEntryPaymentStatus(data.baseStore, orderNumber, CAPTURE) == SETTLED
-        waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+        waitFor { api.getOrderStatus(orderNumber) == ORDER_SPLIT }
+    }
+
+    @Regression
+    'should create order with Auth'()
+    {
+        given: 'The checkout is started'
+        api.setPaymentAcceptanceTypeAuth()
+        to(LoginPage)
+                .login(data.email, data.loginCode)
+        to(ProductDescriptionPage, data.product)
+                .addProductToCart()
+                .checkoutB2B()
+                .proceedToPayPalPayment()
+                .populateShippingAndBilling(data)
+
+        when: 'I pay with PayPal'
+        at(B2bCheckoutPage)
+                .placeOrder()
+
+        and: 'Accepts Payment'
+        at(PayPalPage)
+                .loginToPayPal(credentials.paypal)
+                .acceptPayment()
+
+        then: 'Order is created'
+        String orderNumber = at(OrderConfirmationPage).extractOrderNumber()
+
+        and: 'Transactions are created'
+        api.getTransactionPaymentProvider(orderNumber) == PAY_PAL
+        api.getTransactionEntryStatus(orderNumber, CREATE_SESSION) == ACCEPT
+        api.getTransactionEntryStatus(orderNumber, CHECK_STATUS) == ACCEPT
+        api.getTransactionEntryStatus(orderNumber, ORDER_SETUP) == ACCEPT
+        api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT
+        api.getTransactionEntryPaymentStatus(data.baseStore, orderNumber, AUTHORIZATION) == AUTHORIZED
+
+        and: 'Order is completed'
+        waitFor { api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT }
+        api.getTransactionEntryPaymentStatus(data.baseStore, orderNumber, AUTHORIZATION) == AUTHORIZED
+        waitFor { api.getOrderStatus(orderNumber) == WAITING_FOR_PAYMENT }
     }
 
     @Regression
     'should create order for asm'()
     {
         given: 'The checkout is started with ASM'
+        api.setPaymentAcceptanceTypeSale()
         to(AsmLoginPage)
                 .loginToAsm(credentials.asm)
                 .selectUser(data.email)
@@ -114,7 +157,7 @@ class PayPalSpec extends IsvGebSpec
     {
         given: 'The checkout is started'
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
         to(ProductDescriptionPage, data.product)
                 .addProductToCart()
                 .checkoutB2B()

@@ -45,14 +45,6 @@
         </property>
     </bean>
 
-    <alias name="isv.sap.payment.defaultFlexCredentials" alias="isv.sap.payment.flexCredentials" />
-    <bean id="isv.sap.payment.defaultFlexCredentials" class="com.cybersource.flex.sdk.CredentialsImpl">
-        <constructor-arg name="environment" value="#{configurationService.configuration.getProperty('isv.payment.customer.flex.microform.api.env')}" />
-        <constructor-arg name="mid" value="#{configurationService.configuration.getProperty('isv.payment.customer.payment.type.CREDIT_CARD.merchantId')}" />
-        <constructor-arg name="keyId" value="#{configurationService.configuration.getProperty('isv.payment.customer.flex.microform.api.key.id')}"/>
-        <constructor-arg name="sharedSecret" value="#{configurationService.configuration.getProperty('isv.payment.customer.flex.microform.shared.secret').toCharArray()}"/>
-    </bean>
-
     <alias name="isv.sap.payment.defaultFlexService" alias="isv.sap.payment.flexService"/>
     <bean id="isv.sap.payment.defaultFlexService" class="isv.sap.payment.injector.GuiceFactoryBean" lazy-init="true">
         <property name="beanClass">

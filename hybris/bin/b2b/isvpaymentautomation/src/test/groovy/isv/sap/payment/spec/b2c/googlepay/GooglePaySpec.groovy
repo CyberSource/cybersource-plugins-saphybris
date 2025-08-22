@@ -2,6 +2,7 @@ package isv.sap.payment.spec.b2c.googlepay
 
 import org.junit.experimental.categories.Category
 import spock.lang.IgnoreIf
+import spock.lang.Unroll
 
 import isv.sap.payment.pageobject.page.LoginPage
 import isv.sap.payment.pageobject.page.OrderConfirmationPage
@@ -12,11 +13,12 @@ import isv.sap.payment.pageobject.page.googlepay.GooglePayPage
 import isv.sap.payment.spec.IsvGebSpec
 import isv.sap.payment.suite.Regression
 import isv.sap.payment.suite.Smoke
-import isv.sap.payment.suite.category.GooglePay
+import isv.sap.payment.suite.category.b2c.GooglePay
 
 import static isv.sap.payment.data.constants.PaymentConstants.PaymentMethod.GOOGLE_PAY
 import static isv.sap.payment.data.constants.TransactionStatus.ACCEPT
-import static isv.sap.payment.data.constants.TransactionStatus.COMPLETED
+import static isv.sap.payment.data.constants.TransactionStatus.PAYMENT_AUTHORIZED
+import static isv.sap.payment.data.constants.TransactionStatus.ORDER_SPLIT
 import static isv.sap.payment.data.constants.TransactionType.AUTHORIZATION
 import static isv.sap.payment.data.constants.TransactionType.CAPTURE
 
@@ -27,15 +29,18 @@ class GooglePaySpec extends IsvGebSpec
     void setup()
     {
         useUkSite()
+        api.importDefaultCurrency(data)
     }
 
     @Smoke
+    @Unroll
     'should create order for registered user'()
     {
         given: 'A cart with product and addresses'
+        api.setPaymentAcceptanceTypeSale()
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 
         when: 'User submits GooglePay order'
         to(B2cCheckoutPage)
@@ -44,11 +49,10 @@ class GooglePaySpec extends IsvGebSpec
                 .buyWithGooglePay()
 
         and: 'Selects google pay'
-        withWindow({ title.toUpperCase().contains('GOOGLE') }) {
-            at(GooglePayPage)
-                    .loginToGoogle(credentials.google)
-                    .acceptPayment()
-        }
+        def googlePayPage = page(GooglePayPage)
+        googlePayPage. switchToGooglePayPopup()
+        googlePayPage.loginToGoogle(credentials.google)
+        googlePayPage.acceptPayment()
 
         then: 'Order is created'
         String orderNumber = at(OrderConfirmationPage).extractOrderNumber()
@@ -59,13 +63,14 @@ class GooglePaySpec extends IsvGebSpec
 
         and: 'Order is completed'
         waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
-        waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+        waitFor { api.getOrderStatus(orderNumber) == ORDER_SPLIT }
     }
 
     @Regression
     'should create order for guest user'()
     {
         given: 'Checkout for guest user is started'
+        api.setPaymentAcceptanceTypeAuth()
         to(ProductDescriptionPage, data.product)
                 .addProductToCart()
                 .checkoutAsGuest()
@@ -79,11 +84,10 @@ class GooglePaySpec extends IsvGebSpec
                 .buyWithGooglePay()
 
         and: 'Selects google pay'
-        withWindow({ title.toUpperCase().contains('GOOGLE') }) {
-            at(GooglePayPage)
-                    .loginToGoogle(credentials.google)
-                    .acceptPayment()
-        }
+        def googlePayPage = page(GooglePayPage)
+        googlePayPage.switchToGooglePayPopup()
+        googlePayPage.loginToGoogle(credentials.google)
+        googlePayPage.acceptPayment()
 
         then: 'Order is created'
         String orderNumber = at(OrderConfirmationPage).extractOrderNumber()
@@ -93,14 +97,16 @@ class GooglePaySpec extends IsvGebSpec
         api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT
 
         and: 'Order is completed'
-        waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
-        waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+        waitFor { api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT }
+        waitFor { api.getOrderStatus(orderNumber) == PAYMENT_AUTHORIZED }
     }
 
     @Regression
+    @Unroll
     'should complete order from asm'()
     {
         given: 'A cart with product and addresses'
+        api.setPaymentAcceptanceTypeSale()
         api.importCart(data)
         to(AsmLoginPage)
                 .loginToAsm(credentials.asm)
@@ -128,6 +134,6 @@ class GooglePaySpec extends IsvGebSpec
 
         and: 'Order is completed'
         waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
-        waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+        waitFor { api.getOrderStatus(orderNumber) == ORDER_SPLIT }
     }
 }

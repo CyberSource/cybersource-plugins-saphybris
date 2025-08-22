@@ -2,15 +2,15 @@ package isv.sap.payment.util.adminconsole
 
 import groovy.text.GStringTemplateEngine
 
-class TemplatePopulator
-{
+class TemplatePopulator {
 
-    static populateTemplate(String templateFile, Map map)
-    {
-        String templateContent = getClass().getResource(templateFile).text
-
+    static populateTemplate(String templateFile, Map map) {
+        def resource = TemplatePopulator.class.getResource(templateFile)
+        if (resource == null) {
+            throw new IllegalArgumentException("Template file not found: $templateFile")
+        }
+        String templateContent = resource.text
         GStringTemplateEngine engine = new GStringTemplateEngine()
-        engine.createTemplate(templateContent).make(map).toString()
+        return engine.createTemplate(templateContent).make(map).toString()
     }
 }
-

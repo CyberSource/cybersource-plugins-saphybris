@@ -11,7 +11,6 @@ class PaymentConstants
     {
         public static final String PAY_PAL = 'PAY_PAL'
         public static final String CREDIT_CARD = 'CREDIT_CARD'
-        public static final String VISA_CHECKOUT = 'VISA_CHECKOUT'
         public static final String ALTERNATIVE_PAYMENT = 'ALTERNATIVE_PAYMENT'
         public static final String GOOGLE_PAY = 'GOOGLE_PAY'
     }
@@ -30,7 +29,10 @@ class PaymentConstants
         final static String MASTERCARD = '5555555555554444'
         final static String AMEX = '378282246310005'
         final static String MAESTRO = '50339619890917'
-
+        final static String DISCOVER = '6011000991543426'
+        final static String JCB = '3550998650131033'
+        final static String DINERS = '36134900145645'
+        final static String CARTESBANCAIRES ='4360000001000005'
         // Test card for 3DS 2.0
         final static String VISA_3DS2_VALID = '4000000000001091'
         final static String VISA_3DS2_NOSTEPUP_VALID = '4456530000001005'
@@ -53,33 +55,35 @@ class PaymentConstants
         final static String DISCOVER_3DS2_INVALID = '6011000000001101'
         final static String DISCOVER_3DS2_NOSTEPUP_INVALID = '6011000000001010'
 
-        final static String HOP_SELECTOR_VISA = 'card_type_001'
-        final static String HOP_SELECTOR_MASTERCARD = 'card_type_002'
-        final static String HOP_SELECTOR_AMEX = 'card_type_003'
-        final static String HOP_SELECTOR_MAESTRO = 'card_type_024'
+        final static String HOP_SELECTOR_VISA = '001'
+        final static String HOP_SELECTOR_MASTERCARD = '002'
+        final static String HOP_SELECTOR_AMEX = '003'
+        final static String HOP_SELECTOR_MAESTRO = '042'
+        final static String HOP_SELECTOR_DISCOVER = '004'
+        final static String HOP_SELECTOR_DINERS = '005'
+        final static String HOP_SELECTOR_JCB = '007'
 
         final static String SOP_SELECTOR_VISA = '001'
         final static String SOP_SELECTOR_MASTERCARD = '002'
         final static String SOP_SELECTOR_AMEX = '003'
         final static String SOP_SELECTOR_DINERS = '005'
         final static String SOP_SELECTOR_MAESTRO = '024'
+        final static String SOP_SELECTOR_DISCOVER = '004'
+        final static String SOP_SELECTOR_CARTESBANCAIRES = '036'
 
         final static String PIN_3_DIGITS = '123'
         final static String PIN_4_DIGITS = '1234'
 
-        static final String EXP_DATE = '12/25'
+        static final String EXP_DATE = '12/27'
         static final String EXP_MONTH = '12'
-        static final String EXP_YEAR = '2025'
+        static final String EXP_YEAR = '2027'
 
         static final String CVV = '111'
     }
 
     static class Klarna
     {
-        public static final String PENDING_ACCEPT_EMAIL = 'test+pend-accept-5@test.com'
-        public static final String PENDING_REJECT_EMAIL = 'test+pend-reject-5@test.com'
-        public static final String PAYMENT_NOT_AVAILABLE_EMAIL = 'test+red@test.com'
-        public static final String DENIED_EMAIL = 'test+denied@test.com'
+        public static final String ENTRY_CODE ='123456'
     }
 
     static class Sofort

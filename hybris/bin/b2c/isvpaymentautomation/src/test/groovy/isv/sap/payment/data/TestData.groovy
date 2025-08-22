@@ -12,8 +12,9 @@ class TestData
     String city
     String postCode
     String phoneNumber
+    String state
     String dateOfBirth
-    String password
+    String loginCode
     String today
     String paymentCode
     String cartGuid

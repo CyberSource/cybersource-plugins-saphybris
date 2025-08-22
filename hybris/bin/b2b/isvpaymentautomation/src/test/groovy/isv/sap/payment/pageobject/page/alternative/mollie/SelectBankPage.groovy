@@ -11,6 +11,7 @@ class SelectBankPage extends Page
     static content = {
         ingBank(to: PaymentPage) { $('button.grid-button-ideal-INGBNL2A') }
         cancel(to: B2cCheckoutPage) { $('#cancel-button').children('button') }
+
     }
 
     PaymentPage selectINGBank()

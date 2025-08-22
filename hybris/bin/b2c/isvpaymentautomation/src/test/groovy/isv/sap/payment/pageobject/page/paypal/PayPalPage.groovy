@@ -28,11 +28,12 @@ class PayPalPage extends Page
 
         email(wait: true) { $('#email') }
         nextBtn(required: false) { $('#btnNext') }
-        password(wait: true) { $('#password') }
+        CodeTopaypal(wait: true) { $('#password') }
         logInBtn { $('#btnLogin') }
+        cancel(wait: true) { $("a[data-testid='cancel-link']") }
 
-        cancel(wait: true) { $('a.CancelLink_cancel-link_2uud4') }
-        continueBtn(required: false, wait: true) { $('#payment-submit-btn') }
+        continueBtn(required: false, wait: true) { $('button[data-id="payment-submit-btn"]') }
+
         selectPaymentContinueBtn(required: false, wait: true) { $('button.continueButton') }
     }
 
@@ -42,6 +43,7 @@ class PayPalPage extends Page
         waitFor { !spinner.displayed }
 
         if (acceptCookies)
+
         {
             acceptCookies.click()
         }
@@ -61,10 +63,10 @@ class PayPalPage extends Page
             if (nextBtn)
             {
                 nextBtn.click()
-            } // for cases where email and password are separated
+            }
 
-            waitFor { password.click() }
-            password = payPalCredentials.password
+            waitFor { CodeTopaypal.click() }
+            CodeTopaypal = payPalCredentials.usercode
 
             logInBtn.click()
         }
@@ -74,16 +76,14 @@ class PayPalPage extends Page
 
     OrderConfirmationPage acceptPayment()
     {
-        waitFor { shippingDetails.displayed }
         continueBtn << Keys.RETURN
-
         browser.at(OrderConfirmationPage)
     }
 
     B2cCheckoutPage cancelPayment()
     {
+        waitFor { cancel.displayed }
         cancel << Keys.RETURN
-
         browser.at(B2cCheckoutPage)
     }
 }

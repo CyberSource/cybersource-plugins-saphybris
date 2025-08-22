@@ -1,0 +1,2 @@
+INSERT_UPDATE Customer; uid[unique = true]; name           ; password       ; &customerRef
+                      ; $email       ; $firstName $lastName ; $loginCode ; customer

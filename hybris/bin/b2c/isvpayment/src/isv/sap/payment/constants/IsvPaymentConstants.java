@@ -94,6 +94,8 @@ public final class IsvPaymentConstants extends GeneratedIsvPaymentConstants //NO
 
         public static final String ENROLLED_CODE = "475";
 
+        public static final String REVIEW_CODE = "480";
+
         private ReasonCode()
         {
             //empty

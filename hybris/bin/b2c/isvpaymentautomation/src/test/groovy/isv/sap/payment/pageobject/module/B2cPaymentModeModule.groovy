@@ -14,10 +14,10 @@ class B2cPaymentModeModule extends Module
         sofort { $('#paymentMode_4_sofort') }
         bancontact { $('#paymentMode_5_bancontact') }
         aliPay { $('#paymentMode_6_alipay') }
-        visaCheckout { $('#paymentMode_7_visacheckout') }
         klarna { $('#paymentMode_8_klarna') }
         klarnaFrame { $('#klarna-credit-main') }
         googlePay { $('#paymentMode_10_googlepay') }
+        weChatPay{$('#paymentMode_11_wechatpay_en')}
     }
 
     B2cCheckoutPage selectCreditCard()
@@ -50,10 +50,16 @@ class B2cPaymentModeModule extends Module
         browser.at(B2cCheckoutPage)
     }
 
+    B2cCheckoutPage selectWeChatPay()
+    {
+        weChatPay.click()
+
+        browser.at(B2cCheckoutPage)
+    }
+
     B2cCheckoutPage selectBancontact()
     {
         bancontact.click()
-
         browser.at(B2cCheckoutPage)
     }
 
@@ -64,19 +70,12 @@ class B2cPaymentModeModule extends Module
         browser.at(B2cCheckoutPage)
     }
 
-    B2cCheckoutPage selectVisaCheckout()
-    {
-        visaCheckout.click()
-
-        browser.at(B2cCheckoutPage)
-    }
-
     B2cCheckoutPage selectKlarna()
     {
         klarna.click()
-        waitFor { klarnaFrame }
-        sleep(5000)
+        sleep(20000)
         browser.at(B2cCheckoutPage)
+
     }
 
     B2cCheckoutPage selectGooglePay()

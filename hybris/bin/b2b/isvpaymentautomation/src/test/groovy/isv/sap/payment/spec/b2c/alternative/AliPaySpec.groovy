@@ -10,7 +10,7 @@ import isv.sap.payment.pageobject.page.checkout.B2cCheckoutPage
 import isv.sap.payment.spec.IsvGebSpec
 import isv.sap.payment.suite.Regression
 import isv.sap.payment.suite.Smoke
-import isv.sap.payment.suite.category.AliPay
+import isv.sap.payment.suite.category.b2c.AliPay
 
 import static isv.sap.payment.data.constants.PaymentConstants.AliPay.ID_FOR_ABANDONED
 import static isv.sap.payment.data.constants.PaymentConstants.AliPay.ID_FOR_COMPLETED
@@ -22,6 +22,7 @@ import static isv.sap.payment.data.constants.TransactionStatus.CANCELLED
 import static isv.sap.payment.data.constants.TransactionStatus.COMPLETED
 import static isv.sap.payment.data.constants.TransactionStatus.REJECT
 import static isv.sap.payment.data.constants.TransactionStatus.WAITING_FOR_PAYMENT
+import static isv.sap.payment.data.constants.TransactionStatus.ORDER_SPLIT
 import static isv.sap.payment.data.constants.TransactionType.CHECK_STATUS
 import static isv.sap.payment.data.constants.TransactionType.INITIATE
 
@@ -32,16 +33,18 @@ class AliPaySpec extends IsvGebSpec
     void setup()
     {
         useDeSite()
+        api.importDefaultCurrency(data)
     }
 
     @Smoke
     'should create order for registered user'()
     {
         given: 'A cart with product and addresses'
+        api.setPaymentAcceptanceTypeSale()
         api.setAliPayStatus(ID_FOR_COMPLETED)
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
         to(ProductDescriptionPage, data.product)
                 .addProductToCart()
                 .checkoutB2B()
@@ -61,13 +64,14 @@ class AliPaySpec extends IsvGebSpec
 
         and: 'Order is completed'
         waitFor { api.getTransactionEntryStatus(orderNumber, CHECK_STATUS) == ACCEPT }
-        waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+        waitFor { api.getOrderStatus(orderNumber) == ORDER_SPLIT }
     }
 
     @Regression
     'should create order for guest user'()
     {
         given: 'Checkout for guest user is started'
+        api.setPaymentAcceptanceTypeSale()
         api.setAliPayStatus(ID_FOR_COMPLETED)
         to(ProductDescriptionPage, data.product)
                 .addProductToCart()
@@ -90,13 +94,14 @@ class AliPaySpec extends IsvGebSpec
 
         and: 'Order is completed'
         waitFor { api.getTransactionEntryStatus(orderNumber, CHECK_STATUS) == ACCEPT }
-        waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+        waitFor { api.getOrderStatus(orderNumber) == ORDER_SPLIT }
     }
 
     @Regression
     'should create order from asm'()
     {
         given: 'A cart with product and addresses'
+        api.setPaymentAcceptanceTypeSale()
         api.setAliPayStatus(ID_FOR_COMPLETED)
         api.importCart(data)
         to(AsmLoginPage)
@@ -125,10 +130,11 @@ class AliPaySpec extends IsvGebSpec
     'should not complete order for error status from AliPay'()
     {
         given: 'A cart with product and addresses'
+        api.setPaymentAcceptanceTypeSale()
         api.setAliPayStatus(ID_FOR_ERROR)
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 
         when: 'User submits AliPay order'
         to(B2cCheckoutPage)
@@ -152,10 +158,11 @@ class AliPaySpec extends IsvGebSpec
     'should not complete order for abandoned status from AliPay'()
     {
         given: 'A cart with product and addresses'
+        api.setPaymentAcceptanceTypeSale()
         api.setAliPayStatus(ID_FOR_ABANDONED)
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 
         when: 'User submits AliPay order'
         to(B2cCheckoutPage)
@@ -179,10 +186,11 @@ class AliPaySpec extends IsvGebSpec
     'should not complete order for pending status from AliPay'()
     {
         given: 'A cart with product and addresses'
+        api.setPaymentAcceptanceTypeSale()
         api.setAliPayStatus(ID_FOR_PENDING)
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 
         when: 'User submits AliPay order'
         to(B2cCheckoutPage)
