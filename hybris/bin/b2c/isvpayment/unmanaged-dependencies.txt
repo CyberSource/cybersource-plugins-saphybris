@@ -1,1 +1,1 @@
-isv-payment-api-3.0.6.jar
+isv-payment-api-3.0.7.jar

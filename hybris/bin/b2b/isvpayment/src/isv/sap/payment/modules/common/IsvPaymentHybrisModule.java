@@ -3,7 +3,6 @@ package isv.sap.payment.modules.common;
 import java.util.List;
 import javax.annotation.Resource;
 
-import com.cybersource.flex.sdk.Credentials;
 import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -27,6 +26,8 @@ import static com.google.inject.name.Names.named;
 import static isv.cjl.module.util.ConfigurationConstants.PAYMENT_WRAPPER_EXECUTOR;
 import static isv.cjl.module.util.ConfigurationConstants.REPORT_WRAPPER_EXECUTOR;
 import static isv.cjl.payment.constants.PaymentConstants.ConfigurationResolvers.CUSTOM;
+import isv.cjl.payment.service.flex.DefaultFlexService;
+import isv.cjl.payment.service.flex.FlexService;
 
 @EnableGuiceModules
 public class IsvPaymentHybrisModule extends PaymentModule
@@ -49,9 +50,6 @@ public class IsvPaymentHybrisModule extends PaymentModule
     @Resource(name = "isv.sap.payment.populator.l3.omniPayVisaPopulator")
     private Populator omniPayVisaPopulatorL3;
 
-    @Resource(name = "isv.sap.payment.flexCredentials")
-    private Credentials flexCredentials;
-
     @Override
     protected void configure()
     {
@@ -69,8 +67,7 @@ public class IsvPaymentHybrisModule extends PaymentModule
         }, named(REPORT_WRAPPER_EXECUTOR)))
                 .toInstance(new TenantAwareHystrixWrapperExecutor<String>("isvReportingGroup"));
 
-        bind(Credentials.class).annotatedWith(named("isv.sap.payment.flexCredentials"))
-                .toInstance(flexCredentials);
+        bind(FlexService.class).to(DefaultFlexService.class);
     }
 
     @Provides

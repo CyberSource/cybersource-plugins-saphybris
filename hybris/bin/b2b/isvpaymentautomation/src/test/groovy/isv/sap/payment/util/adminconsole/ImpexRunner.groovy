@@ -23,7 +23,6 @@ class ImpexRunner
     void fromTemplate(String fileName, Map map)
     {
         GString impexFile = "$RESOURCE_FOLDER/${fileName}"
-
         String impex = TemplatePopulator.populateTemplate(impexFile, map)
         run(impex)
     }

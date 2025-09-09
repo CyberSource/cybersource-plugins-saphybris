@@ -12,10 +12,10 @@ class LoginPage extends Page
         loginForm(wait: true) { module LoginForm }
     }
 
-    void login(String user, String password)
+    void login(String user, String loginCode)
     {
         loginForm.userName = user
-        loginForm.password = password
+        loginForm.password = loginCode
         loginForm.login.click()
     }
 }

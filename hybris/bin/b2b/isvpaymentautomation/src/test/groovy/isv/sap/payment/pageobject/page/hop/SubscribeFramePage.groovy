@@ -14,7 +14,7 @@ class SubscribeFramePage extends Page
     static atCheckWaiting = true
     static at = { $('#notinpaymentflow') }
     static content = {
-        cardType { type -> $(id: type) }
+        cardType { type -> $("select#card_type option", value: type) }
         cardNumber { $('input#card_number') }
         cardCvn(wait: true) { $('input#card_cvn') }
         expirationMonth { $('select#card_expiry_month') }

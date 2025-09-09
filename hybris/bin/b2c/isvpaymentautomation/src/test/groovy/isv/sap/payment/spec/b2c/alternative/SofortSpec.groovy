@@ -11,7 +11,7 @@ import isv.sap.payment.pageobject.page.checkout.B2cCheckoutPage
 import isv.sap.payment.spec.IsvGebSpec
 import isv.sap.payment.suite.Regression
 import isv.sap.payment.suite.Smoke
-import isv.sap.payment.suite.category.Sofort
+import isv.sap.payment.suite.category.b2c.Sofort
 
 import static isv.sap.payment.data.constants.PaymentConstants.PaymentMethod.ALTERNATIVE_PAYMENT
 import static isv.sap.payment.data.constants.PaymentConstants.Sofort.ACCOUNT_NUMBER
@@ -37,7 +37,7 @@ class SofortSpec extends IsvGebSpec
         given: 'A cart with product and addresses'
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 
         when: 'User places Sofort order'
         to(B2cCheckoutPage)

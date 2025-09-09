@@ -2,11 +2,15 @@ package isv.sap.payment.util.api
 
 import isv.sap.payment.util.adminconsole.AdminConsole
 import isv.sap.payment.data.TestData
+import jodd.lagarto.dom.CData
+import groovy.text.GStringTemplateEngine
 
 class AdminApi
 {
     private static final GET_PAYMENT_STATUS_SCRIPT = 'getPaymentStatus.groovy'
     private static final CART_IMPEX = 'cart.impex'
+    private static final CURRENCY_IMPEX ='currency.impex'
+    private static final CUSTOMER_IMPEX ='customer.impex'
     private static final ORDER_NUMBER_FXS = 'orderNumberFromCronjob.fxs'
     private static final ORDER_STATUS_FXS = 'orderStatusFromOrder.fxs'
     private static final PAYMENT_PROVIDER_FXS = 'paymentProviderByOrderAndType.fxs'
@@ -14,7 +18,11 @@ class AdminApi
     private static final TRANSACTION_FROM_CART_FXS = 'transactionStatusFromCartByEmail.fxs'
 
     private static final PCI_STRATEGY_KEY = 'site.pci.strategy'
+    private static final PAYMENTACCEPTANCE_TYPE ='isv.payment.paymentAcceptance.type'
     private static final ALI_PAY_RECONCILATION_ID_KEY = 'isv.payment.alternativepayment.alipay.reconcilationId'
+
+    private static final AUTH ='AUTH'
+    private static final SALE ='SALE'
 
     private static final HOP = 'HOP'
     private static final SOP = 'SOP'
@@ -36,11 +44,18 @@ class AdminApi
     {
         adminConsole.updateConfig().setHybrisProperty(PCI_STRATEGY_KEY, SOP)
     }
-
     void setPciStrategyFlexMicroforms()
     {
         adminConsole.updateConfig().setHybrisProperty(PCI_STRATEGY_KEY, FLEX)
     }
+
+    void setPaymentAcceptanceTypeAuth(){
+        adminConsole.updateConfig().setHybrisProperty(PAYMENTACCEPTANCE_TYPE, AUTH)
+    }
+    void setPaymentAcceptanceTypeSale(){
+        adminConsole.updateConfig().setHybrisProperty(PAYMENTACCEPTANCE_TYPE, SALE)
+    }
+
 
     void setAliPayStatus(String reconciliationId)
     {
@@ -49,7 +64,16 @@ class AdminApi
 
     void importCart(TestData data)
     {
-        adminConsole.runImpex().fromTemplate(CART_IMPEX, data.properties)
+      adminConsole.runImpex().fromTemplate(CART_IMPEX, data.properties)
+    }
+
+    void importDefaultCurrency(TestData data){
+        adminConsole.runImpex().fromTemplate(CURRENCY_IMPEX, data.properties)
+    }
+
+    void importCustomer(TestData data)
+    {
+        adminConsole.runImpex().fromTemplate(CUSTOMER_IMPEX, data.properties)
     }
 
     String getOrderNumber(String cronJob)
@@ -60,17 +84,17 @@ class AdminApi
 
     String getOrderStatus(String orderCode)
     {
-        List<Map> responce = adminConsole.runFlexibleSearch().fromTemplate(ORDER_STATUS_FXS, [orderCode: orderCode])
-        responce[0]?.CODE
+        List<Map> response = adminConsole.runFlexibleSearch().fromTemplate(ORDER_STATUS_FXS, [orderCode: orderCode])
+        response[0]?.CODE
     }
 
     String getTransactionPaymentProvider(String orderCode, String entryType = 'AUTHORIZATION')
     {
-        List<Map> responce = adminConsole.runFlexibleSearch().fromTemplate(PAYMENT_PROVIDER_FXS, [
+        List<Map> response = adminConsole.runFlexibleSearch().fromTemplate(PAYMENT_PROVIDER_FXS, [
                 orderCode: orderCode,
                 entryType: entryType,
         ])
-        responce[0]?.P_PAYMENTPROVIDER
+        response[0]?.P_PAYMENTPROVIDER
     }
 
     String getTransactionEntryStatus(String orderCode, String entryType)
@@ -98,7 +122,6 @@ class AdminApi
                 storeCode      : storeCode,
                 transactionType: transactionType,
         ]
-
         adminConsole.runScript().fromTemplate(GET_PAYMENT_STATUS_SCRIPT, requestMap)
     }
 }

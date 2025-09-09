@@ -11,7 +11,7 @@ import isv.sap.payment.pageobject.page.paypal.PayPalPage
 import isv.sap.payment.spec.IsvGebSpec
 import isv.sap.payment.suite.Regression
 import isv.sap.payment.suite.Smoke
-import isv.sap.payment.suite.category.PayPal
+import isv.sap.payment.suite.category.b2c.PayPal
 
 import static isv.sap.payment.data.constants.PaymentConstants.PaymentMethod.PAY_PAL
 import static isv.sap.payment.data.constants.TransactionStatus.ACCEPT
@@ -23,19 +23,21 @@ import static isv.sap.payment.data.constants.TransactionType.CAPTURE
 import static isv.sap.payment.data.constants.TransactionType.CHECK_STATUS
 import static isv.sap.payment.data.constants.TransactionType.CREATE_SESSION
 import static isv.sap.payment.data.constants.TransactionType.ORDER_SETUP
+import static isv.sap.payment.data.constants.TransactionStatus.SETTLED
+import static isv.sap.payment.data.constants.TransactionStatus.ORDER_SPLIT
 
 @Category(PayPal)
-class PayPalSpec extends IsvGebSpec
-{
-    void setup()
-    {
+class PayPalSpec extends IsvGebSpec {
+
+    void setup() {
         useUkSite()
+        api.importDefaultCurrency(data)
     }
 
     @Regression
-    'should create order for guest user'()
-    {
+    'should create order for guest user'() {
         given: 'Checkout for guest user is started'
+        api.setPaymentAcceptanceTypeSale()
         to(ProductDescriptionPage, data.product)
                 .addProductToCart()
                 .checkoutAsGuest()
@@ -66,17 +68,18 @@ class PayPalSpec extends IsvGebSpec
 
         and: 'Order is completed'
         waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
-        api.getTransactionEntryPaymentStatus(data.baseStore, orderNumber, CAPTURE) == PENDING
-        api.getOrderStatus(orderNumber) == WAITING_FOR_PAYMENT
+        api.getTransactionEntryPaymentStatus(data.baseStore, orderNumber, CAPTURE) == SETTLED
+        api.getOrderStatus(orderNumber) == ORDER_SPLIT
     }
 
     @Smoke
     'should create order for registered user'()
     {
         given: 'A cart with product and addresses'
+          api.setPaymentAcceptanceTypeSale()
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 
         when: 'User submits PayPal order'
         to(B2cCheckoutPage)
@@ -100,10 +103,10 @@ class PayPalSpec extends IsvGebSpec
         api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT
         api.getTransactionEntryPaymentStatus(data.baseStore, orderNumber, AUTHORIZATION) == AUTHORIZED
 
-        and: 'Capture is Pending'
+        and: 'Order is completed'
         waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
-        api.getTransactionEntryPaymentStatus(data.baseStore, orderNumber, CAPTURE) == PENDING
-        api.getOrderStatus(orderNumber) == WAITING_FOR_PAYMENT
+        api.getTransactionEntryPaymentStatus(data.baseStore, orderNumber, CAPTURE) == SETTLED
+        api.getOrderStatus(orderNumber) == ORDER_SPLIT
     }
 
     @Regression
@@ -112,7 +115,7 @@ class PayPalSpec extends IsvGebSpec
         given: 'A cart with product and addresses'
         api.importCart(data)
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 
         when: 'User submits PayPal order'
         to(B2cCheckoutPage)

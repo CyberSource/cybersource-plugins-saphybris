@@ -5,16 +5,16 @@ import isv.sap.payment.data.Credentials
 trait WithCredentials
 {
     static final PAYPAL_CREDENTIALS = new Credentials(email: 'ap.paypal@cybs.com',
-                                                      password: 'Password1',)
+            usercode: 'Password1',)
 
     static final GOOGLE_CREDENTIALS = new Credentials(email: System.properties['googlepay.username'],
-                                                      password: System.properties['googlepay.password'],)
+            usercode: System.properties['googlepay.userCode'],)
 
     static final B2B_CREDENTIALS = new Credentials(email: 'william.hunter@rustic-hw.com',
-                                                   password: '12341234',)
+            usercode: '24451234',)
 
     static final ASM_CREDENTIALS = new Credentials(email: 'asagent',
-                                                   password: '123456',)
+            usercode: '123456',)
 
     static credentialsMap = ['paypal': PAYPAL_CREDENTIALS,
                              'google': GOOGLE_CREDENTIALS,

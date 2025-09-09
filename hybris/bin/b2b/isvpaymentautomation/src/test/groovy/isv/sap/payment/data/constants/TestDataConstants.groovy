@@ -19,6 +19,7 @@ class TestDataConstants
         public static final String UK = 'GB'
         public static final String DE = 'DE'
         public static final String US = 'US'
+        public static final String BE = 'BE'
     }
 
     static class CurrencyIsoCode
@@ -30,7 +31,7 @@ class TestDataConstants
 
     static class Product
     {
-        public static final String PRODUCT_ID_B2C = '300613859'
+        public static final String PRODUCT_ID_B2C = '300015407'
         public static final String PRODUCT_ID_B2B = '3755219'
     }
 }

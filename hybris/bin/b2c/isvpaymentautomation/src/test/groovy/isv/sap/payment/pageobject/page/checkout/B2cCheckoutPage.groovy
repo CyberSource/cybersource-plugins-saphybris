@@ -12,9 +12,6 @@ class B2cCheckoutPage extends AbstractCheckoutPage
     static content = {
         paymentMode { module B2cPaymentModeModule }
         sopRequestFrame(page: Secure3D2PopUpPage, wait: true) { $('iframe#sopRequestIframe') }
-
-        visaCheckoutCta(toWait: true, wait: true) { $('.step-body').find('.v-button') }
-
         firstPaymentMethodLogo { $('div.payment-logos', 0) }
     }
 
@@ -23,8 +20,19 @@ class B2cCheckoutPage extends AbstractCheckoutPage
         waitFor { billingTitle.value() != null }
         paymentCta.click()
         waitFor { firstPaymentMethodLogo.displayed }
+        return this
+    }
 
-        browser.at(B2cCheckoutPage)
+    B2cCheckoutPage startWithPayment()
+    {
+        try {
+            waitFor(10, false) { billingTitle.value() != null }
+        } catch (ignored) {
+            useDeliveryAddress.click()
+        }
+        paymentCta.click()
+        waitFor { firstPaymentMethodLogo.displayed }
+        return this
     }
 
     B2cCheckoutPage populateShippingAndBilling(TestData data)
@@ -37,15 +45,22 @@ class B2cCheckoutPage extends AbstractCheckoutPage
         shippingForm.city = data.city
         shippingForm.postCode = data.postCode
 
+        try {
+            if (shippingForm.state.displayed) {
+                shippingForm.state = data.state
+            }
+        } catch (Throwable ignored) {
+            // ignored: state dropdown may not exist for some regions
+        }
         shippingCta.click()
 
         deliveryMethodCta.click()
-
         waitFor { billingTitle.value() == '' }
         useDeliveryAddress.click()
-        waitFor { billingTitle.value() == data.title }
+        sleep(10000)
 
-        browser.at(B2cCheckoutPage)
+        waitFor { billingTitle.value() == data.title }
+        return this
     }
 
     B2cCheckoutPage fillSopCard(String type, String number, String cvv)
@@ -55,8 +70,7 @@ class B2cCheckoutPage extends AbstractCheckoutPage
         card.expMonth = EXP_MONTH
         card.expYear = EXP_YEAR
         card.cvv = cvv
-
-        browser.at(B2cCheckoutPage)
+        return this
     }
 
     B2cCheckoutPage fillFlexFormCard(String number, String cvv)
@@ -72,31 +86,30 @@ class B2cCheckoutPage extends AbstractCheckoutPage
             flexSecureCode = cvv
         }
 
-        browser.at(B2cCheckoutPage)
+        return this
     }
 
-    void fill3dSecure2()
+    B2cCheckoutPage fill3dSecure2()
     {
+        waitFor(60) { sopRequestFrame.size() > 0 }
         withFrame(sopRequestFrame) {
-            browser.at(Secure3D2PopUpPage).fill3dSecure2InFrame()
+            browser.at(Secure3D2PopUpPage).fill3dSecure2InFrameSA()
         }
+        return this
     }
 
-    void placeOrder()
+    B2cCheckoutPage placeOrder()
     {
         acceptCheckBox.click()
         placeOrderCta.click()
+        return this
     }
 
-    void buyWithGooglePay()
+    B2cCheckoutPage buyWithGooglePay()
     {
         acceptCheckBox.click()
         placeOrderGooglePayCta.click()
+        return this
     }
 
-    void placeOrderVCO()
-    {
-        acceptCheckBox.click()
-        visaCheckoutCta.click()
-    }
 }

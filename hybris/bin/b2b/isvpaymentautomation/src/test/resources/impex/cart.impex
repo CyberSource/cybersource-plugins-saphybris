@@ -1,5 +1,5 @@
 INSERT_UPDATE Customer; uid[unique = true]; name           ; password       ; &customerRef
-                      ; $email       ; $firstName $lastName ; $password ; customer
+                      ; $email       ; $firstName $lastName ; $loginCode ; customer
 
 INSERT_UPDATE Address; owner(&customerRef)[unique = true]; streetname    ; postalcode     ; town       ; country(isocode); billingAddress; contactAddress; shippingAddress; unloadingAddress; title(code); firstname       ; lastname       ; email       ; &addressRef
                      ; customer                          ; $address ; $postCode ; $city ; $country   ; true          ; false         ; true           ; false           ; mr         ; $firstName ; $lastName ; $email ; address

@@ -14,7 +14,7 @@ class PaymentFramePage extends Page
     static atCheckWaiting = true
     static at = { $('#payment') }
     static content = {
-        cardType { type -> $(id: type) }
+        cardType { $('#card_type') }
         cardNumber { $('input#card_number') }
         cardCvn(wait: true) { $('input#card_cvn') }
         expirationMonth { $('select#card_expiry_month') }
@@ -30,18 +30,24 @@ class PaymentFramePage extends Page
 
     void fillCardData(String type, String number, String cvv)
     {
-        cardType(type).click()
+
+        cardType = type
         cardNumber = number
         cardCvn = cvv
         expirationMonth = EXP_MONTH
         expirationYear = EXP_YEAR
     }
 
-    void cancelPayment()
-    {
-        cancelBtn.click()
-        confirmBtn.click()
+    void cancelPayment() {
+        interact {
+            cancelBtn.firstElement().click()
+        }
+
+        interact {
+            confirmBtn.firstElement().click()
+        }
     }
+
 
     void continueWithPayment()
     {

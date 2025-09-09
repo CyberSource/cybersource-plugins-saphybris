@@ -311,4 +311,10 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
     {
         return getMerchantService().is3dsEnabled();
     }
+
+    @Override
+    public String getMerchantIdForCaptureContext()
+    {
+        return getMerchantID(CREDIT_CARD);
+    }
 }

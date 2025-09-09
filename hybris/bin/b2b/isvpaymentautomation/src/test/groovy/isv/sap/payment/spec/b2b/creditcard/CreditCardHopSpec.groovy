@@ -11,23 +11,34 @@ import isv.sap.payment.pageobject.page.hop.SaHopPaymentPage
 import isv.sap.payment.spec.IsvGebSpec
 import isv.sap.payment.suite.Regression
 import isv.sap.payment.suite.Smoke
-import isv.sap.payment.suite.category.CreditCard
+import isv.sap.payment.suite.category.b2b.CreditCardHOP
+import spock.lang.Unroll
 
+import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.MAESTRO
+import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.JCB
+import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.DINERS
 import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.AMEX
 import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.HOP_SELECTOR_AMEX
 import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.HOP_SELECTOR_MASTERCARD
 import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.HOP_SELECTOR_VISA
+import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.HOP_SELECTOR_DISCOVER
+import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.HOP_SELECTOR_DINERS
+import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.HOP_SELECTOR_JCB
+import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.HOP_SELECTOR_MAESTRO
 import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.MASTERCARD
 import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.PIN_3_DIGITS
 import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.PIN_4_DIGITS
 import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.VISA
+import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.DISCOVER
 import static isv.sap.payment.data.constants.PaymentConstants.PaymentMethod.CREDIT_CARD
 import static isv.sap.payment.data.constants.TransactionStatus.ACCEPT
+import static isv.sap.payment.data.constants.TransactionStatus.ORDER_SPLIT
+import static isv.sap.payment.data.constants.TransactionStatus.PAYMENT_AUTHORIZED
 import static isv.sap.payment.data.constants.TransactionStatus.COMPLETED
 import static isv.sap.payment.data.constants.TransactionType.AUTHORIZATION
 import static isv.sap.payment.data.constants.TransactionType.CAPTURE
 
-@Category(CreditCard)
+@Category(CreditCardHOP)
 class CreditCardHopSpec extends IsvGebSpec
 {
     void setupSpec()
@@ -41,11 +52,13 @@ class CreditCardHopSpec extends IsvGebSpec
     }
 
     @Regression
-    'should create order for HOP'()
+    @Unroll
+    'should create order for HOP with Sale'()
     {
         given: 'The checkout is started'
+        api.setPaymentAcceptanceTypeSale()
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
         to(ProductDescriptionPage, data.product)
                 .addProductToCart()
                 .checkoutB2B()
@@ -69,19 +82,69 @@ class CreditCardHopSpec extends IsvGebSpec
 
         and: 'Order is completed'
         waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
-        waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+        waitFor { api.getOrderStatus(orderNumber) == ORDER_SPLIT }
 
         where: 'Following cards are used'
         type                    | number     | cvv
         HOP_SELECTOR_VISA       | VISA       | PIN_3_DIGITS
         HOP_SELECTOR_MASTERCARD | MASTERCARD | PIN_3_DIGITS
         HOP_SELECTOR_AMEX       | AMEX       | PIN_4_DIGITS
+        HOP_SELECTOR_DISCOVER   | DISCOVER   | PIN_3_DIGITS
+        HOP_SELECTOR_DINERS     |DINERS      | PIN_3_DIGITS
+        HOP_SELECTOR_JCB        |JCB         | PIN_3_DIGITS
+        HOP_SELECTOR_MAESTRO    |MAESTRO     | PIN_3_DIGITS
+    }
+
+    @Regression
+    @Unroll
+    'should create order for HOP with Auth'()
+    {
+        given: 'The checkout is started'
+        api.setPaymentAcceptanceTypeAuth()
+        to(LoginPage)
+                .login(data.email, data.loginCode)
+        to(ProductDescriptionPage, data.product)
+                .addProductToCart()
+                .checkoutB2B()
+                .proceedToCardPayment()
+                .populateShippingAndBilling(data)
+
+        when: 'I start Payment'
+        at(B2bCheckoutPage)
+                .placeOrder()
+
+        and: 'Populate Card Data'
+        at(SaHopPaymentPage)
+                .authorizeSubscription(type, number, cvv)
+
+        then: 'Order is created'
+        String orderNumber = at(OrderConfirmationPage).extractOrderNumber()
+
+        and: 'Transactions are created'
+        api.getTransactionPaymentProvider(orderNumber) == CREDIT_CARD
+        api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT
+
+        and: 'Order is completed'
+        waitFor { api.getTransactionEntryStatus(orderNumber, AUTHORIZATION) == ACCEPT }
+        waitFor { api.getOrderStatus(orderNumber) == PAYMENT_AUTHORIZED }
+
+
+        where: 'Following cards are used'
+        type                    | number     | cvv
+        HOP_SELECTOR_VISA       | VISA       | PIN_3_DIGITS
+        HOP_SELECTOR_MASTERCARD | MASTERCARD | PIN_3_DIGITS
+        HOP_SELECTOR_AMEX       | AMEX       | PIN_4_DIGITS
+        HOP_SELECTOR_DISCOVER   | DISCOVER   | PIN_3_DIGITS
+        HOP_SELECTOR_DINERS     | DINERS     | PIN_3_DIGITS
+        HOP_SELECTOR_JCB        | JCB        | PIN_3_DIGITS
+        HOP_SELECTOR_MAESTRO    | MAESTRO    | PIN_3_DIGITS
     }
 
     @Smoke
     'should create order from ASM'()
     {
         given: 'The checkout is started'
+    api.setPaymentAcceptanceTypeSale()
         to(AsmLoginPage)
                 .loginToAsm(credentials.asm)
                 .selectUser(data.email)

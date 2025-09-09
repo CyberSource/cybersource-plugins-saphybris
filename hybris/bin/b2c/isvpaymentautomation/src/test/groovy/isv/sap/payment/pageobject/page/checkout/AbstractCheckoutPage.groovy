@@ -24,7 +24,7 @@ class AbstractCheckoutPage extends Page
         acceptCheckBox { $('#Terms1', 0) }
 
         placeOrderCta(toWait: true) { $('#placeOrder', 0) }
-        placeOrderGooglePayCta(toWait: true) { $('.gpay-button', 0) }
+        placeOrderGooglePayCta(toWait: true) { $('#gpay-button-online-api-id', 0) }
 
         globalError(wait: true) { $('div.global-alerts') }
 

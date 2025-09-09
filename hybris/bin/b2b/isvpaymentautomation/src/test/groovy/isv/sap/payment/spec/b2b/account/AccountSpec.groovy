@@ -10,7 +10,7 @@ import isv.sap.payment.pageobject.page.checkout.B2bCheckoutPage
 import isv.sap.payment.spec.IsvGebSpec
 import isv.sap.payment.suite.Regression
 import isv.sap.payment.suite.Smoke
-import isv.sap.payment.suite.category.Account
+import isv.sap.payment.suite.category.b2b.Account
 
 import static isv.sap.payment.data.constants.TransactionStatus.COMPLETED
 
@@ -27,7 +27,7 @@ class AccountSpec extends IsvGebSpec
     {
         given: 'The checkout is started'
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
         to(ProductDescriptionPage, data.product)
                 .addProductToCart()
                 .checkoutB2B()

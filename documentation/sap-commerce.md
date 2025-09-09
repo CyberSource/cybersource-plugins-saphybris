@@ -3,8 +3,8 @@
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 25.4.0**
-May 2025
+**Version 25.4.1**
+August 2025
 
 ## Contents <!-- omit in toc -->
 <!-- TOC -->
@@ -64,38 +64,38 @@ May 2025
     - [Description](#description-11)
 - [Business Services](#business-services)
   - [Fraud Management](#fraud-management)
-    - [Description](#description-11)
+    - [Description](#description-12)
     - [Implementation details](#implementation-details-11)
     - [Applicability and limitations](#applicability-and-limitations-3)
   - [Decision Manager](#decision-manager)
-    - [Description](#description-12)
+    - [Description](#description-13)
     - [Implementation details](#implementation-details-12)
   - [Verification Services](#verification-services)
-    - [Description](#description-13)
+    - [Description](#description-14)
     - [Implementation details](#implementation-details-13)
     - [Applicability and limitations](#applicability-and-limitations-4)
   - [Payer Authentication](#payer-authentication)
-    - [Description](#description-14)
+    - [Description](#description-15)
     - [Implementation details](#implementation-details-14)
     - [Applicability and limitations](#applicability-and-limitations-5)
   - [Reporting](#reporting)
-    - [Description](#description-15)
+    - [Description](#description-16)
     - [Implementation details](#implementation-details-15)
   - [Tax calculation](#tax-calculation)
-    - [Description](#description-16)
+    - [Description](#description-17)
     - [Implementation details](#implementation-details-16)
     - [Applicability and limitations](#applicability-and-limitations-6)
   - [Transaction Status Check](#transaction-status-check)
-    - [Description](#description-17)
+    - [Description](#description-18)
     - [Implementation details](#implementation-details-17)
     - [Applicability and limitations](#applicability-and-limitations-7)
 - [Configuration](#configuration-1)
-  - [Description](#description-18)
+  - [Description](#description-19)
   - [Implementation details](#implementation-details-18)
 - [Logging and Filtering](#logging-and-filtering)
 - [Validation](#validation)
 - [Resilience](#resilience)
-  - [Description](#description-19)
+  - [Description](#description-20)
   - [Implementation details](#implementation-details-19)
 - [Reference Implementation](#reference-implementation)
   - [Business Process](#business-process)
@@ -103,7 +103,7 @@ May 2025
     - [Device fingerprinting](#device-fingerprinting)
   - [Cron job](#cron-job)
   - [SAP Billing Integration](#sap-billing-integration)
-    - [Description](#description-20)
+    - [Description](#description-21)
       - [Terminology](#terminology)
     - [Implementation details](#implementation-details-20)
       - [Card Tokenization](#card-tokenization)
@@ -130,8 +130,9 @@ May 2025
     - [Automation Testing](#automation-testing)
       - [Testing Approach](#testing-approach-1)
       - [Tools and frameworks](#tools-and-frameworks)
+      - [Driver Configuration](#driver-configuration)
       - [Test Settings](#test-settings)
-      - [Gmail API](#gmail-api)
+      - [Test Suite Configuration](#test-suite-configuration)
       - [Test Data](#test-data-1)
       - [AdminApi](#adminapi)
       - [IsvGebSpec](#isvgebspec)
@@ -166,6 +167,7 @@ May 2025
 | March 2025    | 25.2.0                       | - Microform v2 upgrade |
 | March 2025    | 25.3.0                       | - Message Level Encryption Support |
 | May 2025      | 25.4.0                       | - Disable Card BIN for Transient Token <br>- Payer Authentication upgraded to Cardinal Cruise Direct |
+| August 2025   | 25.4.1                       | - Multi Mid support via p12 |
 
 ### Audience and Purpose
 
@@ -254,7 +256,7 @@ More details on SAP Commerce accelerators: <https://help.sap.com/viewer/4c33bf18
 
 As part of reference functionality, the following features are supported:
 
-| Feature                                     | CJL 3.0.6 | SAP B2C | SAP B2B | Description                                         |
+| Feature                                     | CJL 3.0.7 | SAP B2C | SAP B2B | Description                                         |
 |---------------------------------------------|-----------|---------|---------|-----------------------------------------------------|
 | SA SOP                                      | Y         | Y       | Y       | Secure Acceptance Silent Order Post                 |
 | Microform v2                                | Y         | Y       | N       | Secure field - PCI compliant                        |
@@ -316,7 +318,7 @@ All technical installation concepts in this document are initial draft provided 
 The following components are required:
 
 1. SAP Commerce platform release v2011
-2. sap-commerce-payment-plugin-25.4.0.zip
+2. sap-commerce-payment-plugin-25.4.1.zip
 3. Java 11
 4. Required Dependencies installed in maven repository
 
@@ -326,25 +328,25 @@ The following components are required:
 
 #### Description <!-- omit in toc -->
 
-The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-3.0.6.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
+The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-3.0.7.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
 
 Following errors will be thrown during SAP Commerce build:
 
 ```text
-[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:3.0.6: Could not find artifact isv.payment.cjl:isv-payment-api:jar:3.0.6 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
+[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:3.0.7: Could not find artifact isv.payment.cjl:isv-payment-api:jar:3.0.7 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
 ```
 
 #### Solution <!-- omit in toc -->
 
-The "isvpayment" extension comes with all the library binaries included in "hybris/bin/isvpayment/lib" so that you are able to build the extension without Maven. For that you will need to disable Maven dependency resolution for the extension (please see the documentation here <https://help.sap.com/viewer/d0224eca81e249cb821f2cdf45a82ace/2011/en-US/120f6d7b89a745018cb28b5e34318fa4.html>). 
+The "isvpayment" extension comes with all the library binaries included in "hybris/bin/isvpayment/lib" so that you are able to build the extension without Maven. For that you will need to disable Maven dependency resolution for the extension (please see the documentation here <https://help.sap.com/viewer/d0224eca81e249cb821f2cdf45a82ace/2011/en-US/120f6d7b89a745018cb28b5e34318fa4.html>).
 
 As a quick local build solution the dependency can be installed in local maven repository and retrieved as a cached dependency as per <https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html>.
 
 ```text
-$mvn install:install-file -Dfile=isv-payment-api-3.0.6.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=3.0.6 -Dpackaging=jar
+$mvn install:install-file -Dfile=isv-payment-api-3.0.7.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=3.0.7 -Dpackaging=jar
 ```
 
-Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.6.jar".
+Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.7.jar".
 
 > ![Note](images/note.jpg) According to SAP documentation:  The ant updateMavenDependencies task deletes all *.jar files from the lib folder by default. Only libraries listed in unmanaged-dependencies.txt files are not deleted.
 
@@ -406,6 +408,15 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     isv.payment.api.rest.<merchant_id>.keyFileName = <merchant_id>
     # P12 key path. Enter the folder path where the .p12 file is located.
     isv.payment.api.rest.<merchant_id>.keysDirectory = isvpayment/keys
+
+    # P12 Parameters
+    # The credentials below MUST be provided for P12 Configuration
+    isv.payment.p12.<merchantID>.merchantId= <merchantID>
+    isv.payment.p12.<merchantID>.libVersion= < Lib Version>
+    isv.payment.p12.<merchantID>.keyAlias= <Key Alias>
+    isv.payment.p12.<merchantID>.keyFile= <p12 File>
+    isv.payment.p12.<merchantID>.keyPass=<p12 File Passward>
+    isv.payment.p12.<merchantID>.keysDirectory= <key Directory>
     ```
 
     > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `api.cybersource.com` on production environments.
@@ -730,7 +741,7 @@ The following implementations are provided for **credit card authorization opera
 
 The implementation is selected dynamically based on plugin configuration. For more details, please refer to the "[Configuration](#_17o0hy9q9ihq)" section.
 
-Additionally, SAp Commerce plugin supports credit card authorization by using Simple Order API. This enables to collect and store card sensitive data on the merchant side and then submit the authorization request. The interaction with the Simple Order API is provided by CJL whereas converters provided as a part of reference implementation. Please note, this type of integration significantly increases PCI DSS scope.
+Additionally, SAP Commerce plugin supports credit card authorization by using Simple Order API. This enables to collect and store card sensitive data on the merchant side and then submit the authorization request. The interaction with the Simple Order API is provided by CJL whereas converters provided as a part of reference implementation. Please note, this type of integration significantly increases PCI DSS scope.
 
 ### Implementation details
 
@@ -851,13 +862,10 @@ The custom JSP tag **pciStrategyType** could be used to display the UI fragment 
 </isv:pciStrategyType>
 ```
 
-For Microform, the following configuration properties are defined:
+For Microform, the following configuration properties are defined along with merchant configuration:
 
 | **Configuration property** | **Description** |
 | --- | --- |
-| isv.payment.customer.flex.microform.api.key.id  | Customer specific Flex API key ID obtained from your payment provider |
-| isv.payment.customer.flex.microform.shared.secret | Shared secret for Flex API key |
-| isv.payment.customer.flex.microform.api.env | Flex API environment: `SANDBOX` - to use the FLEX API test environment,  `PRODUCTION` - to use the FLEX API live environment. Additional properties can be used to change the host and URI path of the Flex API service, e.g for `SANDBOX` environment use `isv.payment.customer.flex.microform.api.SANDBOX.host` for host location (host and port) and `isv.payment.customer.flex.microform.api.SANDBOX.path` for URI path (`/flex/v1/keys`). Usually only `isv.payment.customer.flex.microform.api.env` property should be configured. |
 | isv.payment.flex.card.type.selection | Possible values true/false. Indicates if the card type selection dropdown in the payment form will be enabled. This is useful when processing payments with cards that are co-branded (e.g. Carte Bancaire), so the user is able to select the card type from the list in the dropdown. |
 
 For Secure Acceptance, the following configuration properties are defined:
@@ -1303,7 +1311,7 @@ The conversion from payment service request to a request object specific to Appl
 
 > ![Note](images/note.jpg) You need to install [Java Cryptography Extension](https://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html) if having issues executing Payment Token Decryption operation
 
-Go to [Apple Pay Merchant Page](https://developer.apple.com/account/ios/identifier/merchant) and add a new merchant. (This ID will be the value for config property` isv.payment.customer.applepay.merchant.identifier`)
+Go to [Apple Pay Merchant Page](https://developer.apple.com/account/ios/identifier/merchant) and add a new merchant. (This ID will be the value for config property`isv.payment.customer.applepay.merchant.identifier`)
 
 Edit your new merchant and add your domain(s). Note that subdomains of your registered domain won't work. (Your registered domain will be "initiativeContext" parameter in CreateSessionRequestBuilder)
 
@@ -1951,6 +1959,7 @@ The process works in the following way:
 ## Message Level Encryption
 
 ### Description
+
 Message-Level Encryption (MLE) enables you to store information or communicate with other parties while helping to prevent uninvolved parties from understanding the stored information. If enabled, the SAP Commerce plugin encrypts the entire request body before transmission. MLE is optional and supported only for payments services.
 
 | **Configuration property** | **Description** |
@@ -2181,9 +2190,9 @@ Microform implementation is based in Cardinal Cruise Direct
 
 The following configurations are required:
 
-| **Key** | **Description** | **EBC platform**|
-| --- | --- | --- |
-| isv.payment.customer.3ds.<MERCAHNT_ID>.enabled | Possible values true/false  Indicates if 3DS is enabled for the merchant provided in <MERCHANT_ID> | |
+| **Key** | **Description** |
+| --- | --- |
+| isv.payment.payerAuthentication.3ds.enabled | Possible values true/false, indicates if 3DS is enabled |
 
 The flow is as follows:
 
@@ -2456,8 +2465,10 @@ INSERT_UPDATE IsvMerchantProfile;id[unique=true];merchant(id);profileType(code);
 ;mid_1_sop;mid_1;SOP;
 ;mid_1_hop;mid_1;HOP;
 ```
+
 The profile data can be obtained in EBC platform in Payment Configuration->Secure Acceptance Settings
  section.
+
 # Logging and Filtering
 
 SAP Commerce extension logging is based on CJL logging components that provides support for masking and filtering sensitive customer data.
@@ -3017,16 +3028,26 @@ The general test flow is following:
 
 Tests are written using [Selenium Webdriver](https://www.seleniumhq.org/projects/webdriver/) and [Geb](http://www.gebish.org/) as a selenium wrapper for [groovy](http://groovy-lang.org/). Following libraries are used:
 
-- **Groovy 2.4.12** - object-oriented programming language for the Java platform.
-- **Spock 1.2** - Spock is a testing and specification framework for Java and Groovy applications. What makes it stand out from the crowd is its beautiful and highly expressive specification language.
-- **Selenium 3.6.0** - a portable software-testing framework for web applications.
-- **Geb 2.1** - Geb is a browser automation solution that brings together the power of WebDriver, the elegance of jQuery content selection, the robustness of Page Object modeling and the expressiveness of the Groovy language.
-- **Gradle 4.2** - open source build automation system. Used to resolve dependencies, build and run tests
-- **jFairy 0.5.8** - Java fake data generator that creates human readable data packed in POJOs
-- **Geb-spock-reports 0.2.0** - Customizable reports with Geb screenshots
-- **Google-api-client 1.23.0** - access to gmail via API. Introduced to test for getting one time password for Visa SRC
+- **Groovy 2.5.6** – Object-oriented programming language for the Java platform.
+- **Spock 1.3** – Testing and specification framework for Java and Groovy applications, known for its expressive and readable syntax.
+- **Selenium 4.34.0** – Portable software testing framework for web applications.
+- **Geb 3.0.1** – Browser automation solution that combines WebDriver, jQuery-style selectors, Page Object modeling, and Groovy expressiveness.
+- **Gradle 4.2** – Open-source build automation tool used to resolve dependencies, build, and run tests.
+- **jFairy 0.5.8** – Java fake data generator that creates realistic, human-readable test data.
+- **Geb-Spock-Reports 0.2.0** – Plugin for generating customizable test reports with embedded screenshots.
+- **Spock Reports 1.6.0** – Enhanced reporting for Spock tests (non-transitive).
 
 > ![Note](images/note.jpg) UI tests are provided in module _isvpaymentautomation_. Which is a separate gradle project.
+
+#### Driver Configuration
+
+For browser, chrome driver configuration should be downloaded from [Chrome Webdriver](https://googlechromelabs.github.io/chrome-for-testing/) and placed in the `src/test/driver` directory. This driver is referenced in the `build.gradle` file to run tests using the Chrome browser.
+
+```text
+    systemProperty 'webdriver.chrome.driver', "$projectDir/src/test/driver/chromedriver"
+```
+
+> ![Note](images/note.jpg) ChromeDriver version must be stable, compatible with your platform (OS), and match the installed Chrome browser version to ensure reliable test execution.
 
 #### Test Settings
 
@@ -3045,59 +3066,53 @@ waiting {
 }
 atCheckWaiting = true
 
-driver = { new ChromeDriver() }
+driver = {
+    new DriverFactory().createDriver(browser)
+}
 ```
 
 The GebConfig template contains 2 predefined environments: Local dev and Remote.
 
 ```text
  environments {
+    dev {
+        ukSite = 'https://apparel-uk.local:9002/yb2cacceleratorstorefront/en/'
+        hac = 'https://localhost:9002/'
+        deSite = 'https://apparel-de.local:9002/yb2cacceleratorstorefront/de/'
+        b2bSite = 'https://powertools.local:9002/yb2bacceleratorstorefront/powertools/en/USD/'
+    }
 
-     dev {
-         hac = 'https://apparel-uk.local:9002/'
-         ukSite = 'https://apparel-uk.local:9002/'
-         deSite = 'https://apparel-de.local:9002/'
-         b2bSite = 'https://powertools.local:9002/'
-     }
-
-     remote {
-         hac =
-         ukSite =
-         deSite =
-         b2bSite =
-     }
- }
+    remote {
+        ukSite = ''
+        hac = ''
+        deSite = ''
+        b2bSite = ''
+    }
+}
 ```
 
 SI can add as many environments as required by providing url for admin console (hac) and storefronts.
 
-To use SRC and PayPal please also provide credentials of created accounts:
+#### Test Suite Configuration
+
+All test suites should be defined in build.properties file in root directory.
 
 ```text
- logins {
-     vco {
-         email = <Registered SRC Email>
-         reject_email = <SRC email that should fail DM>
-         password = <Common password for both SRC accounts>
-         address = <Address Line 1 set up in SRC accounts>
-     }
-     paypal {
-         email = <Sandbox PayPal email>
-         password = <PayPal Password>
-     }
- }
+includes = creditcard
 ```
 
-> ![Note](images/note.jpg) If 2 factor Authentication is turned on for SRC the account should have a valid google email with api access.
+Defines which payment method modules to include in the test run.
 
-#### Gmail API
+Fully qualified class names of the test suites to run.Comma-separated list of test suite class names (Groovy/Java class references).
 
-To get One Time password for SRC using UI test:
+```text
+uiTestSuites=isv.sap.payment.suite.category.b2c.CreditCardFlex
+```
 
-1. During development, register the application in the [Google API Console](https://console.developers.google.com/?authuser=2).
-2. When the app launches, request that the user grant access to data in their Google account.
-3. If the user consents, your application requests and receives credentials to access the Gmail API.
-4. Refresh the credentials (if necessary).
+Important:
+Test suite selection should be made based on the instance type — use B2B suites for B2B instances and B2C suites for B2C instances. This ensures proper test coverage and avoids misconfiguration during the test execution process.
+
+ > ![Note](images/note.jpg) For better experience and more reliable execution, it's recommended to run each payment suite separately (one at a time).This minimizes flakiness caused by shared browser state
 
 #### Test Data
 
@@ -3166,12 +3181,15 @@ The tests are using Page Object pattern. So all web controls are described withi
 ```text
 class ProductDescriptionPage extends Page
 {
-   static at = { $("body.page-productDetails") }
-   static content = {
-       qtyInput { $("input.js-qty-selector-input") }
-       addToCartCta(wait: true) { $("#addToCartButton") }
-       addToCartDialog { module AddToCartDialog }
-   }
+     static url = 'search/?text='
+     static at = {$('button.js-enable-btn', 0)}
+     static content = {
+        qtyInput { $('input.js-qty-selector-input') }
+        selectProduct(wait: true){$('button.js-enable-btn', 0)}
+        addToCartCta(wait: true) { $('#addToCartButton').click() }
+        addToCartDialog { module AddToCartDialog }
+
+    }
 }
 ```
 
@@ -3196,10 +3214,10 @@ As a test prerequisites we require:
 - Storefront Site is selected
 
 ```text
- def setup()
-{
-    useB2bSite()
-}
+ void setup()
+    {
+        useUkSite()
+    }
 ```
 
 - A cart with User and Billing and shipping addresses
@@ -3209,7 +3227,7 @@ As a test prerequisites we require:
 given: "A cart with product and addresses"
         api.importCart()
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
 ```
 
 Test steps performed in most cases are
@@ -3234,7 +3252,7 @@ After the order is created the test checks that
 
 ```text
 then: "Order is created"
-        def orderNumber = at(OrderConfirmationPage).extractOrderNumber()
+        String orderNumber = at(OrderConfirmationPage).extractOrderNumber()
 
         and: "Transactions are created"
         api.getTransactionPaymentProvider(orderNumber) == CREDIT_CARD
@@ -3242,7 +3260,7 @@ then: "Order is created"
 
         and: "Order is completed"
         waitFor { api.getTransactionEntryStatus(orderNumber, CAPTURE) == ACCEPT }
-        waitFor { api.getOrderStatus(orderNumber) == COMPLETED }
+        waitFor { api.getOrderStatus(orderNumber) == ORDER_SPLIT }
 ```
 
  > ![Note](images/note.jpg) Transaction and order status checks are performed by browserless requests.
@@ -3251,13 +3269,13 @@ then: "Order is created"
 
 To run the test pack please ensure that latest Chrome is installed. Gradle will download all necessary binarys and libs. Use the following commands:
 
-For Windows:
+For Windows :
 
 ```text
  gradlew.bat test
 ```
 
-For Linux:
+For Linux / macOS :
 
 ```text
  ./gradlew test
@@ -3271,7 +3289,31 @@ Following parameters can be sent:
 
 -Dretry=[true, false] - All tests are dependant on several 3rd parties, which introduces some level of flakiness. By default failed tests are automatically re-run. To disable re-run provide value _false._
 
-Please Note: To run tests in IDE add `-Dgeb.env=dev` VM options of Run/Debug configurations
+-Dgooglepay.username = and -Dgooglepay.userCode - Used to pass test credentials or configuration for Google Pay-related tests.
+
+-Dgeb.browser=[chrome, chrome-headless, firefox] - Specifies the browser to use for tests. Supported value. Default value is _chrome_.
+
+The following is a sample command to configure and run tests with Google Pay credentials:
+
+```text
+./gradlew test -Dgooglepay.username= sampleusername -Dgooglepay.userCode=sampleusercode 
+```
+
+Replace the values of sampleusername and sampleusercode with valid credentials as needed.
+
+Sample commands to run with common parameters for Windows / macOS :
+
+```text
+For Windows
+
+gradlew.bat test -Dgeb.env=dev -Dsuite=smoke -Dretry=true -Dgooglepay.username=testuser -Dgooglepay.userCode=12345 -Dgeb.browser=chrome
+
+For macOS
+
+./gradlew test -Dgeb.env=dev -Dsuite=smoke -Dretry=true -Dgooglepay.username=your_username -Dgooglepay.userCode=your_usercode -Dgeb.browser=chrome
+```
+
+ > ![Note](images/note.jpg) To run tests in IDE add `-Dgeb.env=dev` VM options of Run/Debug configurations
 
 #### Test Report
 
@@ -3425,4 +3467,4 @@ Customer Support: 1-800-709-7779 (for signed accounts only)
 
 Fax: 650-286-6641
 
-Email: sales@cybersource.com
+Email: <sales@cybersource.com>

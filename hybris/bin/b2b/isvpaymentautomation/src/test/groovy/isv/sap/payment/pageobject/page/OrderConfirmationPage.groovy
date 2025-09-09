@@ -5,6 +5,7 @@ import geb.Page
 class OrderConfirmationPage extends Page
 {
     static atCheckWaiting = true
+
     static at = { $('body.page-orderConfirmationPage') }
     static content = {
         orderNumber(wait: true) { $('span.item-value').first() }

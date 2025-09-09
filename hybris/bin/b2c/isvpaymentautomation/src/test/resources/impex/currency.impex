@@ -1,0 +1,5 @@
+INSERT_UPDATE Currency; isocode[unique=true]; active
+; ${currency} ; true
+
+INSERT_UPDATE BaseStore; uid[unique=true]; defaultCurrency(isocode); currencies(isocode)[mode=append]
+; ${baseStore} ; ${currency} ; ${currency}

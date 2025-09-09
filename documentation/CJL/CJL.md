@@ -2,7 +2,7 @@
 
 ## CJL - Core Java Library <!-- omit in toc -->
 
-**Version 25.4.0**
+**Version 25.4.1**
 May 2025
 
 ## Contents <!-- omit in toc -->
@@ -429,11 +429,7 @@ isv.cjl.payment.service.flex.FlexService
 isv.cjl.payment.security.service.DefaultFlexService
 ```
 
-The public key is used on a the client side to initiate the Microform API and to validate a token passed back through the cardholder's browser. The wirings are defined through the following [Google Guice](https://github.com/google/guice) module:
-
-```text
-isv.cjl.module.common.FlexMicroformModule
-```
+The public key is used on a the client side to initiate the Microform API and to validate a token passed back through the cardholder's browser.
 
 The payment service request is executed through an instance of PaymentServiceExecutor, which dispatches the request to an instance of PaymentServiceProvider component defined through the following [Google Guice](https://github.com/google/guice) module:
 
@@ -2525,6 +2521,24 @@ Each property above can be MID specific, e.g. key alias can be configured as:
 ```text
 isv.payment.api.rest.<MERCHANT_ID>.keyAlias=<key_alias>
 ```
+#### P12 Configuration <!-- omit in toc -->
+
+In order to configure the P12 authentication provide the following configuration.
+```text
+isv.payment.p12.merchantId= <merchantID>
+isv.payment.p12.libVersion= <Lib Version>
+isv.payment.p12.keyAlias= <Key Alias>
+isv.payment.p12.keyFile= <p12 File>
+isv.payment.p12.keyPass= <p12 File Passward>
+isv.payment.p12.keysDirectory= <key Directory>
+```
+
+Each property above can be MID specific, e.g. key alias can be configured as:
+
+```text
+isv.payment.p12.<merchantID>.keyAlias= <Key Alias>
+```
+
 
 ### Implementation Details
 

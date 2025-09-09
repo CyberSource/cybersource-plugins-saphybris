@@ -11,4 +11,6 @@ class TransactionType
     public static final String CAPTURE = 'CAPTURE'
     public static final String INITIATE = 'INITIATE'
     public static final String SALE = 'SALE'
+
+
 }

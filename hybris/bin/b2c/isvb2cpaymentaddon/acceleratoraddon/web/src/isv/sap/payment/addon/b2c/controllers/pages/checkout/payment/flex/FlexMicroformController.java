@@ -5,7 +5,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 // import org.apache.commons.lang3.ObjectUtils;
  
-import com.cybersource.flex.sdk.CaptureContext;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCheckoutController;
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.core.model.order.CartModel;
@@ -37,10 +36,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static isv.sap.payment.constants.IsvPaymentConstants.ReasonCode.ENROLLED_CODE;
 import static isv.sap.payment.constants.IsvPaymentConstants.ReasonCode.NOT_ENROLLED_CODE;
+import static isv.sap.payment.constants.IsvPaymentConstants.ReasonCode.REVIEW_CODE;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import org.springframework.ui.Model;
-
-//OLH: For Reflected XSS fix. Used to sanitize some text
 import org.apache.commons.text.StringEscapeUtils;
 import isv.sap.payment.addon.utils.AjaxResponse;
 
@@ -76,7 +74,7 @@ public class FlexMicroformController extends AbstractCheckoutController
                 .replacePath(null).replaceQuery(null).userInfo(null).fragment(null)
                 .build()
                 .toUriString();
-        final Map<String, String> captureContext = flexService.createKey(targetOrigin);
+        final Map<String, String> captureContext = flexService.createKey(targetOrigin, creditCardPaymentFacade.getMerchantIdForCaptureContext());
 
         session.setAttribute(FLEX_CAPTURE_CONTEXT_ATTRIBUTE, captureContext.get("captureContext"));
         
@@ -97,9 +95,9 @@ public class FlexMicroformController extends AbstractCheckoutController
 
         checkNotNull(captureContext);
 
-        //OLH: For Reflected XSS fix
-        return flexService.verifyAndGet(captureContext, sanitizedFlexToken)//OLH: Use sanitize value
-                .map(transientToken -> ResponseEntity.ok(transientToken.getId()))
+        
+        return flexService.verifyAndGet(sanitizedFlexToken)//OLH: Use sanitize value
+                .map(transientToken -> ResponseEntity.ok(transientToken))
                 .orElse(ResponseEntity.status(UNPROCESSABLE_ENTITY).build());
     }
 
@@ -198,7 +196,7 @@ public class FlexMicroformController extends AbstractCheckoutController
             final Map<String, String> properties = enrollmentTransaction.getProperties();
 
             final String responseCode = properties.get("reasonCode");
-            if (NOT_ENROLLED_CODE.equals(responseCode))
+            if (NOT_ENROLLED_CODE.equals(responseCode)|| REVIEW_CODE.equals(responseCode))
             {
                 final String redirectUrl = payAndPlaceOrder(transientToken, null, enrollmentTransaction);
 

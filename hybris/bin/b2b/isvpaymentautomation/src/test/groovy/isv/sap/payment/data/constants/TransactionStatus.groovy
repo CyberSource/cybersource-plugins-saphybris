@@ -11,4 +11,6 @@ class TransactionStatus
     public static final String DECLINE = 'DECLINE'
     public static final String REJECT = 'REJECT'
     public static final String CANCELLED = 'CANCELLED'
+    public static final String PAYMENT_AUTHORIZED = 'PAYMENT_AUTHORIZED'
+    public static final String ORDER_SPLIT = 'ORDER_SPLIT'
 }

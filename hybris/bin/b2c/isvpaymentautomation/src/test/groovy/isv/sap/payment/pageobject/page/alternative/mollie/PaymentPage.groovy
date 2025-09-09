@@ -4,10 +4,12 @@ import geb.Page
 
 class PaymentPage extends Page
 {
-    static at = { $('.alert--valid').text().contains('iDEAL') }
+
+    static at = {true }
     static content = {
         status { module StatusModule }
         submit { $('button.form__button') }
+        expired{$('[class="form__body-tight"] tr:nth-child(3) td code')}
     }
 
     PaymentPage selectSuccessStatus()
@@ -34,8 +36,18 @@ class PaymentPage extends Page
         browser.at(PaymentPage)
     }
 
-    void submitPayment()
+    PaymentPage selectExpiredStatus()
+    {
+        status.expired.click()
+        browser.at(PaymentPage)
+    }
+
+     void submitPayment()
     {
         submit.click()
+    }
+
+     void expiredPaymentStatus() {
+        expired.text().contains("expired")
     }
 }

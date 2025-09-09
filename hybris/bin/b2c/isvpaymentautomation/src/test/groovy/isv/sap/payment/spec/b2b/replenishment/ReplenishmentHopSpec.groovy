@@ -11,7 +11,7 @@ import isv.sap.payment.pageobject.page.hop.SaHopPaymentPage
 import isv.sap.payment.spec.IsvGebSpec
 import isv.sap.payment.suite.Regression
 import isv.sap.payment.suite.Smoke
-import isv.sap.payment.suite.category.CreditCard
+import isv.sap.payment.suite.category.b2b.ReplenishmentCreditCardHOP
 
 import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.HOP_SELECTOR_VISA
 import static isv.sap.payment.data.constants.PaymentConstants.CreditCard.PIN_3_DIGITS
@@ -22,7 +22,7 @@ import static isv.sap.payment.data.constants.TransactionStatus.COMPLETED
 import static isv.sap.payment.data.constants.TransactionType.AUTHORIZATION
 import static isv.sap.payment.data.constants.TransactionType.CAPTURE
 
-@Category(CreditCard)
+@Category(ReplenishmentCreditCardHOP)
 class ReplenishmentHopSpec extends IsvGebSpec
 {
     void setupSpec()
@@ -40,7 +40,7 @@ class ReplenishmentHopSpec extends IsvGebSpec
     {
         given: 'The checkout is started'
         to(LoginPage)
-                .login(data.email, data.password)
+                .login(data.email, data.loginCode)
         to(ProductDescriptionPage, data.product)
                 .addProductToCart()
                 .checkoutB2B()

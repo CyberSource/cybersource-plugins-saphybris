@@ -86,4 +86,10 @@ public interface CreditCardPaymentFacade extends PaymentFacade
      * @return true if 3DS is enabled, false otherwise
      */
     boolean is3dsEnabled();
+    /**
+     * Returns current merchant ID
+     *
+     * @return String
+     */
+    String getMerchantIdForCaptureContext();
 }
