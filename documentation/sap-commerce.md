@@ -3,7 +3,7 @@
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 25.2.0**
+**Version 25.2.0 - JDK21**
 March 2025
 
 ## Contents <!-- omit in toc -->
