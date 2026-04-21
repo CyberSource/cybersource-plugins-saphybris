@@ -1,6 +1,6 @@
 package isv.sap.payment.setup;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.commerceservices.setup.SetupImpexService;
 import de.hybris.platform.core.initialization.SystemSetup;

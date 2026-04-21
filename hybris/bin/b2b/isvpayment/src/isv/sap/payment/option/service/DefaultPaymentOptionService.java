@@ -1,7 +1,7 @@
 package isv.sap.payment.option.service;
 
 import java.util.List;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -10,7 +10,7 @@ import de.hybris.platform.servicelayer.search.SearchResult;
 import isv.sap.payment.cronjob.UpdateAlternativePaymentOptionsJob;
 import isv.sap.payment.model.IsvAlternativePaymentOptionModel;
 
-import static org.apache.commons.collections.ListUtils.EMPTY_LIST;
+import java.util.Collections;
 
 /**
  * Encapsulates the default implementation of {@link PaymentOptionService} interface.
@@ -32,7 +32,7 @@ public class DefaultPaymentOptionService implements PaymentOptionService
     public List<IsvAlternativePaymentOptionModel> getPaymentOptions()
     {
         final SearchResult<IsvAlternativePaymentOptionModel> options = flexibleSearchService.search(OPTIONS_QUERY);
-        return options.getResult() == null ? EMPTY_LIST : options.getResult();
+        return options.getResult() == null ? Collections.emptyList() : options.getResult();
     }
 
     @Override

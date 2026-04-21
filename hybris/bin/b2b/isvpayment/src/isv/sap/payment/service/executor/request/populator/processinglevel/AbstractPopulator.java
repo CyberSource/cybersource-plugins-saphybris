@@ -2,7 +2,7 @@ package isv.sap.payment.service.executor.request.populator.processinglevel;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import com.google.inject.Inject;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;

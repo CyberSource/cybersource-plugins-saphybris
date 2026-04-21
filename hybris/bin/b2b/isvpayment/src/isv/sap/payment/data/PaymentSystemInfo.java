@@ -1,10 +1,10 @@
 package isv.sap.payment.data;
 
-import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import jakarta.annotation.PostConstruct;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,16 +44,23 @@ public class PaymentSystemInfo
         {
             setClientLibraryVersion();
         }
-        catch (final ConfigurationException e)
+        catch (final IOException e)
         {
             LOG.warn(e.getMessage(), e);
         }
     }
 
-    protected void setClientLibraryVersion() throws ConfigurationException
+    protected void setClientLibraryVersion() throws IOException
     {
-        final Configuration versionInfo = new PropertiesConfiguration(VERSION_INFO_FILE);
-        clientLibraryVersion = versionInfo.getString("build_version");
+        try (InputStream stream = getClass().getClassLoader().getResourceAsStream(VERSION_INFO_FILE))
+        {
+            if (stream != null)
+            {
+                final Properties props = new Properties();
+                props.load(stream);
+                clientLibraryVersion = props.getProperty("build_version");
+            }
+        }
     }
 
     public String getPartnerSolutionID()

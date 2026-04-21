@@ -16,7 +16,7 @@ import isv.cjl.payment.service.executor.request.converter.AbstractRequestConvert
 import isv.cjl.payment.service.request.Request;
 import isv.cjl.payment.utils.Assert;
 import isv.cjl.payment.utils.PaymentParamUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import static isv.cjl.payment.constants.PaymentConstants.CommonFields.ORDER;
 import static isv.cjl.payment.constants.PaymentRequestParamConstants.*;

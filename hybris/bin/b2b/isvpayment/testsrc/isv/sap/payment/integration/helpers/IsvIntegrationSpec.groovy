@@ -1,6 +1,6 @@
 package isv.sap.payment.integration.helpers
 
-import javax.annotation.Resource
+import jakarta.annotation.Resource
 
 import de.hybris.bootstrap.config.ConfigUtil
 import de.hybris.platform.core.Registry

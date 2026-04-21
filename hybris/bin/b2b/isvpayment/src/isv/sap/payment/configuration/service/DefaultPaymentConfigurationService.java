@@ -2,7 +2,6 @@ package isv.sap.payment.configuration.service;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
 
 import isv.sap.payment.configuration.resolver.PaymentConfigurationResolver;
@@ -30,7 +29,6 @@ public class DefaultPaymentConfigurationService implements PaymentConfigurationS
         return (T) resolver.resolve(params);
     }
 
-    @Required
     public void setResolverMap(final Map<IsvConfigurationType, PaymentConfigurationResolver> resolverMap)
     {
         this.resolverMap = resolverMap;

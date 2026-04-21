@@ -18,7 +18,7 @@ import static isv.cjl.payment.enums.ExportComplianceAddressOperator.IGNORE
 import static isv.cjl.payment.enums.ExportComplianceFieldWeight.HIGH
 import static isv.cjl.payment.enums.ExportComplianceFieldWeight.LOW
 import static isv.cjl.payment.enums.ExportComplianceFieldWeight.MEDIUM
-import static org.apache.commons.lang.StringUtils.EMPTY
+import static org.apache.commons.lang3.StringUtils.EMPTY
 
 @UnitTest
 class ExportComplianceRequestConverterSpec extends Specification

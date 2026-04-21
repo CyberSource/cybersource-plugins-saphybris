@@ -1,9 +1,9 @@
 package isv.sap.payment.modules.converter;
 
 import java.util.List;
-import javax.annotation.Resource;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.annotation.Resource;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;

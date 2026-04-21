@@ -6,7 +6,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
-import org.springframework.beans.factory.annotation.Required;
 
 import isv.cjl.module.PaymentModule;
 
@@ -31,7 +30,6 @@ public class DefaultGuiceInjectorFactory
         return parentModule;
     }
 
-    @Required
     public void setModules(final List<Module> modules)
     {
         this.modules = modules;

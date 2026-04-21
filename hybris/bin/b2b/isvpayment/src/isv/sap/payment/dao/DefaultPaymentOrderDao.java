@@ -1,12 +1,12 @@
 package isv.sap.payment.dao;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.List;
 
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.order.daos.impl.DefaultOrderDao;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
-import jersey.repackaged.com.google.common.collect.ImmutableMap;
 
 public class DefaultPaymentOrderDao extends DefaultOrderDao implements PaymentOrderDao
 {

@@ -1,8 +1,8 @@
 package isv.sap.payment.service.executor.request.converter.creditcard;
 
 import java.math.BigDecimal;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import com.google.common.base.Optional;
 import de.hybris.platform.core.model.order.AbstractOrderModel;

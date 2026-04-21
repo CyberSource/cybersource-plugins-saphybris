@@ -1,6 +1,6 @@
 package isv.sap.payment.integration.reporting
 
-import javax.annotation.Resource
+import jakarta.annotation.Resource
 
 import de.hybris.bootstrap.annotations.ManualTest
 import org.junit.Ignore

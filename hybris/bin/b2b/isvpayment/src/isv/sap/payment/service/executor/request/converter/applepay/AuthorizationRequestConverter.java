@@ -1,7 +1,7 @@
 package isv.sap.payment.service.executor.request.converter.applepay;
 
 import java.util.List;
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import com.google.inject.Inject;
 

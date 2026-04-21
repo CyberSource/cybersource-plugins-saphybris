@@ -1,7 +1,7 @@
 package isv.sap.payment.integration.helpers
 
 import java.lang.reflect.Field
-import javax.annotation.Resource
+import jakarta.annotation.Resource
 
 import de.hybris.platform.core.Registry
 import de.hybris.platform.servicelayer.ServicelayerBaseTest

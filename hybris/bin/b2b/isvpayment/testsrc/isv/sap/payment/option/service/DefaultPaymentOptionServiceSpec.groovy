@@ -6,12 +6,11 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService
 import de.hybris.platform.servicelayer.search.impl.SearchResultImpl
 import org.junit.Test
 import spock.lang.Specification
-
+import java.util.Collections;
 import isv.sap.payment.model.IsvAlternativePaymentOptionModel
 
 import static isv.sap.payment.option.service.DefaultPaymentOptionService.OPTIONS_QUERY
 import static java.util.Arrays.asList
-import static org.apache.commons.collections.ListUtils.EMPTY_LIST
 
 @UnitTest
 class DefaultPaymentOptionServiceSpec extends Specification
@@ -55,7 +54,7 @@ class DefaultPaymentOptionServiceSpec extends Specification
         def actual = service.paymentOptions
 
         then:
-        actual == EMPTY_LIST
+        actual == Collections.emptyList()
     }
 
     @Test

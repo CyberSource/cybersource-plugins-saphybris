@@ -22,7 +22,7 @@ import static isv.cjl.payment.constants.PaymentRequestParamConstants.PURCHASE_TO
 import static isv.cjl.payment.constants.PaymentServiceConstants.AlternativePayment.REFUND;
 import static isv.cjl.payment.enums.AlternativePaymentMethod.APY;
 import static isv.cjl.payment.enums.AlternativePaymentMethod.AYM;
-import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class RefundRequestConverter extends AbstractRequestConverter
 {
