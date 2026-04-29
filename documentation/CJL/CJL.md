@@ -2,8 +2,8 @@
 
 ## CJL - Core Java Library <!-- omit in toc -->
 
-**Version 25.4.1**
-May 2025
+**Version 25.4.2**
+April 2026
 
 ## Contents <!-- omit in toc -->
 
@@ -128,7 +128,7 @@ May 2025
 | May 2020      | - Repackaging with ISV package |
 | March 2021    | - Upgraded Cybersource Transaction Web Service to version 175 <br> - Added cardTypeSelectionIndicator field to  support Credit Mutuel-CIC transactions <br> - Upgraded cybersource-rest-client-java to version 0.0.30 |
 | February 2024 | - Upgraded cybersource-rest-client-java to version 0.0.58 and okhttp to 4.12.0 |
-
+| April 2026    | - Support for new Cardinal Commerce URLs <br> - Upgraded cybersource-rest-client-java to version 0.0.87 and AuthenticationSdk 0.0.42 |
 ## About This Guide
 
 ### Audience and Purpose
@@ -345,7 +345,7 @@ compile 'commons-io:commons-io:2.6'
 compile 'cglib:cglib-nodep:3.1'
 compile 'joda-time:joda-time:2.9.9'
 compile 'com.squareup.okhttp3:okhttp:4.12.0'
-compile 'com.cybersource:cybersource-rest-client-java:0.0.58'
+compile 'com.cybersource:cybersource-rest-client-java:0.0.87'
 
 // tests related deps
 testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
@@ -2443,7 +2443,7 @@ CJL consumes HTTP REST APIs using [Java SDK](https://github.com/CyberSource/cybe
 Java SDK is included in CJL as a dependency:
 
 ```text
- compile 'com.cybersource:cybersource-rest-client-java:0.0.75'
+ compile 'com.cybersource:cybersource-rest-client-java:0.0.87'
 ```
 
 The dependency above brings in transitively two supporting libraries:
