@@ -3,8 +3,8 @@
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 25.4.1**
-August 2025
+**Version 25.4.2**
+April 2026
 
 ## Contents <!-- omit in toc -->
 <!-- TOC -->
@@ -168,6 +168,7 @@ August 2025
 | March 2025    | 25.3.0                       | - Message Level Encryption Support |
 | May 2025      | 25.4.0                       | - Disable Card BIN for Transient Token <br>- Payer Authentication upgraded to Cardinal Cruise Direct |
 | August 2025   | 25.4.1                       | - Multi Mid support via p12 |
+| April 2026    | 25.4.2                       | - Support for new Cardinal Commerce URLs <br> - Upgraded cybersource-rest-client-java to version 0.0.87 and AuthenticationSdk 0.0.42 |
 
 ### Audience and Purpose
 
@@ -256,7 +257,7 @@ More details on SAP Commerce accelerators: <https://help.sap.com/viewer/4c33bf18
 
 As part of reference functionality, the following features are supported:
 
-| Feature                                     | CJL 3.0.7 | SAP B2C | SAP B2B | Description                                         |
+| Feature                                     | CJL 3.0.8 | SAP B2C | SAP B2B | Description                                         |
 |---------------------------------------------|-----------|---------|---------|-----------------------------------------------------|
 | SA SOP                                      | Y         | Y       | Y       | Secure Acceptance Silent Order Post                 |
 | Microform v2                                | Y         | Y       | N       | Secure field - PCI compliant                        |
@@ -318,7 +319,7 @@ All technical installation concepts in this document are initial draft provided 
 The following components are required:
 
 1. SAP Commerce platform release v2011
-2. sap-commerce-payment-plugin-25.4.1.zip
+2. sap-commerce-payment-plugin-25.4.2.zip
 3. Java 11
 4. Required Dependencies installed in maven repository
 
@@ -328,12 +329,12 @@ The following components are required:
 
 #### Description <!-- omit in toc -->
 
-The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-3.0.7.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
+The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-3.0.8.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
 
 Following errors will be thrown during SAP Commerce build:
 
 ```text
-[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:3.0.7: Could not find artifact isv.payment.cjl:isv-payment-api:jar:3.0.7 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
+[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:3.0.8: Could not find artifact isv.payment.cjl:isv-payment-api:jar:3.0.8 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
 ```
 
 #### Solution <!-- omit in toc -->
@@ -343,10 +344,10 @@ The "isvpayment" extension comes with all the library binaries included in "hybr
 As a quick local build solution the dependency can be installed in local maven repository and retrieved as a cached dependency as per <https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html>.
 
 ```text
-$mvn install:install-file -Dfile=isv-payment-api-3.0.7.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=3.0.7 -Dpackaging=jar
+$mvn install:install-file -Dfile=isv-payment-api-3.0.8.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=3.0.8 -Dpackaging=jar
 ```
 
-Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.7.jar".
+Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.8.jar".
 
 > ![Note](images/note.jpg) According to SAP documentation:  The ant updateMavenDependencies task deletes all *.jar files from the lib folder by default. Only libraries listed in unmanaged-dependencies.txt files are not deleted.
 

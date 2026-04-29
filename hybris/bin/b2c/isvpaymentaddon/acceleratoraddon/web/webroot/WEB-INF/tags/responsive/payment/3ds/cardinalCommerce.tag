@@ -63,7 +63,7 @@
                         success: function (response) {
                             if('ACCEPT'== response.data.decision){
                                 window.addEventListener("message", (event) => {
-                                    if (event.origin === "https://centinelapistag.cardinalcommerce.com") {
+                                    if (event.origin === new URL(response.data.deviceDataCollectionURL).origin) {
                                         let data = JSON.parse(event.data);
                                         if (data != undefined && data.Status) {
                                             console.log('Data received successfully');
