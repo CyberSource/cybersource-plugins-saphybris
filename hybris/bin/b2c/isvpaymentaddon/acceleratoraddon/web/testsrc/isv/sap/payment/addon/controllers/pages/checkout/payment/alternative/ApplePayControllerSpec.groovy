@@ -47,13 +47,125 @@ class ApplePayControllerSpec extends Specification
     }
 
     @Test
-    def 'Should validate ApplePay merchant'()
+    def 'Should validate ApplePay merchant with valid Apple URL'()
     {
+        given:
+        def validUrl = 'https://apple-pay-gateway.apple.com/paymentservices/startSession'
+
         when:
-        controller.validateMerchant('validationUrl')
+        def response = controller.validateMerchant(validUrl)
 
         then:
-        1 * applePayPaymentFacade.createApplePaySession('validationUrl')
+        1 * applePayPaymentFacade.createApplePaySession(validUrl)
+        response.statusCode.value() == 200
+    }
+
+    @Test
+    def 'Should reject validation with non-Apple domain'()
+    {
+        given:
+        def maliciousUrl = 'https://evil.com/paymentservices/startSession'
+
+        when:
+        def response = controller.validateMerchant(maliciousUrl)
+
+        then:
+        0 * applePayPaymentFacade.createApplePaySession(_)
+        response.statusCode.value() == 403
+    }
+
+    @Test
+    def 'Should reject validation with non-HTTPS URL'()
+    {
+        given:
+        def insecureUrl = 'http://apple-pay-gateway.apple.com/paymentservices/startSession'
+
+        when:
+        def response = controller.validateMerchant(insecureUrl)
+
+        then:
+        0 * applePayPaymentFacade.createApplePaySession(_)
+        response.statusCode.value() == 400
+    }
+
+    @Test
+    def 'Should reject validation with empty URL'()
+    {
+        when:
+        def response = controller.validateMerchant('')
+
+        then:
+        0 * applePayPaymentFacade.createApplePaySession(_)
+        response.statusCode.value() == 400
+    }
+
+    @Test
+    def 'Should reject validation with null URL'()
+    {
+        when:
+        def response = controller.validateMerchant(null)
+
+        then:
+        0 * applePayPaymentFacade.createApplePaySession(_)
+        response.statusCode.value() == 400
+    }
+
+    @Test
+    def 'Should reject validation with malformed URL'()
+    {
+        when:
+        def response = controller.validateMerchant('not-a-valid-url')
+
+        then:
+        0 * applePayPaymentFacade.createApplePaySession(_)
+        response.statusCode.value() == 400
+    }
+
+    @Test
+    def 'Should reject validation with credentials in URL'()
+    {
+        given:
+        def urlWithCredentials = 'https://user:pass@apple-pay-gateway.apple.com/paymentservices/startSession'
+
+        when:
+        def response = controller.validateMerchant(urlWithCredentials)
+
+        then:
+        0 * applePayPaymentFacade.createApplePaySession(_)
+        response.statusCode.value() == 400
+    }
+
+    @Test
+    def 'Should validate with all legitimate Apple Pay gateway domains'()
+    {
+        given:
+        def validUrls = [
+                'https://apple-pay-gateway.apple.com/paymentservices/startSession',
+                'https://cn-apple-pay-gateway.apple.com/paymentservices/startSession',
+                'https://apple-pay-gateway-cert.apple.com/paymentservices/startSession',
+                'https://cn-apple-pay-gateway-cert.apple.com/paymentservices/startSession'
+        ]
+
+        when:
+        def responses = validUrls.collect { controller.validateMerchant(it) }
+
+        then:
+        validUrls.size() * applePayPaymentFacade.createApplePaySession(_)
+        responses.every { it.statusCode.value() == 200 }
+    }
+
+    @Test
+    def 'Should reject validation with subdomain that is not in allowlist'()
+    {
+        given:
+        def unauthorizedUrl = 'https://apple-pay-gateway-nc-pod1.apple.com/paymentservices/startSession'
+
+        when:
+        def response = controller.validateMerchant(unauthorizedUrl)
+
+        then:
+        0 * applePayPaymentFacade.createApplePaySession(_)
+        response.statusCode.value() == 403
     }
 
     @Test
