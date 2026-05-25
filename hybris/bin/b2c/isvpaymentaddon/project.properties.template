@@ -31,9 +31,6 @@ isv.payment.alternativepayment.alipay.reconcilationId=333333333401
 
 # production only
 #isv.payment.alternativepayment.alipay.merchanturl.host=http://www.alipay.net/cooperate/gateway.do
-# test
-# link to alipay stub controller, for testing only
-isv.payment.alternativepayment.alipay.merchanturl.host=/checkout/payment/ap/alipay
 
 # Apple Pay
 isv.payment.applepay.initiative=web
@@ -46,7 +43,7 @@ isv.payment.customer.applepay.apparel-de.initiative.context=<merchantID>
 isv.payment.customer.applepay.apparel-uk.initiative.context=<merchantID>
 
 # Sample keystores: 'isvpaymentaddon/applepay/keystores/isvDecryption/applePayMerchantId.jks' or 'isvpaymentaddon/applepay/keystores/merchDecryption/applePayMerchDecryption.jks'
-isv.payment.customer.applepay.keystore.location=isvpaymentaddon/applepay/keystores/merchDecryption/applePayMerchDecryption.jks
+isv.payment.customer.applepay.keystore.location=<apple pay merchantId.jks location>
 isv.payment.customer.applepay.keystore.password=<apple pay pwd>
 isv.payment.customer.applepay.merchantidentity.key.password=<apple pay pwd>
 isv.payment.customer.applepay.payment.privatekey.alias=<private key alias>

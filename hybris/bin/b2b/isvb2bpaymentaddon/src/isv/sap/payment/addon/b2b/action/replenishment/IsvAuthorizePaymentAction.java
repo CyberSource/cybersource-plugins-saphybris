@@ -46,15 +46,14 @@ public class IsvAuthorizePaymentAction extends AuthorizePaymentAction
             final String cardType = subscriptionEntry.getProperties().get(CARD_TYPE);
 
             final IsvPaymentTransactionEntryModel authorization = b2bPaymentAuthorizationHelper
-                    .authorizeRecurringPayment(subscriptionEntry, clonedCart);
+                    .authorizeRecurringPayment(subscriptionEntry, clonedCart); 
 
             if (isNotBlank(cardType))
             {
                 paymentTransactionService.addProperty(CARD_TYPE, cardType, authorization);
             }
 
-            final String status = b2bPaymentAuthorizationHelper.authorizeRecurringPayment(subscriptionEntry, clonedCart)
-                    .getTransactionStatus();
+            final String status = authorization.getTransactionStatus();
 
             return status.equals(ACCEPT) ? OK : NOK;
         }

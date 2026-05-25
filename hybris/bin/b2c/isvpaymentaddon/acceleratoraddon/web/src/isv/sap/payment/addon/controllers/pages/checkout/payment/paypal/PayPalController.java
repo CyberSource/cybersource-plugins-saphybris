@@ -66,11 +66,40 @@ public class PayPalController extends AbstractCheckoutController
 
             final CartModel sessionCart = cartService.getSessionCart();
 
+            final Double authorizedTotal = sessionCart.getTotalPrice();
+            final int authorizedItemCount = sessionCart.getEntries().size();
+            final String cartCode = sessionCart.getCode();
+
             if (payPalPaymentFacade.authorizePayPalPayment(sessionCart, token))
             {
-                final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
+                // Re-fetch the cart to detect any concurrent modifications
+                final CartModel currentCart = cartService.getSessionCart();
+
+                // Validate cart integrity: verify the cart hasn't been modified between authorization and placement
+                if (!cartCode.equals(currentCart.getCode()))
+                {
+                    LOG.error("Cart code mismatch detected. Expected: {}, Current: {}. Possible session manipulation.",
+                            cartCode, currentCart.getCode());
+                    return REDIRECT_PREFIX + PAYMENT_ERROR_URL;
+                }
+
+                final Double currentTotal = currentCart.getTotalPrice();
+                final int currentItemCount = currentCart.getEntries().size();
+
+                if (!authorizedTotal.equals(currentTotal) || authorizedItemCount != currentItemCount)
+                {
+                    LOG.error("Cart modification detected between authorization and placement. " +
+                            "Authorized total: {}, Current total: {}. " +
+                            "Authorized items: {}, Current items: {}. " +
+                            "Rejecting order to prevent race condition exploit.",
+                            authorizedTotal, currentTotal, authorizedItemCount, currentItemCount);
+                    return REDIRECT_PREFIX + PAYMENT_ERROR_URL;
+                }
+
+                final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(currentCart);
                 return REDIRECT_PREFIX + "/checkout/orderConfirmation/" + getOrderId(orderData);
             }
+
         }
         catch (final Exception ex)
         {

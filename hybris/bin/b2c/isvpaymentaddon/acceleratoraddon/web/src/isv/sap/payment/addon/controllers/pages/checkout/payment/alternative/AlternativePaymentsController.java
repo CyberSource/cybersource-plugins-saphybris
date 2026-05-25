@@ -31,6 +31,7 @@ import static de.hybris.platform.acceleratorstorefrontcommons.controllers.util.G
 import static java.util.Optional.empty;
 import static org.apache.commons.lang.StringUtils.containsIgnoreCase;
 import static org.springframework.http.ResponseEntity.ok;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Controller
 @RequestMapping(path = "/checkout/payment/ap")
@@ -166,6 +167,10 @@ public class AlternativePaymentsController extends AbstractCheckoutController
         {
             final String paramsUrl = url.substring(url.indexOf('?'));
             final String merchantHost = configurationService.getConfiguration().getString(ALIPAY_MERCHANT_URL_HOST);
+            if(isBlank(merchantHost)){
+                LOG.warn("Merchant host for Alipay is not configured, redirecting to return controller for testing controller");
+                return "/checkout/payment/ap/return?type=APY";
+            }
             return merchantHost + paramsUrl;
         }
         return url;

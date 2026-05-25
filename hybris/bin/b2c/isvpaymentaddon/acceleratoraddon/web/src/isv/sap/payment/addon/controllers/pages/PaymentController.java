@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import isv.sap.payment.model.IsvPaymentTransactionModel;
 import isv.sap.payment.addon.handler.ResponseHandler;
 import isv.sap.payment.addon.provider.OrderConfirmationPageProvider;
 import isv.sap.payment.commercefacades.order.PaymentCheckoutFacade;
@@ -65,6 +66,12 @@ public class PaymentController extends AbstractCheckoutController
             final CartModel cart = paymentCartService.getCartForGuid(orderNumber);
             if (cart != null)
             {
+                if (!validateMerchantId(paymentResponse, cart))
+                {
+                    LOG.error("Merchant ID validation failed for cart [{}]. Rejecting payment response.",
+                            LogUtils.encode(orderNumber));
+                    return "addon:/isvpaymentaddon/pages/checkout/payment/sa/response";
+                }
                 paymentCartService.executeWithCartLock(cart, () -> {
                     final AbstractOrderData orderData = doHandlePlaceOrder(paymentResponse, cart);
                     if (orderData != null)
@@ -95,6 +102,12 @@ public class PaymentController extends AbstractCheckoutController
         final CartModel cart = paymentCartService.getCartForGuid(orderNumber);
         if (cart != null)
         {
+             if (!validateMerchantId(paymentResponse, cart))
+            {
+                LOG.error("Merchant ID validation failed for cart [{}]. Rejecting payment response.",
+                        LogUtils.encode(orderNumber));
+                return;
+            }
             paymentCartService.executeWithCartLock(cart, () -> doHandlePlaceOrder(paymentResponse, cart));
         }
     }
@@ -126,10 +139,69 @@ public class PaymentController extends AbstractCheckoutController
         return referenceNumber;
     }
 
+    /**
+     * Validates that the merchant ID in the payment response matches the cart's configuration.
+     * This prevents replay attacks where an attacker uses a different merchant's credentials
+     * to forge valid signatures.
+     *
+     * @param paymentResponse the payment response containing merchant ID
+     * @param cart the cart being processed
+     * @return true if merchant ID is valid, false otherwise
+     */
+    private boolean validateMerchantId(final Map<String, String> paymentResponse, final CartModel cart)
+    {
+        final String responseMerchantId = paymentResponse.get(IsvPaymentConstants.SAResponseFields.MERCHANT_ID);
+ 
+        if (StringUtils.isEmpty(responseMerchantId))
+        {
+            LOG.error("Payment response does not contain merchant ID");
+            return false;
+        }
+ 
+        if (cart.getPaymentTransactions().isEmpty())
+        {
+            LOG.error("Cart does not contain any payment transactions to validate merchant ID");
+            return false;
+        }
+ 
+        final String expectedMerchantId = cart.getPaymentTransactions().stream()
+                .filter(IsvPaymentTransactionModel.class::isInstance)
+                .map(txn -> ((IsvPaymentTransactionModel) txn).getMerchantId())
+                .filter(StringUtils::isNotEmpty)
+                .findFirst()
+                .orElse(null);
+ 
+        if (StringUtils.isEmpty(expectedMerchantId))
+        {
+            LOG.error("No ISV payment transaction with merchant ID found on cart");
+            return false;
+        }
+ 
+        if (!responseMerchantId.equals(expectedMerchantId))
+        {
+            LOG.error("Merchant ID mismatch. Expected: {}, Received: {}. Rejecting to prevent merchant ID substitution attack.",
+                    LogUtils.encode(expectedMerchantId), LogUtils.encode(responseMerchantId));
+            return false;
+        }
+ 
+        return true;
+    }
+
     private AbstractOrderData doHandlePlaceOrder(final Map<String, String> paymentResponse, final CartModel cart)
     {
         try
         {
+            try
+            {
+                orderFacade.getOrderDetailsForGUID(cart.getGuid());
+                LOG.error("Order already exists for cart GUID [{}]. Rejecting duplicate order placement attempt.",
+                        LogUtils.encode(cart.getGuid()));
+                return null;
+            }
+            catch (final UnknownIdentifierException e)
+            {
+                LOG.error("Failed to place Order", e);
+            }
             if (isvResponseHandler.isValidSignature(paymentResponse))
             {
                 isvResponseHandler.processResponse(cart, paymentResponse);
