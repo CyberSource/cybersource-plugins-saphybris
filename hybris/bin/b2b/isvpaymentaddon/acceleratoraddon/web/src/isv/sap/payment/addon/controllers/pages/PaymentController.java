@@ -202,7 +202,6 @@ public class PaymentController extends AbstractCheckoutController
             {
                 LOG.error("Failed to place Order", e);
             }
-
             if (isvResponseHandler.isValidSignature(paymentResponse))
             {
                 isvResponseHandler.processResponse(cart, paymentResponse);

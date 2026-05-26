@@ -20,6 +20,7 @@ import isv.sap.payment.addon.facade.GooglePayPaymentFacade;
 import isv.sap.payment.commercefacades.order.PaymentCheckoutFacade;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 @Controller
 @RequestMapping(path = "/checkout/payment/ap/googlepay")
@@ -37,27 +38,47 @@ public class GooglePayController extends AbstractCheckoutController
 
     @Resource(name = "isv.sap.payment.paymentCheckoutFacade")
     private PaymentCheckoutFacade paymentCheckoutFacade;
-
+ 
     @RequestMapping(value = "/placeOrder", method = POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> placeOrder(@RequestBody final Map paymentData)
     {
         final CartModel sessionCart = cartService.getSessionCart();
-
+        final String[] orderId={null};
+ 
         try
         {
             if (googlePayPaymentFacade.authorizeGooglePayPayment(paymentData, sessionCart))
             {
-                final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
-
-                return ResponseEntity.ok("/checkout/orderConfirmation/" + getOrderId(orderData));
+                 if (!paymentCheckoutFacade.validateCart())
+                {
+                    LOG.error("Cart validation failed after Google Pay payment authorization");
+                    return ResponseEntity.unprocessableEntity().body(PAYMENT_ERROR_URL);
+                }
+ 
+                paymentCartService.executeWithCartLock(sessionCart, () -> {
+                    try
+                    {
+                        final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
+                        if(orderData!=null)
+                        {
+                            orderId[0] = getOrderId(orderData);
+                        }
+                    }
+                    catch (final Exception e)
+                    {
+                        LOG.error("Error While Processing Google Pay Response", e);
+                    }
+                });
+                if(orderId[0]!=null){
+                    return ResponseEntity.ok("/checkout/orderConfirmation/" + orderId[0]);
+                }
             }
         }
         catch (final Exception e)
         {
             LOG.error("Error while processing Google Pay placeOrder", e);
         }
-
         return ResponseEntity.unprocessableEntity().body(PAYMENT_ERROR_URL);
     }
 

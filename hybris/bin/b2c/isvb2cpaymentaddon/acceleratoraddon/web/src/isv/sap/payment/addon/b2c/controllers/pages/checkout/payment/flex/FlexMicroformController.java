@@ -41,6 +41,7 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import org.springframework.ui.Model;
 import org.apache.commons.text.StringEscapeUtils;
 import isv.sap.payment.addon.utils.AjaxResponse;
+import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 @Controller
 @RequestMapping(path = "/checkout/payment/flex")
@@ -258,12 +259,16 @@ public class FlexMicroformController extends AbstractCheckoutController
             return AjaxResponse.fail().put("redirectUrl", URL_PAYMENT_FAILED);
         }
     }
-
+ 
+    @Resource(name = "isv.sap.payment.paymentCartService")
+    private PaymentCartService paymentCartService;
+ 
     private String payAndPlaceOrder(final String transientToken, final String transactionId,
             final IsvPaymentTransactionEntryModel enrollmentTransaction)
     {
         final CartModel cart = cartService.getSessionCart();
-
+        final String[] response = {URL_PAYMENT_FAILED};
+ 
         boolean authorizationSucceeded;
         if (transactionId != null)
         {
@@ -279,21 +284,38 @@ public class FlexMicroformController extends AbstractCheckoutController
         {
             authorizationSucceeded = creditCardPaymentFacade.authorizeFlexCreditCardPayment(cart, transientToken);
         }
-
+ 
         if (authorizationSucceeded)
         {
             try
             {
-                final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(cart);
-                return URL_ORDER_CONFIRMATION + getOrderId(orderData);
+                if (!paymentCheckoutFacade.validateCart())
+                {
+                    LOG.error("Cart validation failed after Card payment authorization");
+                    return URL_PAYMENT_FAILED;
+                }
+ 
+                paymentCartService.executeWithCartLock(cart, () -> {
+                    try
+                    {
+                        final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(cart);
+                        if(orderData!=null){
+                            response[0] = URL_ORDER_CONFIRMATION + getOrderId(orderData);
+                        }
+                    }
+                    catch (final Exception e)
+                    {
+                        LOG.error("Error while placing order with Card payment", e);
+                    }
+                });
             }
-            catch (InvalidCartException e)
+            catch (final Exception e)
             {
                 LOG.error("Cart [{}]: Place order failed", cart.getCode(), e);
             }
         }
-
-        return URL_PAYMENT_FAILED;
+ 
+        return response[0];
     }
 
     private String getOrderId(final AbstractOrderData orderData)

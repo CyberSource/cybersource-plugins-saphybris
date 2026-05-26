@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import isv.sap.payment.addon.facade.PayPalPaymentFacade;
 import isv.sap.payment.commercefacades.order.PaymentCheckoutFacade;
+import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 @Controller
 @RequestMapping(path = "/checkout/payment/paypal")
@@ -54,59 +55,50 @@ public class PayPalController extends AbstractCheckoutController
             return REDIRECT_PREFIX + PAYMENT_ERROR_URL;
         }
     }
-
+ 
+    @Resource(name = "isv.sap.payment.paymentCartService")
+    private PaymentCartService paymentCartService;
+ 
     @RequestMapping(path = "/handleResponse", method = RequestMethod.GET)
     public String handleResponse(@RequestParam(name = "token") final String token,
             @RequestParam(name = "PayerID") final String payerId)
     {
+        final String[] returnUrl = {REDIRECT_PREFIX + PAYMENT_ERROR_URL};
         try
         {
             Preconditions.checkArgument(StringUtils.isNotBlank(token), "Paypal token can't be blank");
             Preconditions.checkArgument(StringUtils.isNotBlank(payerId), "Paypal PayerID can't be blank");
-
+ 
             final CartModel sessionCart = cartService.getSessionCart();
-            
-            // Capture cart state before authorization to detect race conditions
-            final Double authorizedTotal = sessionCart.getTotalPrice();
-            final int authorizedItemCount = sessionCart.getEntries().size();
-            final String cartCode = sessionCart.getCode();
-
+ 
             if (payPalPaymentFacade.authorizePayPalPayment(sessionCart, token))
             {
-                // Re-fetch the cart to detect any concurrent modifications
-                final CartModel currentCart = cartService.getSessionCart();
-
-                // Validate cart integrity: verify the cart hasn't been modified between authorization and placement
-                if (!cartCode.equals(currentCart.getCode()))
+                if (!paymentCheckoutFacade.validateCart())
                 {
-                    LOG.error("Cart code mismatch detected. Expected: {}, Current: {}. Possible session manipulation.",
-                            cartCode, currentCart.getCode());
+                    LOG.error("Cart validation failed after paypal authorization");
                     return REDIRECT_PREFIX + PAYMENT_ERROR_URL;
                 }
-
-                final Double currentTotal = currentCart.getTotalPrice();
-                final int currentItemCount = currentCart.getEntries().size();
-
-                if (!authorizedTotal.equals(currentTotal) || authorizedItemCount != currentItemCount)
-                {
-                    LOG.error("Cart modification detected between authorization and placement. " +
-                            "Authorized total: {}, Current total: {}. " +
-                            "Authorized items: {}, Current items: {}. " +
-                            "Rejecting order to prevent race condition exploit.",
-                            authorizedTotal, currentTotal, authorizedItemCount, currentItemCount);
-                    return REDIRECT_PREFIX + PAYMENT_ERROR_URL;
-                }
-
-                final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(currentCart);
-                return REDIRECT_PREFIX + "/checkout/orderConfirmation/" + getOrderId(orderData);
+                paymentCartService.executeWithCartLock(sessionCart, () -> {
+                    try
+                    {
+                        final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
+                        if(orderData!=null)
+                        {
+                            returnUrl[0] = REDIRECT_PREFIX + "/checkout/orderConfirmation/" + getOrderId(orderData);
+                        }
+                    }
+                    catch (final Exception e)
+                    {
+                        LOG.error("Error while processing paypal response", e);
+                    }
+                });
             }
-           
         }
         catch (final Exception ex)
         {
             LOG.error("Exception happened during processing paypal response", ex);
         }
-        return REDIRECT_PREFIX + PAYMENT_ERROR_URL;
+        return returnUrl[0];
     }
 
     private String getOrderId(final AbstractOrderData orderData)

@@ -28,6 +28,7 @@ import isv.sap.payment.commercefacades.order.PaymentCheckoutFacade;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 @Controller
 @RequestMapping(path = "/checkout/payment/ap/applepay")
@@ -106,27 +107,50 @@ public class ApplePayController extends AbstractCheckoutController
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
+ 
+    @Resource(name = "isv.sap.payment.paymentCartService")
+    private PaymentCartService paymentCartService;
+ 
     @RequestMapping(value = "/placeOrder", method = POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> placeOrder(@RequestBody final Map paymentToken)
     {
         final CartModel sessionCart = cartService.getSessionCart();
-
+        final String[] orderId={null};
+ 
         try
         {
             if (applePayPaymentFacade.authorizeApplePayPayment(paymentToken, sessionCart))
             {
-                final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
-
-                return ResponseEntity.ok("/checkout/orderConfirmation/" + getOrderId(orderData));
+                 if (!paymentCheckoutFacade.validateCart())
+                {
+                    LOG.error("Cart validation failed after Apple Pay payment authorization");
+                    return ResponseEntity.unprocessableEntity().body(PAYMENT_ERROR_URL);
+                }
+                paymentCartService.executeWithCartLock(sessionCart, () -> {
+                    try
+                    {
+                        final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
+                        if(orderData!=null)
+                        {
+                            orderId[0] = getOrderId(orderData);
+                        }
+                    }
+                    catch (final Exception e)
+                    {
+                        LOG.error("Error while placing order with Apple Pay payment", e);
+                    }
+                });
+                if(orderId[0]!=null){
+                    return ResponseEntity.ok("/checkout/orderConfirmation/" + orderId[0]);
+                }
             }
         }
         catch (final Exception e)
         {
             LOG.error("Error while processing ApplePay placeOrder", e);
         }
-
+ 
         return ResponseEntity.unprocessableEntity().body(PAYMENT_ERROR_URL);
     }
 

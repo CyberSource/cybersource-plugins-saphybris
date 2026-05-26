@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import isv.sap.payment.addon.facade.VisaCheckoutPaymentFacade;
 import isv.sap.payment.commercefacades.order.PaymentCheckoutFacade;
+import isv.sap.payment.commerceservices.order.PaymentCartService; 
 
 @Controller
 @RequestMapping(path = "/checkout/payment/vc/success")
@@ -43,30 +44,48 @@ public class VisaCheckoutController extends AbstractCheckoutController
     @Resource
     private CartService cartService;
 
+    @Resource(name = "isv.sap.payment.paymentCartService")
+    private PaymentCartService paymentCartService;
+ 
     @RequireHardLogIn
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public String success(@RequestParam(name = VISA_CHECKOUT_CALL_ID) final String callId,
             @RequestParam(name = "expressCheckout") final boolean expressCheckout)
     {
+        final String[] response = {REDIRECT_PREFIX + PAYMENT_ERROR_URL};
         try
         {
             Preconditions.checkArgument(StringUtils.isNotBlank(callId), "Visa Checkout callId can't be blank");
-
+ 
             final CartModel sessionCart = cartService.getSessionCart();
-
+ 
             if (visaCheckoutPaymentFacade.authorizeVisaCheckoutPayment(sessionCart, callId, !expressCheckout))
             {
-                final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
-
-                return REDIRECT_URL_ORDER_CONFIRMATION + getOrderId(orderData);
+                if (!paymentCheckoutFacade.validateCart())
+                {
+                    LOG.error("Cart validation failed after Visa Checkout payment authorization");
+                     return REDIRECT_PREFIX + PAYMENT_ERROR_URL;
+                }
+                paymentCartService.executeWithCartLock(sessionCart, () -> {
+                    try
+                    {
+                        final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
+                        if(orderData!=null){
+                            response[0] = REDIRECT_URL_ORDER_CONFIRMATION + getOrderId(orderData);
+                        }
+                    }
+                    catch (final Exception e)
+                    {
+                        LOG.error("Error while placing order with Visa Checkout payment", e);
+                    }
+                });
             }
         }
         catch (final Exception ex)
         {
             LOG.error("Exception happened during processing visa checkout response", ex);
         }
-
-        return REDIRECT_PREFIX + PAYMENT_ERROR_URL;
+        return response[0];
     }
 
     @RequireHardLogIn

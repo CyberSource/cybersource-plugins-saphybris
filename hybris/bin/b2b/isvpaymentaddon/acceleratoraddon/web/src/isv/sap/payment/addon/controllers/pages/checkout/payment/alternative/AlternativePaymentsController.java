@@ -32,6 +32,7 @@ import static java.util.Optional.empty;
 import static org.apache.commons.lang.StringUtils.containsIgnoreCase;
 import static org.springframework.http.ResponseEntity.ok;
 import org.apache.commons.text.StringEscapeUtils;
+import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 @Controller
 @RequestMapping(path = "/checkout/payment/ap")
@@ -135,14 +136,36 @@ public class AlternativePaymentsController extends AbstractCheckoutController
             return empty();
         }
     }
-
+ 
+    @Resource(name = "isv.sap.payment.paymentCartService")
+    private PaymentCartService paymentCartService;
+ 
     private Optional<AbstractOrderData> placeOrder(final CartModel cart, final String paymentType)
     {
+        final Optional<AbstractOrderData>[] orderDataOptional = new Optional[]{empty()};
+ 
         try
         {
             if (alternativePaymentFacade.validateAlternativePaymentResponse(cart, paymentType))
             {
-                return Optional.of(paymentCheckoutFacade.performPlaceOrder(cart));
+                if (!paymentCheckoutFacade.validateCart())
+                {
+                    LOG.error("Cart validation failed after alternative payment authorization");
+                    return Optional.empty();
+                }
+                paymentCartService.executeWithCartLock(cart, () -> {
+                    try
+                    {
+                        final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(cart);
+                        if(orderData!=null){
+                            orderDataOptional[0] = Optional.ofNullable(orderData);
+                        }
+                    }
+                    catch (final Exception e)
+                    {
+                        LOG.error("Error while placing order with alternative payment", e);
+                    }
+                });
             }
         }
         catch (final Exception ex)
@@ -150,8 +173,8 @@ public class AlternativePaymentsController extends AbstractCheckoutController
             LOG.error("Exception during processing return for alternative payment", ex);
             return empty();
         }
-
-        return empty();
+ 
+        return orderDataOptional[0];
     }
 
     protected String redirectToOrderConfirmation(final AbstractOrderData orderData)
