@@ -1218,11 +1218,10 @@ There are also some additional configuration values:
 
 ```text
 // ApplePay customer configs
-isv.payment.customer.applepay.merchant.identifier=merchant.com.tacitknowledge.cybsxt
-isv.payment.customer.applepay.keystore.location=applepay/keystores/applePayMerchDecryption.jks
-isv.payment.customer.applepay.keystore.password=123456
-isv.payment.customer.applepay.payment.privatekey.alias=tk merch decrypt
-isv.payment.customer.applepay.payment.privatekey.password=123456
+isv.payment.customer.applepay.keystore.location=<apple pay merchantId.jks location>
+isv.payment.customer.applepay.keystore.password=<apple pay pwd>
+isv.payment.customer.applepay.payment.privatekey.alias=<private key alias>
+isv.payment.customer.applepay.payment.privatekey.password=<apple pay pwd>
 isv.payment.customer.applepay.payment.expiration.time=-1
 isv.payment.applePay.supported.ssl.protocols=TLSv1.2
 isv.payment.applepay.initiative=web

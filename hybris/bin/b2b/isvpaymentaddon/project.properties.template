@@ -46,7 +46,7 @@ isv.payment.customer.applepay.apparel-de.initiative.context=<context>
 isv.payment.customer.applepay.apparel-uk.initiative.context=<context>
 
 # Sample keystores: 'isvpaymentaddon/applepay/keystores/isvDecryption/applePayMerchantId.jks' or 'isvpaymentaddon/applepay/keystores/merchDecryption/applePayMerchDecryption.jks'
-isv.payment.customer.applepay.keystore.location=isvpaymentaddon/applepay/keystores/merchDecryption/applePayMerchDecryption.jks
+isv.payment.customer.applepay.keystore.location=<apple pay merchantId.jks location>
 isv.payment.customer.applepay.keystore.password=<password>
 isv.payment.customer.applepay.merchantidentity.key.password=<password>
 isv.payment.customer.applepay.payment.privatekey.alias=<privatekey_alias>
