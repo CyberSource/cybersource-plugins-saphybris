@@ -38,7 +38,10 @@ public class GooglePayController extends AbstractCheckoutController
 
     @Resource(name = "isv.sap.payment.paymentCheckoutFacade")
     private PaymentCheckoutFacade paymentCheckoutFacade;
- 
+
+    @Resource(name = "isv.sap.payment.paymentCartService")
+    private PaymentCartService paymentCartService;
+
     @RequestMapping(value = "/placeOrder", method = POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> placeOrder(@RequestBody final Map paymentData)
