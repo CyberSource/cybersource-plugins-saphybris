@@ -8,6 +8,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.servicelayer.model.ModelService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,10 @@ public class VisaCheckoutController extends AbstractCheckoutController
 
     @Resource(name = "isv.sap.payment.paymentCartService")
     private PaymentCartService paymentCartService;
- 
+
+    @Resource
+    private ModelService modelService;
+
     @RequireHardLogIn
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public String success(@RequestParam(name = VISA_CHECKOUT_CALL_ID) final String callId,
@@ -56,21 +60,38 @@ public class VisaCheckoutController extends AbstractCheckoutController
         try
         {
             Preconditions.checkArgument(StringUtils.isNotBlank(callId), "Visa Checkout callId can't be blank");
- 
+
             final CartModel sessionCart = cartService.getSessionCart();
- 
+
+            // Capture cart state before authorization
+            final Double authorizedTotal = sessionCart.getTotalPrice();
+            final int authorizedItemCount = sessionCart.getEntries().size();
+
             if (visaCheckoutPaymentFacade.authorizeVisaCheckoutPayment(sessionCart, callId, !expressCheckout))
             {
-                if (!paymentCheckoutFacade.validateCart())
-                {
-                    LOG.error("Cart validation failed after Visa Checkout payment authorization");
-                     return REDIRECT_PREFIX + PAYMENT_ERROR_URL;
-                }
                 paymentCartService.executeWithCartLock(sessionCart, () -> {
                     try
                     {
+                        // Refresh cart to get current database state after lock acquisition
+                        modelService.refresh(sessionCart);
+
+                        // Re-validate cart state against authorized amounts inside critical section
+                        final Double currentTotal = sessionCart.getTotalPrice();
+                        final int currentItemCount = sessionCart.getEntries().size();
+
+                        if (!authorizedTotal.equals(currentTotal) || authorizedItemCount != currentItemCount)
+                        {
+                            LOG.error("Cart modification detected inside lock. " +
+                                    "Authorized total: {}, Current total: {}. " +
+                                    "Authorized items: {}, Current items: {}. " +
+                                    "Rejecting order to prevent race condition exploit.",
+                                    authorizedTotal, currentTotal, authorizedItemCount, currentItemCount);
+                            return;
+                        }
+
                         final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
-                        if(orderData!=null){
+                        if(orderData != null)
+                        {
                             response[0] = REDIRECT_URL_ORDER_CONFIRMATION + getOrderId(orderData);
                         }
                     }

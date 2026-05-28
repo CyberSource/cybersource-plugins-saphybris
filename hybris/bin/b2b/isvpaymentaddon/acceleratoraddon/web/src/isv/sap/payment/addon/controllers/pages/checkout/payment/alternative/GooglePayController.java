@@ -7,6 +7,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.servicelayer.model.ModelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import isv.sap.payment.addon.facade.GooglePayPaymentFacade;
 import isv.sap.payment.commercefacades.order.PaymentCheckoutFacade;
+import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 @Controller
 @RequestMapping(path = "/checkout/payment/ap/googlepay")
@@ -41,29 +42,48 @@ public class GooglePayController extends AbstractCheckoutController
  
     @Resource(name = "isv.sap.payment.paymentCartService")
     private PaymentCartService paymentCartService;
- 
+
+    @Resource
+    private ModelService modelService;
+
     @RequestMapping(value = "/placeOrder", method = POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> placeOrder(@RequestBody final Map paymentData)
     {
         final CartModel sessionCart = cartService.getSessionCart();
-        final String[] orderId={null};
- 
+
+        // Capture cart state before authorization
+        final Double authorizedTotal = sessionCart.getTotalPrice();
+        final int authorizedItemCount = sessionCart.getEntries().size();
+
+        final String[] orderId = {null};
+
         try
         {
             if (googlePayPaymentFacade.authorizeGooglePayPayment(paymentData, sessionCart))
             {
-                 if (!paymentCheckoutFacade.validateCart())
-                {
-                    LOG.error("Cart validation failed after Google Pay payment authorization");
-                    return ResponseEntity.unprocessableEntity().body(PAYMENT_ERROR_URL);
-                }
- 
                 paymentCartService.executeWithCartLock(sessionCart, () -> {
                     try
                     {
+                        // Refresh cart to get current database state after lock acquisition
+                        modelService.refresh(sessionCart);
+
+                        // Re-validate cart state against authorized amounts inside critical section
+                        final Double currentTotal = sessionCart.getTotalPrice();
+                        final int currentItemCount = sessionCart.getEntries().size();
+
+                        if (!authorizedTotal.equals(currentTotal) || authorizedItemCount != currentItemCount)
+                        {
+                            LOG.error("Cart modification detected inside lock. " +
+                                    "Authorized total: {}, Current total: {}. " +
+                                    "Authorized items: {}, Current items: {}. " +
+                                    "Rejecting order to prevent race condition exploit.",
+                                    authorizedTotal, currentTotal, authorizedItemCount, currentItemCount);
+                            return;
+                        }
+
                         final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
-                        if(orderData!=null)
+                        if(orderData != null)
                         {
                             orderId[0] = getOrderId(orderData);
                         }
@@ -73,7 +93,9 @@ public class GooglePayController extends AbstractCheckoutController
                         LOG.error("Error While Processing Google Pay Response", e);
                     }
                 });
-                if(orderId[0]!=null){
+
+                if(orderId[0] != null)
+                {
                     return ResponseEntity.ok("/checkout/orderConfirmation/" + orderId[0]);
                 }
             }
@@ -82,7 +104,7 @@ public class GooglePayController extends AbstractCheckoutController
         {
             LOG.error("Error while processing Google Pay placeOrder", e);
         }
- 
+
         return ResponseEntity.unprocessableEntity().body(PAYMENT_ERROR_URL);
     }
 
