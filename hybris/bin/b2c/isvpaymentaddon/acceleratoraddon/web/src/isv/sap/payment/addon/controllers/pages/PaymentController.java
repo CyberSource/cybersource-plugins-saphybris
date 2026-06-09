@@ -30,6 +30,9 @@ import isv.sap.payment.commerceservices.order.PaymentCartService;
 import isv.sap.payment.constants.IsvPaymentConstants;
 import isv.sap.payment.utils.LogUtils;
 
+import static isv.cjl.payment.enums.PaymentType.CREDIT_CARD;
+import isv.cjl.payment.service.MerchantService;
+
 @Controller
 @RequestMapping("/checkout/payment/sa")
 public class PaymentController extends AbstractCheckoutController
@@ -52,6 +55,9 @@ public class PaymentController extends AbstractCheckoutController
 
     @Resource
     private OrderConfirmationPageProvider orderConfirmationPageProvider;
+
+    @Resource(name = "isv.sap.payment.hybrisMerchantService")
+    private MerchantService merchantService;
 
     @RequestMapping(value = "/receipt", method = RequestMethod.POST)
     public String handlerReceiptPost(final HttpServletRequest request, final Model model)
@@ -158,18 +164,7 @@ public class PaymentController extends AbstractCheckoutController
             return false;
         }
  
-        if (cart.getPaymentTransactions().isEmpty())
-        {
-            LOG.error("Cart does not contain any payment transactions to validate merchant ID");
-            return false;
-        }
- 
-        final String expectedMerchantId = cart.getPaymentTransactions().stream()
-                .filter(IsvPaymentTransactionModel.class::isInstance)
-                .map(txn -> ((IsvPaymentTransactionModel) txn).getMerchantId())
-                .filter(StringUtils::isNotEmpty)
-                .findFirst()
-                .orElse(null);
+        final String expectedMerchantId =   merchantService.getCurrentMerchant(CREDIT_CARD).getId();
  
         if (StringUtils.isEmpty(expectedMerchantId))
         {
