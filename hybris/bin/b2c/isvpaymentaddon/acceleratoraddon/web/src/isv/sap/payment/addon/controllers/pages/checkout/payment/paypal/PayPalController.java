@@ -8,6 +8,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMe
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.servicelayer.model.ModelService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import isv.sap.payment.addon.facade.PayPalPaymentFacade;
 import isv.sap.payment.commercefacades.order.PaymentCheckoutFacade;
+import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 @Controller
 @RequestMapping(path = "/checkout/payment/paypal")
@@ -55,10 +57,17 @@ public class PayPalController extends AbstractCheckoutController
         }
     }
 
+    @Resource(name = "isv.sap.payment.paymentCartService")
+    private PaymentCartService paymentCartService;
+
+    @Resource
+    private ModelService modelService;
+
     @RequestMapping(path = "/handleResponse", method = RequestMethod.GET)
     public String handleResponse(@RequestParam(name = "token") final String token,
             @RequestParam(name = "PayerID") final String payerId)
     {
+        final String[] returnUrl = {REDIRECT_PREFIX + PAYMENT_ERROR_URL};
         try
         {
             Preconditions.checkArgument(StringUtils.isNotBlank(token), "Paypal token can't be blank");
@@ -66,17 +75,50 @@ public class PayPalController extends AbstractCheckoutController
 
             final CartModel sessionCart = cartService.getSessionCart();
 
+            // Capture cart state before authorization
+            final Double authorizedTotal = sessionCart.getTotalPrice();
+            final int authorizedItemCount = sessionCart.getEntries().size();
+
             if (payPalPaymentFacade.authorizePayPalPayment(sessionCart, token))
             {
-                final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
-                return REDIRECT_PREFIX + "/checkout/orderConfirmation/" + getOrderId(orderData);
+                paymentCartService.executeWithCartLock(sessionCart, () -> {
+                    try
+                    {
+                        // Refresh cart to get current database state after lock acquisition
+                        modelService.refresh(sessionCart);
+
+                        // Re-validate cart state against authorized amounts inside critical section
+                        final Double currentTotal = sessionCart.getTotalPrice();
+                        final int currentItemCount = sessionCart.getEntries().size();
+
+                        if (!authorizedTotal.equals(currentTotal) || authorizedItemCount != currentItemCount)
+                        {
+                            LOG.error("Cart modification detected inside lock. " +
+                                    "Authorized total: {}, Current total: {}. " +
+                                    "Authorized items: {}, Current items: {}. " +
+                                    "Rejecting order to prevent race condition exploit.",
+                                    authorizedTotal, currentTotal, authorizedItemCount, currentItemCount);
+                            return;
+                        }
+
+                        final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
+                        if(orderData != null)
+                        {
+                            returnUrl[0] = REDIRECT_PREFIX + "/checkout/orderConfirmation/" + getOrderId(orderData);
+                        }
+                    }
+                    catch (final Exception e)
+                    {
+                        LOG.error("Error while processing paypal response", e);
+                    }
+                });
             }
         }
         catch (final Exception ex)
         {
             LOG.error("Exception happened during processing paypal response", ex);
         }
-        return REDIRECT_PREFIX + PAYMENT_ERROR_URL;
+        return returnUrl[0];
     }
 
     private String getOrderId(final AbstractOrderData orderData)

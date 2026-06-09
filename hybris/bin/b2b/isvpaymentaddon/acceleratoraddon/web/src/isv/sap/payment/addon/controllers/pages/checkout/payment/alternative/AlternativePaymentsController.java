@@ -10,6 +10,7 @@ import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.model.ModelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import isv.sap.payment.addon.enums.CheckStatusResponse;
 import isv.sap.payment.addon.facade.AlternativePaymentFacade;
 import isv.sap.payment.addon.facade.AlternativePaymentStatusFacade;
 import isv.sap.payment.commercefacades.order.PaymentCheckoutFacade;
+import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 import static de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages.addErrorMessage;
 import static java.util.Optional.empty;
@@ -135,14 +137,56 @@ public class AlternativePaymentsController extends AbstractCheckoutController
             return empty();
         }
     }
+ 
+    @Resource(name = "isv.sap.payment.paymentCartService")
+    private PaymentCartService paymentCartService;
+
+    @Resource
+    private ModelService modelService;
 
     private Optional<AbstractOrderData> placeOrder(final CartModel cart, final String paymentType)
     {
+        final Optional<AbstractOrderData>[] orderDataOptional = new Optional[]{empty()};
+
         try
         {
             if (alternativePaymentFacade.validateAlternativePaymentResponse(cart, paymentType))
             {
-                return Optional.of(paymentCheckoutFacade.performPlaceOrder(cart));
+                // Capture cart state before locking
+                final Double authorizedTotal = cart.getTotalPrice();
+                final int authorizedItemCount = cart.getEntries().size();
+
+                paymentCartService.executeWithCartLock(cart, () -> {
+                    try
+                    {
+                        // Refresh cart to get current database state after lock acquisition
+                        modelService.refresh(cart);
+
+                        // Re-validate cart state against authorized amounts inside critical section
+                        final Double currentTotal = cart.getTotalPrice();
+                        final int currentItemCount = cart.getEntries().size();
+
+                        if (!authorizedTotal.equals(currentTotal) || authorizedItemCount != currentItemCount)
+                        {
+                            LOG.error("Cart modification detected inside lock. " +
+                                    "Authorized total: {}, Current total: {}. " +
+                                    "Authorized items: {}, Current items: {}. " +
+                                    "Rejecting order to prevent race condition exploit.",
+                                    authorizedTotal, currentTotal, authorizedItemCount, currentItemCount);
+                            return;
+                        }
+
+                        final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(cart);
+                        if(orderData != null)
+                        {
+                            orderDataOptional[0] = Optional.ofNullable(orderData);
+                        }
+                    }
+                    catch (final Exception e)
+                    {
+                        LOG.error("Error while placing order with alternative payment", e);
+                    }
+                });
             }
         }
         catch (final Exception ex)
@@ -151,7 +195,7 @@ public class AlternativePaymentsController extends AbstractCheckoutController
             return empty();
         }
 
-        return empty();
+        return orderDataOptional[0];
     }
 
     protected String redirectToOrderConfirmation(final AbstractOrderData orderData)

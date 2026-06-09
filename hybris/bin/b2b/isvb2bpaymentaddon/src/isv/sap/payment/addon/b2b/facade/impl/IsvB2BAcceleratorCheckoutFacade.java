@@ -46,6 +46,13 @@ public class IsvB2BAcceleratorCheckoutFacade extends DefaultB2BAcceleratorChecko
     private B2bPaymentAuthorizationHelper b2bPaymentAuthorizationHelper;
 
     @Override
+    public boolean validateCart()
+    {
+        final CartData cartData = getCheckoutCart();
+        return cartData != null && validOrder(getCart());
+    }
+    
+    @Override
     public AbstractOrderData performPlaceOrder(final CartModel cart) throws InvalidCartException
     {
         if (cart != null)

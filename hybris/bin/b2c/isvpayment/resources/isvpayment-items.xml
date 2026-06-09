@@ -310,7 +310,7 @@
                 </attribute>
                 <attribute qualifier="passwordToken" type="java.lang.String">
                     <description>SO API credentials: password token</description>
-                    <modifiers read="true" write="true" search="true"/>
+                    <modifiers read="true" write="true" encrypted="true"/>
                     <persistence type="property">
                         <columntype>
                             <value>HYBRIS.LONG_STRING</value>
@@ -346,7 +346,7 @@
                     <persistence type="property"/>
                 </attribute>
                 <attribute qualifier="secretKey" type="java.lang.String">
-                    <modifiers read="true" write="true" search="true"/>
+                    <modifiers read="true" write="true" encrypted="true"/>
                     <persistence type="property">
                         <columntype>
                             <value>HYBRIS.LONG_STRING</value>

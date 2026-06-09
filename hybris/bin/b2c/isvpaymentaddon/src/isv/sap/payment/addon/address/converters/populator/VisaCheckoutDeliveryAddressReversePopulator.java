@@ -21,8 +21,8 @@ public class VisaCheckoutDeliveryAddressReversePopulator
         addressModel.setPhone1(transactionProperties.get("billToPhoneNumber"));
         addressModel.setPostalcode(transactionProperties.get("billToPostalCode"));
         addressModel.setStreetname(transactionProperties.get("billToStreet1"));
-        addressModel.setStreetname(transactionProperties.get("billToStreet2"));
+        addressModel.setStreetnumber(transactionProperties.get("billToStreet2")); 
 
-        
+
     }
 }

@@ -164,7 +164,7 @@ public class CheckoutController extends AbstractCheckoutController
             GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
                     "guest.checkout.existingaccount.register.error", new Object[]
                             {form.getUid()});
-            return REDIRECT_PREFIX + request.getHeader("Referer");
+            return REDIRECT_PREFIX + "/checkout/orderConfirmation/" + form.getOrderCode();
         }
 
         return REDIRECT_PREFIX + "/";

@@ -19,7 +19,12 @@ public class CorePaymentServiceExecutor extends DefaultPaymentServiceExecutor
     @Override
     public PaymentServiceResult execute(final PaymentServiceRequest request)
     {
-        LOG.debug("executing payment service request from core library for request: {}", request);
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("Executing payment service request - Service: {}, Method: {}",
+                    request.getPaymentService() != null ? request.getPaymentService().name() : "null",
+                    request.getPaymentType() != null ? request.getPaymentType().name() : "null");
+        }
 
         final isv.cjl.payment.service.executor.PaymentServiceResult result = executeSuper(request);
 

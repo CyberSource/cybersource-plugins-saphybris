@@ -13,6 +13,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.servicelayer.model.ModelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import isv.sap.payment.addon.facade.ApplePayPaymentFacade;
 import isv.sap.payment.commercefacades.order.PaymentCheckoutFacade;
+import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -106,6 +108,12 @@ public class ApplePayController extends AbstractCheckoutController
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+ 
+    @Resource(name = "isv.sap.payment.paymentCartService")
+    private PaymentCartService paymentCartService;
+
+    @Resource
+    private ModelService modelService;
 
     @RequestMapping(value = "/placeOrder", method = POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -113,13 +121,52 @@ public class ApplePayController extends AbstractCheckoutController
     {
         final CartModel sessionCart = cartService.getSessionCart();
 
+        // Capture cart state before authorization
+        final Double authorizedTotal = sessionCart.getTotalPrice();
+        final int authorizedItemCount = sessionCart.getEntries().size();
+
+        final String[] orderId = {null};
+
         try
         {
             if (applePayPaymentFacade.authorizeApplePayPayment(paymentToken, sessionCart))
             {
-                final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
+                paymentCartService.executeWithCartLock(sessionCart, () -> {
+                    try
+                    {
+                        // Refresh cart to get current database state after lock acquisition
+                        modelService.refresh(sessionCart);
 
-                return ResponseEntity.ok("/checkout/orderConfirmation/" + getOrderId(orderData));
+                        // Re-validate cart state against authorized amounts inside critical section
+                        final Double currentTotal = sessionCart.getTotalPrice();
+                        final int currentItemCount = sessionCart.getEntries().size();
+
+                        if (!authorizedTotal.equals(currentTotal) || authorizedItemCount != currentItemCount)
+                        {
+                            LOG.error("Cart modification detected inside lock. " +
+                                    "Authorized total: {}, Current total: {}. " +
+                                    "Authorized items: {}, Current items: {}. " +
+                                    "Rejecting order to prevent race condition exploit.",
+                                    authorizedTotal, currentTotal, authorizedItemCount, currentItemCount);
+                            return;
+                        }
+
+                        final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(sessionCart);
+                        if(orderData != null)
+                        {
+                            orderId[0] = getOrderId(orderData);
+                        }
+                    }
+                    catch (final Exception e)
+                    {
+                        LOG.error("Error while placing order with Apple Pay payment", e);
+                    }
+                });
+
+                if(orderId[0] != null)
+                {
+                    return ResponseEntity.ok("/checkout/orderConfirmation/" + orderId[0]);
+                }
             }
         }
         catch (final Exception e)

@@ -10,6 +10,7 @@ import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.Config;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import org.springframework.ui.Model;
 import org.apache.commons.text.StringEscapeUtils;
 import isv.sap.payment.addon.utils.AjaxResponse;
+import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 @Controller
 @RequestMapping(path = "/checkout/payment/flex")
@@ -258,11 +260,22 @@ public class FlexMicroformController extends AbstractCheckoutController
             return AjaxResponse.fail().put("redirectUrl", URL_PAYMENT_FAILED);
         }
     }
+ 
+    @Resource(name = "isv.sap.payment.paymentCartService")
+    private PaymentCartService paymentCartService;
+
+    @Resource
+    private ModelService modelService;
 
     private String payAndPlaceOrder(final String transientToken, final String transactionId,
             final IsvPaymentTransactionEntryModel enrollmentTransaction)
     {
         final CartModel cart = cartService.getSessionCart();
+        final String[] response = {URL_PAYMENT_FAILED};
+
+        // Capture cart state before authorization
+        final Double authorizedTotal = cart.getTotalPrice();
+        final int authorizedItemCount = cart.getEntries().size();
 
         boolean authorizationSucceeded;
         if (transactionId != null)
@@ -284,16 +297,45 @@ public class FlexMicroformController extends AbstractCheckoutController
         {
             try
             {
-                final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(cart);
-                return URL_ORDER_CONFIRMATION + getOrderId(orderData);
+                paymentCartService.executeWithCartLock(cart, () -> {
+                    try
+                    {
+                        // Refresh cart to get current database state after lock acquisition
+                        modelService.refresh(cart);
+
+                        // Re-validate cart state against authorized amounts inside critical section
+                        final Double currentTotal = cart.getTotalPrice();
+                        final int currentItemCount = cart.getEntries().size();
+
+                        if (!authorizedTotal.equals(currentTotal) || authorizedItemCount != currentItemCount)
+                        {
+                            LOG.error("Cart modification detected inside lock. " +
+                                    "Authorized total: {}, Current total: {}. " +
+                                    "Authorized items: {}, Current items: {}. " +
+                                    "Rejecting order to prevent race condition exploit.",
+                                    authorizedTotal, currentTotal, authorizedItemCount, currentItemCount);
+                            return;
+                        }
+
+                        final AbstractOrderData orderData = paymentCheckoutFacade.performPlaceOrder(cart);
+                        if(orderData != null)
+                        {
+                            response[0] = URL_ORDER_CONFIRMATION + getOrderId(orderData);
+                        }
+                    }
+                    catch (final Exception e)
+                    {
+                        LOG.error("Error while placing order with Card payment", e);
+                    }
+                });
             }
-            catch (InvalidCartException e)
+            catch (final Exception e)
             {
                 LOG.error("Cart [{}]: Place order failed", cart.getCode(), e);
             }
         }
 
-        return URL_PAYMENT_FAILED;
+        return response[0];
     }
 
     private String getOrderId(final AbstractOrderData orderData)

@@ -25,4 +25,11 @@ public interface PaymentCheckoutFacade
      * @return true if cart data is valid, otherwise false
      */
     boolean validOrder(final CartModel cart);
+
+        /**
+     * Checks the validity of card data.
+     *
+     * @return boolean true if cart data is valid, otherwise false
+     */
+    boolean validateCart();
 }
