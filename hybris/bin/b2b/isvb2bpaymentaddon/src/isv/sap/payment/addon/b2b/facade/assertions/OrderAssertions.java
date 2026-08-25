@@ -3,9 +3,9 @@ package isv.sap.payment.addon.b2b.facade.assertions;
 import de.hybris.platform.b2bacceleratorfacades.checkout.data.PlaceOrderData;
 import de.hybris.platform.b2bacceleratorfacades.exception.EntityValidationException;
 import de.hybris.platform.b2bacceleratorfacades.order.data.B2BReplenishmentRecurrenceEnum;
-import de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType;
+import de.hybris.platform.b2b.enums.CheckoutPaymentType;
 import de.hybris.platform.commercefacades.order.data.CartData;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import static de.hybris.platform.util.localization.Localization.getLocalizedString;
 

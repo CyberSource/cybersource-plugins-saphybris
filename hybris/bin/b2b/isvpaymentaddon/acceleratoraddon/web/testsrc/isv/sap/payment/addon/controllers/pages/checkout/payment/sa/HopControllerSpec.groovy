@@ -13,8 +13,8 @@ import de.hybris.platform.order.CartService
 import de.hybris.platform.servicelayer.config.ConfigurationService
 import de.hybris.platform.servicelayer.i18n.I18NService
 import de.hybris.platform.site.BaseSiteService
-import org.apache.commons.configuration.BaseConfiguration
-import org.apache.commons.configuration.Configuration
+import org.apache.commons.configuration2.BaseConfiguration
+import org.apache.commons.configuration2.Configuration
 import org.junit.Test
 import org.springframework.ui.Model
 import spock.lang.Specification

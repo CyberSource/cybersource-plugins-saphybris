@@ -1,7 +1,7 @@
 package isv.sap.payment.addon.facade.impl;
 
 import java.util.Arrays;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.acceleratorfacades.payment.impl.DefaultPaymentFacade;
 

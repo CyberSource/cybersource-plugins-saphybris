@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Currency;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.bootstrap.annotations.IntegrationTest;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;

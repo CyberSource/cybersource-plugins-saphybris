@@ -3,7 +3,7 @@ package isv.sap.payment.fulfilmentprocess.test.jobs;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.bootstrap.annotations.IntegrationTest;
 import de.hybris.platform.cronjob.model.CronJobModel;

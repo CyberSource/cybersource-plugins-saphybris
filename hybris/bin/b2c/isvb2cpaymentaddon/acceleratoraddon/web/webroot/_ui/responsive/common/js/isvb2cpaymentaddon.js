@@ -424,18 +424,17 @@ ACC.secureacceptance = {
             var alternativePaymentCode = $("input[type='radio'][name='paymentMode']:checked").val();
 
             if (ACC.secureacceptance.termsAndConditionsChecked()) {
-                // Dynamically create the form to avoid XSS risks
+                var sanitizedPaymentCode = String(alternativePaymentCode || '').replace(/[^a-zA-Z0-9_-]/g, '');
                 var form = $('<form>', {
                     id: "alternativePlaceOrder",
                     action: ACC.config.contextPath + '/checkout/payment/ap/pay',
                     method: "post"
                 }).append(
-                    $('<input>', { type: 'hidden', name: 'paymentModeCode', value: alternativePaymentCode }),
+                    $('<input>', { type: 'hidden', name: 'paymentModeCode', value: sanitizedPaymentCode }),
                     $('<input>', { type: 'hidden', name: 'CSRFToken', value: ACC.config.CSRFToken })
                 );
 
-                // Append the form to the DOM and submit it
-                $(".checkout-paymentmethod").after(form);
+                $(document.body).append(form);
                 $("#alternativePlaceOrder").submit();
             }
 
@@ -445,10 +444,10 @@ ACC.secureacceptance = {
         var placeOrderWithWeChatPayment = function () {
             if (ACC.secureacceptance.termsAndConditionsChecked()) {
                 var alternativePaymentCode = $("input[type='radio'][name='paymentMode']:checked").val();
-
+                var sanitizedPaymentCode = String(alternativePaymentCode || '').replace(/[^a-zA-Z0-9_-]/g, '');
                 event.preventDefault();
                 var url = ACC.config.contextPath + '/checkout/payment/ap/payNoRedirect';
-                var postData = { paymentModeCode: alternativePaymentCode };
+                var postData = { paymentModeCode: sanitizedPaymentCode };
 
                 $.post(url, postData, undefined, 'html')
                     .done(function (result, data, status) {
@@ -463,7 +462,7 @@ ACC.secureacceptance = {
         };
 
         var showWeChatPayQRModal = function (qrURL) {
-            var title = $('#weChatModalTitle').text().trim();
+            var title = String($('#weChatModalTitle').text()).replace(/^\s+|\s+$/g, '');
 
             ACC.colorbox.open(title, {
                 inline: true,
@@ -478,7 +477,8 @@ ACC.secureacceptance = {
             $(".confirm-wechat-payment-spinner").hide();
 
             var iframe = $("#weChatPaymentQRIframe");
-            iframe.attr('src', qrURL);
+            var parsedUrl = new URL(String(qrURL).replace(/^\s+|\s+$/g, '').replace(/^["']+|["']+$/g, ''));
+            iframe.prop('src', parsedUrl.href);
 
             var cartGuid = $('input[name=cartGuid]').val();
 
@@ -524,21 +524,25 @@ ACC.secureacceptance = {
                         // Safely get the alternative payment code
                         var alternativePaymentCode = $("input[type='radio'][name='paymentMode']:checked").val();
 
+                        var sanitizedPaymentCode = String(alternativePaymentCode || '').replace(/[^a-zA-Z0-9_-]/g, '');
+
+                        // Sanitize Klarna auth token (should already be safe, but add validation)
+                        var sanitizedAuthToken = String(KLARNA.authResponse['authorization_token'] || '').replace(/[^a-zA-Z0-9_-]/g, '');
+
                         // Create the form dynamically to avoid direct string concatenation
                         var form = $('<form>', {
                             id: "alternativePlaceOrder",
                             action: ACC.config.contextPath + '/checkout/payment/ap/pay',
                             method: "post"
                         }).append(
-                            $('<input>', { type: 'hidden', name: 'paymentModeCode', value: alternativePaymentCode }),
-                            $('<input>', { type: 'hidden', name: 'klarnaAuthToken', value: KLARNA.authResponse['authorization_token'] })
+                            $('<input>', { type: 'hidden', name: 'paymentModeCode', value: sanitizedPaymentCode }),
+                            $('<input>', { type: 'hidden', name: 'klarnaAuthToken', value: sanitizedAuthToken }),
+                            $('<input>', { type: 'hidden', name: 'CSRFToken', value: ACC.config.CSRFToken })
                         );
 
-                        // Append the form to the DOM and submit
-                        $(".checkout-paymentmethod").after(form);
+                        $(document.body).append(form);
                         $("#alternativePlaceOrder").submit();
                     } else if (KLARNA.authResponse['show_form'] === false) {
-                        // Redirect to the error page safely
                         window.location = ACC.config.contextPath + '/checkout/multi/summary/view/payment/error';
                     }
 

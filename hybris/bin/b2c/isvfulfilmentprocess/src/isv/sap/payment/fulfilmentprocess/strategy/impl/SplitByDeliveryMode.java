@@ -5,7 +5,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.ordersplitting.strategy.AbstractSplittingStrategy;
-import org.springframework.beans.factory.annotation.Required;
+
 
 public class SplitByDeliveryMode extends AbstractSplittingStrategy
 {
@@ -30,7 +30,7 @@ public class SplitByDeliveryMode extends AbstractSplittingStrategy
         return pickupDeliveryModeDao;
     }
 
-    @Required
+    
     public void setPickupDeliveryModeDao(final PickupDeliveryModeDao pickupDeliveryModeDao)
     {
         this.pickupDeliveryModeDao = pickupDeliveryModeDao;

@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.acceleratorservices.enums.CheckoutPciOptionEnum;
 import de.hybris.platform.acceleratorservices.payment.data.PaymentData;
@@ -23,9 +23,10 @@ import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,6 +45,7 @@ import static de.hybris.platform.acceleratorstorefrontcommons.constants.WebConst
 import static de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages.CONF_MESSAGES_HOLDER;
 import static java.util.Calendar.YEAR;
 
+@Controller
 @RequestMapping(value = "/checkout/multi/payment-method")
 public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepController
 {

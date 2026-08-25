@@ -1,7 +1,7 @@
 package isv.sap.payment.addon.controllers.pages.checkout.payment.alternative;
 
 import java.util.Map;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCheckoutController;
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;

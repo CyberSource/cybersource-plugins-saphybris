@@ -1,13 +1,12 @@
 package isv.sap.payment.addon.handler;
 
 import java.util.Map;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 
 import isv.cjl.payment.enums.PaymentSource;
 import isv.cjl.payment.enums.PaymentTransactionType;
@@ -102,7 +101,7 @@ public class DefaultIsvResponseHandler implements ResponseHandler
         return true;
     }
 
-    @Required
+    
     public void setTransactionTypeMap(final Map<String, PaymentTransactionType> transactionTypeMap)
     {
         this.transactionTypeMap = transactionTypeMap;

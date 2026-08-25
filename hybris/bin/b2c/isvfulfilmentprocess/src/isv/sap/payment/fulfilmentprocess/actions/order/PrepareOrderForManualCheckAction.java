@@ -10,7 +10,7 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.task.RetryLaterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
+
 
 /**
  * Action in order business process, which sets the order status to {@link OrderStatus#WAIT_FRAUD_MANUAL_CHECK} and
@@ -42,7 +42,7 @@ public class PrepareOrderForManualCheckAction extends AbstractProceduralAction<O
         return eventService;
     }
 
-    @Required
+    
     public void setEventService(final EventService eventService)
     {
         this.eventService = eventService;

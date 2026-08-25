@@ -206,7 +206,7 @@ public abstract class GeneratedReplenishmentInfo extends GenericItem
 	public List<EnumerationValue> getDaysOfWeek(final SessionContext ctx)
 	{
 		List<EnumerationValue> coll = (List<EnumerationValue>)getProperty( ctx, DAYSOFWEEK);
-		return coll != null ? coll : Collections.EMPTY_LIST;
+		return coll != null ? coll : Collections.emptyList();
 	}
 	
 	/**

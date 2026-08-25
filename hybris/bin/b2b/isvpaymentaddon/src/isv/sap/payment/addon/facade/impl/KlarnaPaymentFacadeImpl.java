@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.facade.impl;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;

@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.acceleratorservices.checkout.pci.impl.ConfiguredCheckoutPciStrategy;
 import de.hybris.platform.acceleratorservices.enums.CheckoutPciOptionEnum;
@@ -39,7 +39,7 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.cronjob.enums.DayOfWeek;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -54,7 +54,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import isv.sap.payment.fraud.FraudFacade;
 
-import static de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType.ACCOUNT;
+import static de.hybris.platform.b2b.enums.CheckoutPaymentType.ACCOUNT;
 
 @Controller
 @RequestMapping(value = "/checkout/multi/summary")

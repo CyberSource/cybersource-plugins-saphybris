@@ -3,7 +3,6 @@ package isv.sap.payment.fulfilmentprocess.strategy.context;
 import java.util.Collection;
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Required;
 
 import isv.cjl.payment.enums.PaymentType;
 import isv.sap.payment.enums.AlternativePaymentMethod;
@@ -44,7 +43,7 @@ public class PaymentOperationContext
         return nonNull(paymentMethod) ? AlternativePaymentMethod.valueOf(paymentMethod.getCode()) : null;
     }
 
-    @Required
+    
     public void setStrategies(final Collection<PaymentOperationStrategy> strategies)
     {
         this.strategies = strategies;

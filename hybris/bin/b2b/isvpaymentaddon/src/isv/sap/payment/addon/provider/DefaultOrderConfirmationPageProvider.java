@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.provider;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;

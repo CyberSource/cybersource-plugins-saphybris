@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.controllers.utils
 
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 import de.hybris.bootstrap.annotations.UnitTest
 import org.junit.Test

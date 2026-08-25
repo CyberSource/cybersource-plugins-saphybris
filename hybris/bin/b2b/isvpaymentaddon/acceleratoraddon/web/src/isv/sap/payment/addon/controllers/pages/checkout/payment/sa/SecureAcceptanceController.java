@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.controllers.pages.checkout.payment.sa;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.acceleratorservices.urlresolver.SiteBaseUrlResolutionService;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;

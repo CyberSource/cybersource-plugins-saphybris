@@ -3,7 +3,6 @@ package isv.sap.payment.service.alternativepayment;
 import java.util.Map;
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Required;
 
 import isv.cjl.payment.enums.CheckStatusDecision;
 import isv.sap.payment.enums.AlternativePaymentMethod;
@@ -40,7 +39,6 @@ public class AlternativePaymentOrderStatusContext
         return pendingOrderHandlersMap.getOrDefault(alternativePaymentMethod, defaultPendingOrderHandler);
     }
 
-    @Required
     public void setPendingOrderHandlersMap(
             final Map<AlternativePaymentMethod, AlternativePaymentOrderStatusHandler> pendingOrderHandlersMap)
     {

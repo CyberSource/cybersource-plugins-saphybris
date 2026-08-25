@@ -107,7 +107,7 @@ public final class IsvPaymentConstants extends GeneratedIsvPaymentConstants //NO
      */
     public static final class SARequestFields
     {
-        public static final String ACCESS_KEY = "access_key";
+        public static final String PROFILE_KEY = "access_key";
 
         public static final String PROFILE_ID = "profile_id";
 

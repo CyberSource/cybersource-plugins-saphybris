@@ -12,7 +12,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
+
 
 import isv.sap.payment.cronjob.AbstractAbortableJobPerformable;
 import isv.sap.payment.fulfilmentprocess.constants.IsvfulfilmentprocessConstants;
@@ -65,7 +65,7 @@ public class CleanUpFraudOrderJob extends AbstractAbortableJobPerformable<CronJo
         return businessProcessService;
     }
 
-    @Required
+    
     public void setBusinessProcessService(final BusinessProcessService businessProcessService)
     {
         this.businessProcessService = businessProcessService;

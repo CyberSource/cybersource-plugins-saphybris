@@ -1,8 +1,8 @@
 package isv.sap.payment.configuration.resolver
 
 import de.hybris.bootstrap.annotations.UnitTest
-import org.apache.commons.configuration.Configuration
-import org.apache.commons.configuration.MapConfiguration
+import org.apache.commons.configuration2.Configuration
+import org.apache.commons.configuration2.MapConfiguration
 import org.junit.Test
 import spock.lang.Specification
 

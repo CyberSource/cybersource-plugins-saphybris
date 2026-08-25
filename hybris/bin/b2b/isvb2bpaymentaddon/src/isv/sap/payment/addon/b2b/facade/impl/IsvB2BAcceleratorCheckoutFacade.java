@@ -1,7 +1,7 @@
 package isv.sap.payment.addon.b2b.facade.impl;
 
 import java.util.Optional;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.google.common.base.Preconditions;
 import de.hybris.platform.b2bacceleratorfacades.checkout.data.PlaceOrderData;
@@ -22,7 +22,7 @@ import isv.sap.payment.addon.b2b.model.ReplenishmentInfoModel;
 import isv.sap.payment.addon.b2b.service.B2bPaymentTransactionService;
 import isv.sap.payment.commercefacades.order.PaymentCheckoutFacade;
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import static de.hybris.platform.payment.enums.PaymentTransactionType.CREATE_SUBSCRIPTION;
 import static isv.sap.payment.enums.PaymentType.CREDIT_CARD;

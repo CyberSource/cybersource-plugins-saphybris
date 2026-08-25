@@ -3,7 +3,7 @@ package isv.sap.payment.addon.utils;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.URL;
 import org.apache.commons.text.StringEscapeUtils;
 

@@ -15,6 +15,21 @@
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true">
 
+    <style id="antiClickjack">
+        html { display: none !important; }
+    </style>
+    <script type="text/javascript">
+        (function() {
+            // Framebuster: Prevent page from being loaded in iframe on legacy browsers
+            if (self === top) {
+                // Not in a frame - safe to display page
+                var antiClickjack = document.getElementById("antiClickjack");
+                if (antiClickjack) {
+                    antiClickjack.parentNode.removeChild(antiClickjack);
+                }
+            }
+        })();
+    </script>
 
     <div class="row">
         <div class="col-sm-6">
@@ -69,8 +84,8 @@
                         </form:form>
                     </div>
 
-                     <script type="application/javascript">
-                        var isvB2BPaymentMethod = '<spring:escapeBody javaScriptEscape="true">${cartData.paymentType.code}</spring:escapeBody>';
+                    <script type="application/javascript">
+                        var isvB2BPaymentMethod = '<c:out value="${cartData.paymentType.code}" escapeXml="true"/>';
                     </script>
 
                 </ycommerce:testId>

@@ -5,7 +5,7 @@ import de.hybris.platform.b2b.process.approval.model.B2BApprovalProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.task.RetryLaterException;
 
-import static de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType.ACCOUNT;
+import static de.hybris.platform.b2b.enums.CheckoutPaymentType.ACCOUNT;
 import static de.hybris.platform.processengine.action.AbstractSimpleDecisionAction.Transition.OK;
 
 /**

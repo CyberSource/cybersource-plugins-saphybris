@@ -2,7 +2,7 @@ package isv.sap.payment.addon.facade.impl;
 
 import java.util.Optional;
 import java.util.UUID;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.customer.CustomerEmailResolutionService;

@@ -8,7 +8,7 @@ import de.hybris.platform.cms2.model.site.CMSSiteModel
 import de.hybris.platform.servicelayer.config.ConfigurationService
 import de.hybris.platform.servicelayer.i18n.I18NService
 import de.hybris.platform.site.BaseSiteService
-import org.apache.commons.configuration.Configuration
+import org.apache.commons.configuration2.Configuration
 import org.junit.Test
 import org.springframework.ui.ExtendedModelMap
 import org.springframework.ui.Model

@@ -4,7 +4,7 @@ import de.hybris.bootstrap.annotations.UnitTest
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel
 import de.hybris.platform.servicelayer.config.ConfigurationService
 import de.hybris.platform.site.BaseSiteService
-import org.apache.commons.configuration.BaseConfiguration
+import org.apache.commons.configuration2.BaseConfiguration
 import org.junit.Test
 import spock.lang.Specification
 

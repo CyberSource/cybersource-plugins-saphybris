@@ -1,8 +1,8 @@
 package isv.sap.payment.addon.filters
 
-import javax.servlet.FilterChain
-import javax.servlet.FilterConfig
-import javax.servlet.ServletResponse
+import jakarta.servlet.FilterChain
+import jakarta.servlet.FilterConfig
+import jakarta.servlet.ServletResponse
 
 import de.hybris.bootstrap.annotations.UnitTest
 import org.apache.catalina.connector.RequestFacade

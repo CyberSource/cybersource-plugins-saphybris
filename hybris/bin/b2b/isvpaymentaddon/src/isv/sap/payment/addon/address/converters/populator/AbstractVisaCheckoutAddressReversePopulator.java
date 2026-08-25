@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.address.converters.populator;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.c2l.CountryModel;
@@ -8,7 +8,7 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import org.apache.commons.lang3.StringUtils;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public abstract class AbstractVisaCheckoutAddressReversePopulator<SOURCE, TARGET extends AddressModel> implements Populator<SOURCE, TARGET>
 {

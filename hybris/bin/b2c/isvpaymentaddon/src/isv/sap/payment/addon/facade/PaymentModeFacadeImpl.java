@@ -21,7 +21,7 @@ import isv.sap.payment.enums.PaymentType;
 import isv.sap.payment.model.IsvPaymentModeModel;
 
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.collections.ListUtils.EMPTY_LIST;
+import static java.util.Collections.emptyList;
 
 /**
  * Encapsulates an implementation of {@link PaymentModeFacade} interface used at addon level.
@@ -46,7 +46,7 @@ public class PaymentModeFacadeImpl implements PaymentModeFacade
     {
         final List<IsvPaymentModeModel> modes = baseStoreService.getCurrentBaseStore().getAllowedIsvPaymentModes();
         return modes == null
-                ? EMPTY_LIST
+                ? emptyList()
                 : modes.stream()
                 .map(mode -> paymentModeConverter.convert(mode))
                 .sorted(new PaymentModeDataComparator())

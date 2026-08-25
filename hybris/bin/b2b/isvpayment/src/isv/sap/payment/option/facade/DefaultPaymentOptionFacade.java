@@ -1,7 +1,7 @@
 package isv.sap.payment.option.facade;
 
 import java.util.List;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 

@@ -1,7 +1,7 @@
 package isv.sap.payment.addon.handler;
 
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 

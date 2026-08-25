@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.tags
 
-import javax.servlet.jsp.tagext.Tag
+import jakarta.servlet.jsp.tagext.Tag
 
 import de.hybris.bootstrap.annotations.UnitTest
 import de.hybris.platform.acceleratorservices.checkout.pci.impl.ConfiguredCheckoutPciStrategy

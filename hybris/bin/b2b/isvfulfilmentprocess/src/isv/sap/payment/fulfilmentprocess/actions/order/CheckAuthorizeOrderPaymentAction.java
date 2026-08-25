@@ -1,7 +1,7 @@
 package isv.sap.payment.fulfilmentprocess.actions.order;
 
 import java.util.Optional;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -17,7 +17,7 @@ import isv.sap.payment.constants.IsvPaymentConstants;
 import isv.sap.payment.fulfilmentprocess.strategy.context.PaymentOperationContext;
 import isv.sap.payment.model.IsvPaymentTransactionModel;
 import isv.sap.payment.service.PaymentTransactionService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

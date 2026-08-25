@@ -7,7 +7,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService
 import de.hybris.platform.servicelayer.model.ModelService
 import de.hybris.platform.servicelayer.session.Session
 import de.hybris.platform.servicelayer.session.SessionService
-import org.apache.commons.configuration.Configuration
+import org.apache.commons.configuration2.Configuration
 import org.junit.Test
 import spock.lang.Specification
 

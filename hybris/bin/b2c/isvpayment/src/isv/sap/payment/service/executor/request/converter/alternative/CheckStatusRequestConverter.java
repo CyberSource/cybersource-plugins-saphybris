@@ -2,7 +2,7 @@ package isv.sap.payment.service.executor.request.converter.alternative;
 
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import isv.cjl.payment.configuration.transaction.PaymentTransaction;
 import isv.cjl.payment.enums.AlternativePaymentMethod;

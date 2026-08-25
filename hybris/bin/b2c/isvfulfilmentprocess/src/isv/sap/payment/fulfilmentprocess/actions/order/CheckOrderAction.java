@@ -6,7 +6,7 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractSimpleDecisionAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
+
 
 import isv.sap.payment.fulfilmentprocess.CheckOrderService;
 
@@ -51,7 +51,7 @@ public class CheckOrderAction extends AbstractSimpleDecisionAction<OrderProcessM
         return checkOrderService;
     }
 
-    @Required
+    
     public void setCheckOrderService(final CheckOrderService checkOrderService)
     {
         this.checkOrderService = checkOrderService;

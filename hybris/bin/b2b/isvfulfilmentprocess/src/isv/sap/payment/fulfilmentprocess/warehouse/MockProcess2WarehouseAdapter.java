@@ -13,7 +13,6 @@ import de.hybris.platform.warehouse.Warehouse2ProcessAdapter;
 import de.hybris.platform.warehouse.WarehouseConsignmentStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 
 public class MockProcess2WarehouseAdapter implements Process2WarehouseAdapter
 {
@@ -83,7 +82,7 @@ public class MockProcess2WarehouseAdapter implements Process2WarehouseAdapter
         return modelService;
     }
 
-    @Required
+    
     public void setModelService(final ModelService modelService)
     {
         this.modelService = modelService;
@@ -94,7 +93,7 @@ public class MockProcess2WarehouseAdapter implements Process2WarehouseAdapter
         return warehouse2ProcessAdapter;
     }
 
-    @Required
+    
     public void setWarehouse2ProcessAdapter(final Warehouse2ProcessAdapter warehouse2ProcessAdapter)
     {
         this.warehouse2ProcessAdapter = warehouse2ProcessAdapter;

@@ -29,10 +29,11 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.util.Config;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,6 +54,7 @@ import static isv.sap.payment.enums.AlternativePaymentMethod.GGP;
 import static isv.sap.payment.enums.AlternativePaymentMethod.KLI;
 import static isv.sap.payment.enums.PaymentType.ALTERNATIVE_PAYMENT;
 
+@Controller
 @RequestMapping(value = "/checkout/multi/summary")
 public class SummaryCheckoutStepController extends AbstractCheckoutStepController
 {

@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.b2c.controllers.pages.checkout.payment.flex
 
-import javax.servlet.http.HttpSession
+import jakarta.servlet.http.HttpSession
 
 import com.cybersource.flex.sdk.CaptureContext
 import com.cybersource.flex.sdk.TransientToken

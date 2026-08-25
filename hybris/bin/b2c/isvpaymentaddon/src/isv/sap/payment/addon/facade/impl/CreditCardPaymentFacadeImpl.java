@@ -49,7 +49,7 @@ import static isv.cjl.payment.enums.PaymentType.CREDIT_CARD;
 import static isv.sap.payment.constants.IsvPaymentConstants.CreditCardRequestFields.*;
 import static isv.sap.payment.constants.IsvPaymentConstants.ReasonCode.ENROLLED_CODE;
 import static java.util.Optional.ofNullable;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import org.apache.commons.text.StringEscapeUtils;
 
 /**
@@ -206,7 +206,6 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
 
     private IsvPaymentTransactionEntryModel doFlexCreditCardAuthorization(final CartModel cart, final String flexToken)
     {
-         //OLH: Fix SSRF
          String sanitizedFlexToken = StringEscapeUtils.escapeHtml4(flexToken);
         final PaymentServiceResult authorizationResult = executeRequest(
                 new isv.cjl.payment.service.executor.request.builder.creditcard.AuthorizationRequestBuilder()
@@ -255,8 +254,7 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
     {
         if (ENROLLED_CODE.equals(properties.get("payerAuthEnrollReplyReasonCode")))
         {
-            throw new PaymentException(
-                    String.format("Transaction [%s] requires validation.", enrollmentTransactionEntry.getCode()));
+              throw new PaymentException("Transaction requires validation.");
         }
     }
 

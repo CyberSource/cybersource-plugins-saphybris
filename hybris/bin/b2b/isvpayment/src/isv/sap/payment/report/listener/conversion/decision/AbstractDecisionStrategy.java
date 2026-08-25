@@ -1,7 +1,7 @@
 package isv.sap.payment.report.listener.conversion.decision;
 
 import java.util.Date;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.basecommerce.enums.FraudStatus;
 import de.hybris.platform.core.model.order.OrderModel;

@@ -6,7 +6,7 @@
     <head>
         <template:javaScriptVariables/>
 
-        <script type="text/javascript" src="${commonResourcePath}/js/jquery-3.5.1.min.js"></script>
+        <script type="text/javascript" src="${commonResourcePath}/js/jquery-3.7.1.min.js"></script>
         <script type="text/javascript" src="${contextPath}/_ui/addons/isvpaymentaddon/responsive/common/js/isvpaymentaddon.js"></script>
     </head>
     <body>

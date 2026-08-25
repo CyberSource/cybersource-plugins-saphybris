@@ -1,6 +1,6 @@
 package isv.sap.payment.fulfilmentprocess.strategy.impl;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;

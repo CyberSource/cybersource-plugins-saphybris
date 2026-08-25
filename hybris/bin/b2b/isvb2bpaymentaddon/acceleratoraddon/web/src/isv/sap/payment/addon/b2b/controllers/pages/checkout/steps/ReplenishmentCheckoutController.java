@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.b2b.controllers.pages.checkout.steps;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import org.springframework.http.HttpStatus;

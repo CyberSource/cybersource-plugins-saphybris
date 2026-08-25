@@ -2,7 +2,7 @@ package isv.sap.payment.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;

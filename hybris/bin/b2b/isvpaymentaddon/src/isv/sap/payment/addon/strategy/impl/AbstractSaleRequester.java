@@ -1,7 +1,7 @@
 package isv.sap.payment.addon.strategy.impl;
 
 import java.util.Map;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.acceleratorservices.urlresolver.SiteBaseUrlResolutionService;

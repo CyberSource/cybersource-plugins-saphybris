@@ -6,7 +6,7 @@ import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import de.hybris.platform.servicelayer.event.EventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
+
 
 public class SendFraudErrorNotificationAction extends AbstractProceduralAction<OrderProcessModel>
 {
@@ -26,7 +26,7 @@ public class SendFraudErrorNotificationAction extends AbstractProceduralAction<O
         return eventService;
     }
 
-    @Required
+    
     public void setEventService(final EventService eventService)
     {
         this.eventService = eventService;

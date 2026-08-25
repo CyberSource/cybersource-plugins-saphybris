@@ -4,7 +4,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -13,10 +13,9 @@ import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.action.AbstractAction;
 import de.hybris.platform.util.Config;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 
 import isv.sap.payment.fulfilmentprocess.strategy.context.PaymentOperationContext;
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel;
@@ -142,13 +141,13 @@ public class TakePaymentAction extends AbstractAction<OrderProcessModel>
         this.paymentOperationContext = paymentOperationContext;
     }
 
-    @Required
+    
     public void setAlternativePaymentOrderStatusMap(final Map<String, OrderStatus> alternativePaymentOrderStatusMap)
     {
         this.alternativePaymentOrderStatusMap = alternativePaymentOrderStatusMap;
     }
 
-    @Required
+    
     public void setOrderStatusTransitionMap(final Map<OrderStatus, Transition> orderStatusTransitionMap)
     {
         this.orderStatusTransitionMap = orderStatusTransitionMap;

@@ -12,7 +12,7 @@ import de.hybris.platform.processengine.action.AbstractSimpleDecisionAction;
 import de.hybris.platform.servicelayer.time.TimeService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.util.Config;
-import org.springframework.beans.factory.annotation.Required;
+
 
 public class ScheduleForCleanUpAction extends AbstractSimpleDecisionAction<OrderProcessModel>
 {
@@ -35,7 +35,7 @@ public class ScheduleForCleanUpAction extends AbstractSimpleDecisionAction<Order
         return timeService;
     }
 
-    @Required
+    
     public void setTimeService(final TimeService timeService)
     {
         this.timeService = timeService;

@@ -3,8 +3,8 @@
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 25.4.2**
-April 2026
+**Version 26.1.0**
+August 2026
 
 ## Contents <!-- omit in toc -->
 <!-- TOC -->
@@ -169,7 +169,7 @@ April 2026
 | May 2025      | 25.4.0                       | - Disable Card BIN for Transient Token <br>- Payer Authentication upgraded to Cardinal Cruise Direct |
 | August 2025   | 25.4.1                       | - Multi Mid support via p12 |
 | April 2026    | 25.4.2                       | - Support for new Cardinal Commerce URLs <br> - Upgraded cybersource-rest-client-java to version 0.0.87 and AuthenticationSdk 0.0.42 |
-
+| August 2026   | 26.1.0                       | - Compatibility support for SAP Commerce 2211 with Java 21 |
 ### Audience and Purpose
 
 This document is intended for merchants who want to use Payment and Value Added Business services. This document provides an overview for integrating ISV services into SAP Commerce ecommerce platform.
@@ -257,7 +257,7 @@ More details on SAP Commerce accelerators: <https://help.sap.com/viewer/4c33bf18
 
 As part of reference functionality, the following features are supported:
 
-| Feature                                     | CJL 3.0.8 | SAP B2C | SAP B2B | Description                                         |
+| Feature                                     | CJL 4.0.0 | SAP B2C | SAP B2B | Description                                         |
 |---------------------------------------------|-----------|---------|---------|-----------------------------------------------------|
 | SA SOP                                      | Y         | Y       | Y       | Secure Acceptance Silent Order Post                 |
 | Microform v2                                | Y         | Y       | N       | Secure field - PCI compliant                        |
@@ -308,7 +308,7 @@ SAP Commerce Payment Extension is based on the following package structure:
 
 # Installation and Upgrade
 
-This section summarises the installation process of SAP Commerce payment extension into SAP Commerce release v2011.
+This section summarises the installation process of SAP Commerce payment extension into SAP Commerce release v2211.
 
 There are two types of installation: using step by step approach or by using a custom recipe that will manage most of the work.
 
@@ -318,9 +318,9 @@ All technical installation concepts in this document are initial draft provided 
 
 The following components are required:
 
-1. SAP Commerce platform release v2011
-2. sap-commerce-payment-plugin-25.4.2.zip
-3. Java 11
+1. SAP Commerce platform release v2211
+2. sap-commerce-payment-plugin-26.1.0.zip
+3. Java 21
 4. Required Dependencies installed in maven repository
 
 > ![Note](images/note.jpg) Please take a look at the CJL "Installation" section and check the full list of transitive dependencies for troubleshooting dependency version conflicts.
@@ -329,12 +329,12 @@ The following components are required:
 
 #### Description <!-- omit in toc -->
 
-The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-3.0.8.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
+The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-4.0.0.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
 
 Following errors will be thrown during SAP Commerce build:
 
 ```text
-[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:3.0.8: Could not find artifact isv.payment.cjl:isv-payment-api:jar:3.0.8 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
+[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:4.0.0: Could not find artifact isv.payment.cjl:isv-payment-api:jar:4.0.0 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
 ```
 
 #### Solution <!-- omit in toc -->
@@ -344,10 +344,10 @@ The "isvpayment" extension comes with all the library binaries included in "hybr
 As a quick local build solution the dependency can be installed in local maven repository and retrieved as a cached dependency as per <https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html>.
 
 ```text
-$mvn install:install-file -Dfile=isv-payment-api-3.0.8.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=3.0.8 -Dpackaging=jar
+$mvn install:install-file -Dfile=isv-payment-api-4.0.0.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=4.0.0 -Dpackaging=jar
 ```
 
-Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-3.0.8.jar".
+Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-4.0.0.jar".
 
 > ![Note](images/note.jpg) According to SAP documentation:  The ant updateMavenDependencies task deletes all *.jar files from the lib folder by default. Only libraries listed in unmanaged-dependencies.txt files are not deleted.
 
@@ -357,16 +357,16 @@ SAP Commerce payment extension installation process is based on OOTB build appro
 
 #### SAP Commerce recipe installation - automated (gradle) approach <!-- omit in toc -->
 
-1. Obtain SAP Commerce Suite 2011 release package and unzip it into appropriate location
+1. Obtain SAP Commerce Suite 2211 release package and unzip it into appropriate location
 
     ```text
-    $unzip sap-commerce-suite-2011.zip -d sap-commerce-suite-2011
+    $unzip sap-commerce-suite-2211.zip -d sap-commerce-suite-2211
     ```
 
 2. Copy the payment extensions to SAP Commerce release, following default folder structure
 
     ```text
-    $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-2011
+    $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-2211
     ```
 
 3. Configure the merchant data
@@ -374,7 +374,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     Please update the configuration files by providing your payment merchant configuration. To do this please find the configuration template files having extension ".tpl", rename them to "\*.impex" and edit them by adding merchant details.
 
     ```text
-    $cd sap-commerce-suite-2011/hybris/bin/isvpaymentsampledata/
+    $cd sap-commerce-suite-2211/hybris/bin/isvpaymentsampledata/
     $cd /resources/isvpaymentsampledata/import
     ```
 
@@ -429,7 +429,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     Installation for b2c storefront:
 
     ```text
-    $cd sap-commerce-suite-2011/installer
+    $cd sap-commerce-suite-2211/installer
     $./install.sh -r b2c_acc_isv
     $./install.sh -r b2c_acc_isv initialize
     ```
@@ -437,7 +437,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     Installation for b2b storefront:
 
     ```text
-    $cd sap-commerce-suite-2011/installer
+    $cd sap-commerce-suite-2211/installer
     $./install.sh -r b2b_acc_isv
     $./install.sh -r b2b_acc_isv initialize
     ```
@@ -488,16 +488,16 @@ SAP Commerce payment extension installation process is based on OOTB build appro
 
 #### Step by Step installation - manual approach <!-- omit in toc -->
 
-1. Obtain SAP Commerce suite 2011 release package and unzip it into appropriate location
+1. Obtain SAP Commerce suite 2211 release package and unzip it into appropriate location
 
     ```text
-     $unzip sap-commerce-suite-2011.zip -d sap-commerce-suite-2011
+     $unzip sap-commerce-suite-2211.zip -d sap-commerce-suite-2211
     ```
 
 2. Install B2C components with accelerator storefront, that includes apparel store as sample data
 
     ```text
-    $cd sap-commerce-suite-2011/installer
+    $cd sap-commerce-suite-2211/installer
     $./install.sh -r b2c_acc
     $cd ..
     ```
@@ -523,7 +523,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
 4. Copy payment extensions to SAP Commerce suite, following default folder structure
 
     ```text
-     $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-2011
+     $unzip sap-commerce-payment-plugin.zip -d sap-commerce-suite-2211
     ```
 
 5. In order to use payment extensions, they need to be added and configured into localextensions.xml file. This file contains all extensions, which are used by the platform on startup.
@@ -561,7 +561,7 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     <extension name='yacceleratorstorefront' />
     ```
 
-6. Payment extensions are built using Java 11, containing the latest java features and fixes. Also in order to customize credentials, related to commands or reporting, merchant specific properties should be added into `local.properties` file
+6. Payment extensions are built using Java 21, containing the latest java features and fixes. Also in order to customize credentials, related to commands or reporting, merchant specific properties should be added into `local.properties` file
 
     ```text
     $vim ../../config/local.properties
@@ -570,8 +570,8 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     Add following properties at the end of property file
 
     ```text
-    build.source=11.0
-    build.target=11.0
+    build.source=21
+    build.target=21
 
     site.pci.strategy=FLEX
 

@@ -16,8 +16,8 @@ import isv.sap.payment.addon.b2b.service.B2bPaymentTransactionService
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel
 import isv.sap.payment.service.PaymentTransactionService
 
-import static de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType.ACCOUNT
-import static de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType.CARD
+import static de.hybris.platform.b2b.enums.CheckoutPaymentType.ACCOUNT
+import static de.hybris.platform.b2b.enums.CheckoutPaymentType.CARD
 import static de.hybris.platform.payment.enums.PaymentTransactionType.CREATE_SUBSCRIPTION
 import static de.hybris.platform.processengine.action.AbstractSimpleDecisionAction.Transition.OK
 import static isv.sap.payment.constants.IsvPaymentConstants.SAResponseFields.CARD_TYPE

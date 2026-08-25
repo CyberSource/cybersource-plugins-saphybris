@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.b2b.action.replenishment;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.b2bacceleratoraddon.actions.replenishment.AuthorizePaymentAction;
 import de.hybris.platform.b2bacceleratorservices.model.process.ReplenishmentProcessModel;
@@ -11,14 +11,14 @@ import isv.sap.payment.addon.b2b.service.B2bPaymentTransactionService;
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel;
 import isv.sap.payment.service.PaymentTransactionService;
 
-import static de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType.CARD;
+import static de.hybris.platform.b2b.enums.CheckoutPaymentType.CARD;
 import static de.hybris.platform.payment.enums.PaymentTransactionType.CREATE_SUBSCRIPTION;
 import static de.hybris.platform.processengine.action.AbstractSimpleDecisionAction.Transition.NOK;
 import static de.hybris.platform.processengine.action.AbstractSimpleDecisionAction.Transition.OK;
 import static isv.sap.payment.constants.IsvPaymentConstants.SAResponseFields.CARD_TYPE;
 import static isv.sap.payment.constants.IsvPaymentConstants.TransactionStatus.ACCEPT;
 import static isv.sap.payment.enums.PaymentType.CREDIT_CARD;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class IsvAuthorizePaymentAction extends AuthorizePaymentAction
 {

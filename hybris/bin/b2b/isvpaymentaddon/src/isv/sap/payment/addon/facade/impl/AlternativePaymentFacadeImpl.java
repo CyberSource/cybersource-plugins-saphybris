@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -31,7 +31,7 @@ import static isv.cjl.payment.enums.PaymentType.ALTERNATIVE_PAYMENT;
 import static isv.sap.payment.constants.IsvPaymentConstants.AlternativePaymentsResponseFields.MERCHANT_URL;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class AlternativePaymentFacadeImpl extends AbstractPaymentFacade implements AlternativePaymentFacade
 {

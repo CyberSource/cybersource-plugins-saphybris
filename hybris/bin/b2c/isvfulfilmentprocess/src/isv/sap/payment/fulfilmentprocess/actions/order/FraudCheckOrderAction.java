@@ -12,7 +12,7 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.util.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
+
 
 import isv.sap.payment.fulfilmentprocess.constants.IsvfulfilmentprocessConstants;
 
@@ -29,7 +29,7 @@ public class FraudCheckOrderAction extends AbstractFraudCheckAction<OrderProcess
         return fraudService;
     }
 
-    @Required
+    
     public void setFraudService(final FraudService fraudService)
     {
         this.fraudService = fraudService;
@@ -40,7 +40,7 @@ public class FraudCheckOrderAction extends AbstractFraudCheckAction<OrderProcess
         return providerName;
     }
 
-    @Required
+    
     public void setProviderName(final String providerName)
     {
         this.providerName = providerName;

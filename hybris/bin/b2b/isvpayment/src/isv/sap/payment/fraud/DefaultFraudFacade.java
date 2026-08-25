@@ -1,7 +1,7 @@
 package isv.sap.payment.fraud;
 
 import java.time.Instant;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.order.CartService;

@@ -3,7 +3,7 @@ package isv.sap.payment.service.transaction;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.google.common.collect.Maps;
 import de.hybris.platform.converters.Populator;

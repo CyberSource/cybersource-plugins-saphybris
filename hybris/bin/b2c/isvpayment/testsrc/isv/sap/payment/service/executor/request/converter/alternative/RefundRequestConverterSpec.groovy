@@ -18,7 +18,7 @@ import static isv.cjl.payment.enums.AlternativePaymentMethod.KLI
 import static isv.cjl.payment.enums.AlternativePaymentMethod.MCH
 import static isv.cjl.payment.enums.AlternativePaymentMethod.SOF
 import static java.math.BigDecimal.TEN
-import static org.apache.commons.lang.StringUtils.EMPTY
+import static org.apache.commons.lang3.StringUtils.EMPTY
 
 class RefundRequestConverterSpec extends Specification
 {

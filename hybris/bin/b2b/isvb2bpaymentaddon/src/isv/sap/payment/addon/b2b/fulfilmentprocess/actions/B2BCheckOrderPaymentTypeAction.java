@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.b2b.fulfilmentprocess.actions;
 
-import de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType;
+import de.hybris.platform.b2b.enums.CheckoutPaymentType;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import org.slf4j.Logger;

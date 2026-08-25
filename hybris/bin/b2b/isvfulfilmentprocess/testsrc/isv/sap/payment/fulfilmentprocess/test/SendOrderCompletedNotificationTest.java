@@ -1,12 +1,9 @@
 package isv.sap.payment.fulfilmentprocess.test;
 
 import de.hybris.bootstrap.annotations.UnitTest;
-import de.hybris.platform.orderprocessing.events.FraudErrorEvent;
 import de.hybris.platform.orderprocessing.events.OrderCompletedEvent;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.event.EventService;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -41,27 +38,8 @@ public class SendOrderCompletedNotificationTest
         final OrderProcessModel process = new OrderProcessModel();
         sendOrderCompletedNotification.executeAction(process);
 
-        Mockito.verify(eventService).publishEvent(Mockito.argThat(new BaseMatcher<FraudErrorEvent>()
-        {
-            @Override
-            public boolean matches(final Object item)
-            {
-                if (item instanceof OrderCompletedEvent)
-                {
-                    final OrderCompletedEvent event = (OrderCompletedEvent) item;
-                    if (event.getProcess().equals(process))
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            @Override
-            public void describeTo(final Description description)
-            {
-                // EMPTY
-            }
-        }));
+        Mockito.verify(eventService).publishEvent(Mockito.<OrderCompletedEvent>argThat(event ->
+                event != null && event.getProcess().equals(process)
+        ));
     }
 }
