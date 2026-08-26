@@ -1,10 +1,14 @@
 package isv.sap.payment.integration.helpers
 
-import org.apache.commons.configuration.CompositeConfiguration
-import org.apache.commons.configuration.ConfigurationException
-import org.apache.commons.configuration.PropertiesConfiguration
+import org.apache.commons.configuration2.CompositeConfiguration
+import org.apache.commons.configuration2.ex.ConfigurationException
+import org.apache.commons.configuration2.PropertiesConfiguration
 
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder
+import org.apache.commons.configuration2.builder.fluent.Parameters
 import static java.lang.String.format
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder
+import org.apache.commons.configuration2.builder.fluent.Parameters
 
 class TestConfig
 {
@@ -33,6 +37,35 @@ class TestConfig
 
         try
         {
+            def params = new Parameters()
+
+            def localBuilder =
+                    new FileBasedConfigurationBuilder(PropertiesConfiguration)
+                            .configure(params.properties()
+                            .setFileName("${configDir}/test.properties"))
+
+            compositeConfiguration.addConfiguration(localBuilder.getConfiguration())
+
+            def builder =
+                    new FileBasedConfigurationBuilder(PropertiesConfiguration)
+                            .configure(params.properties()
+                            .setFileName("test.properties"))
+
+            compositeConfiguration.addConfiguration(builder.getConfiguration())
+        }
+        catch (ConfigurationException ignored)
+        {
+        }
+
+        setConstants(compositeConfiguration, merchantRegion)
+        this
+    }
+    /* def getTestConfig(configDir, String merchantRegion = MERCHANT_REGION_DEFAULT)
+    {
+        def compositeConfiguration = new CompositeConfiguration()
+
+        try
+        {
             def localConfig = new PropertiesConfiguration("${configDir}/test.properties")
             compositeConfiguration.addConfiguration(localConfig)
 
@@ -45,7 +78,7 @@ class TestConfig
 
         setConstants(compositeConfiguration, merchantRegion)
         this
-    }
+    } */
 
     private setConstants(compositeConfiguration, String merchantRegion)
     {

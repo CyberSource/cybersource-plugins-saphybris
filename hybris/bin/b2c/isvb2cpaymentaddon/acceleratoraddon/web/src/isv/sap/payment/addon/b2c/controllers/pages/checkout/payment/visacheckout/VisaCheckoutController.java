@@ -59,7 +59,8 @@ public class VisaCheckoutController extends AbstractCheckoutController
         final String[] response = {REDIRECT_PREFIX + PAYMENT_ERROR_URL};
         try
         {
-            Preconditions.checkArgument(StringUtils.isNotBlank(callId), "Visa Checkout callId can't be blank");
+            final String sanitizedCallId = StringUtils.defaultString(callId).replaceAll("[\\r\\n]", "");
+            Preconditions.checkArgument(StringUtils.isNotBlank(sanitizedCallId), "Visa Checkout callId can't be blank");
 
             final CartModel sessionCart = cartService.getSessionCart();
 
@@ -67,7 +68,7 @@ public class VisaCheckoutController extends AbstractCheckoutController
             final Double authorizedTotal = sessionCart.getTotalPrice();
             final int authorizedItemCount = sessionCart.getEntries().size();
 
-            if (visaCheckoutPaymentFacade.authorizeVisaCheckoutPayment(sessionCart, callId, !expressCheckout))
+            if (visaCheckoutPaymentFacade.authorizeVisaCheckoutPayment(sessionCart, sanitizedCallId, !expressCheckout))
             {
                 paymentCartService.executeWithCartLock(sessionCart, () -> {
                     try
@@ -116,14 +117,15 @@ public class VisaCheckoutController extends AbstractCheckoutController
     {
         try
         {
-            Preconditions.checkArgument(StringUtils.isNotBlank(callId), "Visa Checkout callId can't be blank");
+            final String sanitizedCallId = StringUtils.defaultString(callId).replaceAll("[\\r\\n]", "");
+            Preconditions.checkArgument(StringUtils.isNotBlank(sanitizedCallId), "Visa Checkout callId can't be blank");
 
             final CartModel sessionCart = cartService.getSessionCart();
 
-            if (visaCheckoutPaymentFacade.updateCartAddressesWithVCGetData(sessionCart, callId))
+            if (visaCheckoutPaymentFacade.updateCartAddressesWithVCGetData(sessionCart, sanitizedCallId))
             {
                 redirectAttributes.addFlashAttribute(VISA_CHECKOUT_EXPRESS, true);
-                redirectAttributes.addFlashAttribute(VISA_CHECKOUT_CALL_ID, callId);
+                redirectAttributes.addFlashAttribute(VISA_CHECKOUT_CALL_ID, sanitizedCallId);
 
                 return REDIRECT_PREFIX + CHECKOUT_PAYMENT_URL;
             }

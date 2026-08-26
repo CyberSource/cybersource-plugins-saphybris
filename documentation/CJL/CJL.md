@@ -2,8 +2,8 @@
 
 ## CJL - Core Java Library <!-- omit in toc -->
 
-**Version 25.4.2**
-April 2026
+**Version 26.1.0**
+August 2026
 
 ## Contents <!-- omit in toc -->
 
@@ -129,6 +129,7 @@ April 2026
 | March 2021    | - Upgraded Cybersource Transaction Web Service to version 175 <br> - Added cardTypeSelectionIndicator field to  support Credit Mutuel-CIC transactions <br> - Upgraded cybersource-rest-client-java to version 0.0.30 |
 | February 2024 | - Upgraded cybersource-rest-client-java to version 0.0.58 and okhttp to 4.12.0 |
 | April 2026    | - Support for new Cardinal Commerce URLs <br> - Upgraded cybersource-rest-client-java to version 0.0.87 and AuthenticationSdk 0.0.42 |
+| August 2026   | - Compatibility support for SAP Commerce 2211 with Java 21 |
 ## About This Guide
 
 ### Audience and Purpose

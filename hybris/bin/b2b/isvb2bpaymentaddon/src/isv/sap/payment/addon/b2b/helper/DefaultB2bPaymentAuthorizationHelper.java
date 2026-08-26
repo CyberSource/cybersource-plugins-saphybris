@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.b2b.helper;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.google.common.collect.ImmutableMap;
 import de.hybris.platform.core.model.order.CartModel;

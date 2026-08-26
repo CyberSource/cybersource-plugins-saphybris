@@ -21,7 +21,7 @@ public class CorePaymentServiceExecutor extends DefaultPaymentServiceExecutor
     {
         if (LOG.isDebugEnabled())
         {
-            LOG.debug("Executing payment service request - Service: {}, Method: {}",
+            LOG.debug("Executing payment service request - Service: Method: {}",
                     request.getPaymentType() != null ? request.getPaymentType().name() : "null");
         }
         

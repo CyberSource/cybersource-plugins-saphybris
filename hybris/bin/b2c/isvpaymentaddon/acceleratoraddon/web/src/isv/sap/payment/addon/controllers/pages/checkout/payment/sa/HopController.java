@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.AddressModel;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,7 @@ import isv.sap.payment.addon.provider.SecureAcceptanceUrlProvider;
 import static isv.cjl.payment.enums.MerchantProfileType.HOP;
 import static isv.sap.payment.constants.IsvPaymentConstants.SARequestFields.*;
 import static java.util.Objects.isNull;
-import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Controller
 @RequestMapping(value = "/checkout/payment/sa")
@@ -51,7 +51,7 @@ public class HopController extends SecureAcceptanceController
         final String state = isNull(billingAddress.getRegion()) ? EMPTY : billingAddress.getRegion().getIsocodeShort();
 
         SecureAcceptanceRequestBuilder saRequestBuilder = new SecureAcceptanceRequestBuilder();
-        saRequestBuilder.addSignedField(ACCESS_KEY, profile.getAccessKey())
+        saRequestBuilder.addSignedField(PROFILE_KEY, profile.getAccessKey())
                 .addSignedField(PROFILE_ID, profile.getProfileId())
                 .addSignedField(TRANSACTION_UUID, UUID.randomUUID().toString())
                 .addSignedField(SIGNED_DATE_TIME, TimeUtils.toUTCDateTime(new Date()))

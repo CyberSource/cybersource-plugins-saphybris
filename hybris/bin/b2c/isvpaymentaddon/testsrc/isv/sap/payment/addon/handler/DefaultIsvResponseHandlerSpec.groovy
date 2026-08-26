@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.handler
 
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 import de.hybris.bootstrap.annotations.UnitTest
 import de.hybris.platform.core.model.order.AbstractOrderModel

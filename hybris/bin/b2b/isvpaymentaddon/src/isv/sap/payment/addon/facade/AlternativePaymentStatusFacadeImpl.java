@@ -1,7 +1,7 @@
 package isv.sap.payment.addon.facade;
 
 import java.util.Optional;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;

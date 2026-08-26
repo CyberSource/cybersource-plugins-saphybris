@@ -15,7 +15,7 @@ import de.hybris.platform.util.Config;
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel;
 import isv.sap.payment.service.PaymentTransactionService;
 import isv.sap.payment.service.alternativepayment.AlternativePaymentOrderStatusService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import static de.hybris.platform.payment.enums.PaymentTransactionType.AUTHORIZATION;
 import static isv.cjl.payment.constants.PaymentConstants.AlternativePaymentsResponseFields.Sale.PAYMENT_STATUS;

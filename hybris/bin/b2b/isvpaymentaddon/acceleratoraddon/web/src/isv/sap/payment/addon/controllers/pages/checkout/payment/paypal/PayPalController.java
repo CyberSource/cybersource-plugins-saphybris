@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.controllers.pages.checkout.payment.paypal;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.google.common.base.Preconditions;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCheckoutController;

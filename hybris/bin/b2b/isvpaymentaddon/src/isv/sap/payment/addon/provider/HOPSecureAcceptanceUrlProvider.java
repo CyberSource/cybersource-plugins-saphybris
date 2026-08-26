@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.provider;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.site.BaseSiteService;

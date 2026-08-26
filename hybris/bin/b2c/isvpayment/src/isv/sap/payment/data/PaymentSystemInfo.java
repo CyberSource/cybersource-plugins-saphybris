@@ -2,12 +2,14 @@ package isv.sap.payment.data;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
 
 /**
  * Provides information about payment api system (e.g. version, application, etc.).
@@ -32,7 +34,7 @@ public class PaymentSystemInfo
     @Value("${isv.payment.customer.request.client.library}")
     private String clientLibrary;
 
-    @Value("${isv.payment.customer.request.partnerSolution.id:D2OKBRXN}")
+    @Value("${isv.payment.customer.request.partnerSolution.id:eig4mjr1}")
     private String partnerSolutionId;
 
     private String clientLibraryVersion;
@@ -52,9 +54,22 @@ public class PaymentSystemInfo
 
     protected void setClientLibraryVersion() throws ConfigurationException
     {
-        final Configuration versionInfo = new PropertiesConfiguration(VERSION_INFO_FILE);
+        final Parameters params = new Parameters();
+
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
+                        .configure(params.properties()
+                                .setFileName(VERSION_INFO_FILE));
+
+        final Configuration versionInfo = builder.getConfiguration();
         clientLibraryVersion = versionInfo.getString("build_version");
     }
+
+    /* protected void setClientLibraryVersion() throws ConfigurationException
+    {
+        final Configuration versionInfo = new PropertiesConfiguration(VERSION_INFO_FILE);
+        clientLibraryVersion = versionInfo.getString("build_version");
+    } */
 
     public String getPartnerSolutionID()
     {

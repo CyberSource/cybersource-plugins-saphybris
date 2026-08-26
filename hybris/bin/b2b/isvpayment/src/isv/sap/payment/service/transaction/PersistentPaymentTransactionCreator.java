@@ -2,7 +2,7 @@ package isv.sap.payment.service.transaction;
 
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.google.common.collect.Lists;
 import de.hybris.platform.core.model.order.AbstractOrderModel;

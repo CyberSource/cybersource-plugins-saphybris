@@ -4,7 +4,7 @@ import de.hybris.platform.core.model.c2l.CurrencyModel
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel
 import de.hybris.platform.core.model.order.AbstractOrderModel
 import de.hybris.platform.core.model.product.ProductModel
-import org.apache.commons.configuration.Configuration
+import org.apache.commons.configuration2.Configuration
 import org.apache.commons.lang3.StringUtils
 import org.junit.Test
 import spock.lang.Specification

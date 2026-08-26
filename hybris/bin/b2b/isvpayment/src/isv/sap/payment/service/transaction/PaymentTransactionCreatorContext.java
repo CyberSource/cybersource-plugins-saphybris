@@ -1,6 +1,6 @@
 package isv.sap.payment.service.transaction;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import isv.cjl.payment.service.executor.request.PaymentServiceRequest;
 

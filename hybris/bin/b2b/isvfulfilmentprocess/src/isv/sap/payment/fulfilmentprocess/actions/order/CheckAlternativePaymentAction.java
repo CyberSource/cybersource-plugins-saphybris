@@ -9,7 +9,6 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
@@ -41,7 +40,7 @@ public class CheckAlternativePaymentAction extends AbstractAction<OrderProcessMo
         return stream(Transition.values()).map(Transition::toString).collect(toSet());
     }
 
-    @Required
+    
     public void setTransitionMap(final Map<OrderStatus, Transition> transitionMap)
     {
         this.transitionMap = transitionMap;

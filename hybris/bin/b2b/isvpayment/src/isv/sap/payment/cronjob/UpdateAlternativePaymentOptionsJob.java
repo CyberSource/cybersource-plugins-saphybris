@@ -2,7 +2,7 @@ package isv.sap.payment.cronjob;
 
 import java.util.Collection;
 import java.util.List;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.dto.converter.Converter;

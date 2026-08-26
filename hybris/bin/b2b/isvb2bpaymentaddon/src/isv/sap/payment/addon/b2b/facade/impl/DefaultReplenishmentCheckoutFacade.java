@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.b2b.facade.impl;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.order.CartService;

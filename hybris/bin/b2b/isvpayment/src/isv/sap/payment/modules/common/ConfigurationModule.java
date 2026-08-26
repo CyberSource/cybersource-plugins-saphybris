@@ -1,6 +1,6 @@
 package isv.sap.payment.modules.common;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.guice.annotation.EnableGuiceModules;
 

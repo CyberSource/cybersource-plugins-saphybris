@@ -5,7 +5,6 @@ import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractAction;
 import de.hybris.platform.servicelayer.time.TimeService;
-import org.springframework.beans.factory.annotation.Required;
 
 public abstract class AbstractOrderAction<T extends OrderProcessModel> extends AbstractAction<T>
 {
@@ -33,7 +32,7 @@ public abstract class AbstractOrderAction<T extends OrderProcessModel> extends A
         return timeService;
     }
 
-    @Required
+    
     public void setTimeService(final TimeService timeService)
     {
         this.timeService = timeService;

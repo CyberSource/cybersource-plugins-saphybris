@@ -3,7 +3,7 @@ package isv.sap.payment.fulfilmentprocess.actions.order
 import de.hybris.bootstrap.annotations.UnitTest
 import de.hybris.platform.core.model.order.OrderModel
 import de.hybris.platform.orderprocessing.model.OrderProcessModel
-import jersey.repackaged.com.google.common.collect.ImmutableMap
+import com.google.common.collect.ImmutableMap
 import org.junit.Test
 import spock.lang.Specification
 

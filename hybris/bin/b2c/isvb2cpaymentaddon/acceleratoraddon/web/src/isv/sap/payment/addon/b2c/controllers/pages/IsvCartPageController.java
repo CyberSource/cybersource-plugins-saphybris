@@ -21,6 +21,7 @@ import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.util.Config;
 import de.hybris.platform.yb2cacceleratorstorefront.controllers.pages.CartPageController;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -32,6 +33,7 @@ import isv.sap.payment.addon.facade.PaymentModeFacade;
 /**
  * Controller for cart page
  */
+@Controller
 @RequestMapping(value = "/cart")
 public class IsvCartPageController extends CartPageController
 {

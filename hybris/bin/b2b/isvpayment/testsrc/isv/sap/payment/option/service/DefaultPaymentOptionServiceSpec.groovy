@@ -11,7 +11,7 @@ import isv.sap.payment.model.IsvAlternativePaymentOptionModel
 
 import static isv.sap.payment.option.service.DefaultPaymentOptionService.OPTIONS_QUERY
 import static java.util.Arrays.asList
-import static org.apache.commons.collections.ListUtils.EMPTY_LIST
+import static java.util.Collections.emptyList
 
 @UnitTest
 class DefaultPaymentOptionServiceSpec extends Specification
@@ -55,7 +55,7 @@ class DefaultPaymentOptionServiceSpec extends Specification
         def actual = service.paymentOptions
 
         then:
-        actual == EMPTY_LIST
+        actual == emptyList()
     }
 
     @Test

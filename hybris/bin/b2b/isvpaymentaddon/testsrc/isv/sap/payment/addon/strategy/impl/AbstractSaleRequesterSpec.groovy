@@ -6,7 +6,7 @@ import de.hybris.platform.basecommerce.model.site.BaseSiteModel
 import de.hybris.platform.core.model.order.AbstractOrderModel
 import de.hybris.platform.servicelayer.config.ConfigurationService
 import de.hybris.platform.site.BaseSiteService
-import org.apache.commons.configuration.Configuration
+import org.apache.commons.configuration2.Configuration
 import org.junit.Test
 import spock.lang.Ignore
 import spock.lang.Specification

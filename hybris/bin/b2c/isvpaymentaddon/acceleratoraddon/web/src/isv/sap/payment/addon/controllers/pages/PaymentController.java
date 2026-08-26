@@ -2,7 +2,7 @@ package isv.sap.payment.addon.controllers.pages;
 
 import java.util.Map;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCheckoutController;
 import de.hybris.platform.commercefacades.order.OrderFacade;
@@ -191,7 +191,6 @@ public class PaymentController extends AbstractCheckoutController
                 orderFacade.getOrderDetailsForGUID(cart.getGuid());
                 LOG.error("Order already exists for cart GUID [{}]. Rejecting duplicate order placement attempt.",
                         LogUtils.encode(cart.getGuid()));
-                return null;
             }
             catch (final UnknownIdentifierException e)
             {

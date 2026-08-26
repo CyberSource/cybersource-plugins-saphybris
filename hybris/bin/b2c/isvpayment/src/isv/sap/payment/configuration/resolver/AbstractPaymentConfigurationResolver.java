@@ -9,11 +9,11 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.util.Config;
 import isv.sap.payment.model.IsvMerchantPaymentConfigurationModel;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Required;
+import org.apache.commons.lang3.StringUtils;
+
 
 import static isv.sap.payment.utils.Assert.isTrue;
-import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 /**
  * Base implementation for configuration lookup
@@ -42,7 +42,7 @@ public abstract class AbstractPaymentConfigurationResolver<T> implements Payment
         return flexibleSearchService;
     }
 
-    @Required
+    
     public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
     {
         this.flexibleSearchService = flexibleSearchService;

@@ -31,7 +31,7 @@ import isv.sap.payment.commerceservices.order.PaymentCartService;
 
 import static de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages.addErrorMessage;
 import static java.util.Optional.empty;
-import static org.apache.commons.lang.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 

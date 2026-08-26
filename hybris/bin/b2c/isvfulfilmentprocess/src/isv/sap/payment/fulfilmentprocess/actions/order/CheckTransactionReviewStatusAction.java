@@ -20,7 +20,7 @@ import de.hybris.platform.ticket.events.model.CsCustomerEventModel;
 import de.hybris.platform.ticket.model.CsTicketModel;
 import de.hybris.platform.ticket.service.TicketBusinessService;
 import de.hybris.platform.util.localization.Localization;
-import org.springframework.beans.factory.annotation.Required;
+
 
 public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProcessModel>
 {
@@ -124,7 +124,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
                 && TransactionStatus.REVIEW.name().equals(entry.getTransactionStatus());
     }
 
-    @Required
+    
     public void setTicketBusinessService(final TicketBusinessService ticketBusinessService)
     {
         this.ticketBusinessService = ticketBusinessService;

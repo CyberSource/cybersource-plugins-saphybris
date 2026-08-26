@@ -3,7 +3,7 @@ package isv.sap.payment.fulfilmentprocess.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.basecommerce.enums.InStockStatus;
 import de.hybris.platform.basecommerce.enums.StockLevelUpdateType;

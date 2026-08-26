@@ -50,6 +50,8 @@ public class IsvpaymentsampledataSystemSetup
 
     private String toRelativePath(final String filePath)
     {
-        return filePath.substring(filePath.lastIndexOf(DATA_FOLDER));
+        return filePath.replace("\\", "/")
+                    .substring(filePath.replace("\\", "/")
+                    .lastIndexOf(DATA_FOLDER));
     }
 }

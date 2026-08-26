@@ -22,6 +22,22 @@
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true">
 
+<style id="antiClickjack">
+    html { display: none !important; }
+</style>
+<script type="text/javascript">
+    (function() {
+        // Framebuster: Prevent page from being loaded in iframe on legacy browsers
+        if (self === top) {
+            // Not in a frame - safe to display page
+            var antiClickjack = document.getElementById("antiClickjack");
+            if (antiClickjack) {
+                antiClickjack.parentNode.removeChild(antiClickjack);
+            }
+        }
+    })();
+</script>
+
 <c:if test="${visaCheckoutEnabled}">
     <visacheckout:vcInit
             apiKey="${visaCheckoutAPIKey}"

@@ -18,7 +18,7 @@ import isv.sap.payment.enums.PaymentType
 import isv.sap.payment.model.IsvPaymentModeModel
 
 import static java.util.Objects.isNull
-import static org.apache.commons.collections.ListUtils.EMPTY_LIST
+import static java.util.Collections.emptyList
 
 @UnitTest
 class PaymentModeFacadeImplSpec extends Specification
@@ -81,7 +81,7 @@ class PaymentModeFacadeImplSpec extends Specification
         def actual = facade.paymentModes
 
         then:
-        actual == EMPTY_LIST
+        actual == emptyList()
     }
 
     @Test

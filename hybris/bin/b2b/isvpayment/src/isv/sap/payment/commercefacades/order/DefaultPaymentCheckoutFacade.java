@@ -8,7 +8,7 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.CartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * Encapsulates the default implementation of {@link PaymentCheckoutFacade} interface.

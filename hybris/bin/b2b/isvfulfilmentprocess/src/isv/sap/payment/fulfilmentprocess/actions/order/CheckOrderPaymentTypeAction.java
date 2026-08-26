@@ -10,7 +10,6 @@ import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.action.AbstractAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 
 import isv.sap.payment.enums.PaymentType;
 import isv.sap.payment.utils.PaymentTransactionUtils;
@@ -57,7 +56,7 @@ public class CheckOrderPaymentTypeAction extends AbstractAction<OrderProcessMode
         return Transition.NOK.toString();
     }
 
-    @Required
+    
     public void setPaymentTypeMappings(final Map<PaymentType, Transition> paymentTypeMappings)
     {
         this.paymentTypeMappings = paymentTypeMappings;

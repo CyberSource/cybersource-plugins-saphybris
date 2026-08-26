@@ -7,8 +7,8 @@ import de.hybris.platform.servicelayer.model.ModelService
 import org.junit.Test
 import spock.lang.Specification
 
-import static de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType.ACCOUNT
-import static de.hybris.platform.b2bacceleratorservices.enums.CheckoutPaymentType.CARD
+import static de.hybris.platform.b2b.enums.CheckoutPaymentType.ACCOUNT
+import static de.hybris.platform.b2b.enums.CheckoutPaymentType.CARD
 import static de.hybris.platform.processengine.action.AbstractSimpleDecisionAction.Transition.NOK
 import static de.hybris.platform.processengine.action.AbstractSimpleDecisionAction.Transition.OK
 

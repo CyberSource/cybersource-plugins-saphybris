@@ -1,7 +1,7 @@
 package isv.sap.payment.modules.converter;
 
 import java.util.List;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.inject.Named;
 import javax.inject.Singleton;
 

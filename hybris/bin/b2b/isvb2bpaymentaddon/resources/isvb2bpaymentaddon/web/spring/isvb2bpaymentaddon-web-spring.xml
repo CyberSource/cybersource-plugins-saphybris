@@ -8,6 +8,12 @@
            http://www.springframework.org/schema/context/spring-context.xsd">
            
     <context:annotation-config/> 
+		<context:component-scan base-package="isv.sap.payment.addon.b2b.controllers">
+		<context:exclude-filter type="regex" expression="isv\.sap\.payment\.addon\.b2b\.controllers\.pages\.checkout\.steps\.SummaryCheckoutStepController"/>
+		<context:exclude-filter type="regex" expression="isv\.sap\.payment\.addon\.b2b\.controllers\.pages\.checkout\.steps\.PaymentTypeCheckoutStepController"/>
+	</context:component-scan>
+	<bean id="summaryCheckoutStepController" class="isv.sap.payment.addon.b2b.controllers.pages.checkout.steps.SummaryCheckoutStepController"/>
+	<bean id="paymentTypeCheckoutStepController" class="isv.sap.payment.addon.b2b.controllers.pages.checkout.steps.PaymentTypeCheckoutStepController" />
 
 	<!-- Expose /acceleratoraddon/web/webroot/WEB-INF/messages/base.js.properties  resource bundle as javascript variables -->
 	<bean id="defaultIsvb2bpaymentaddonJavaScriptMessageResourceAccessor" parent="abstractJavaScriptMessageResourceAccessor">
@@ -28,8 +34,6 @@
 	</bean>
 
 	<!-- override b2b payment-type and summary controllers -->
-	<bean id="paymentTypeCheckoutStepController" class="isv.sap.payment.addon.b2b.controllers.pages.checkout.steps.PaymentTypeCheckoutStepController" />
-	<bean id="summaryCheckoutStepController" class="isv.sap.payment.addon.b2b.controllers.pages.checkout.steps.SummaryCheckoutStepController" />
 
 	<alias name="isvB2bPaymentMethodCheckoutStep" alias="paymentMethodCheckoutStep"/>
 	<bean id="isvB2bPaymentMethodCheckoutStep" class="isv.sap.payment.addon.b2b.steps.IsvB2BPaymentMethodCheckoutStep" parent="defaultB2bPaymentMethodCheckoutStep"/>

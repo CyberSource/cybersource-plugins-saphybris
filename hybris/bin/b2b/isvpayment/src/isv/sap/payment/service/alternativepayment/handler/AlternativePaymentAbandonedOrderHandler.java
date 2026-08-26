@@ -1,6 +1,6 @@
 package isv.sap.payment.service.alternativepayment.handler;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.core.model.order.OrderModel;
 

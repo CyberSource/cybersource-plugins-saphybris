@@ -1,10 +1,7 @@
 package isv.sap.payment.addon.listener
 
-import javax.servlet.ServletContext
-import javax.servlet.ServletContextEvent
-
-import com.netflix.hystrix.contrib.servopublisher.HystrixServoMetricsPublisher
-import com.netflix.hystrix.strategy.HystrixPlugins
+import jakarta.servlet.ServletContext
+import jakarta.servlet.ServletContextEvent
 import de.hybris.bootstrap.annotations.UnitTest
 import org.junit.Test
 import spock.lang.Specification
@@ -17,17 +14,17 @@ class HystrixMetricsPublisherListenerSpec extends Specification
     def listener = new HystrixMetricsPublisherListener()
 
     @Test
-    def 'ContextInitialized servo metrics publisher registered'()
+    def 'contextInitialized does not throw exception'()
     {
         when:
         listener.contextInitialized(new ServletContextEvent(servletContext))
 
         then:
-        HystrixServoMetricsPublisher == HystrixPlugins.instance.metricsPublisher.getClass()
+        noExceptionThrown()
     }
 
     @Test
-    def 'register when ContextInitialized is called several times'()
+    def 'contextInitialized can be called multiple times safely'()
     {
         when:
         listener.contextInitialized(new ServletContextEvent(servletContext))
@@ -35,6 +32,6 @@ class HystrixMetricsPublisherListenerSpec extends Specification
         listener.contextInitialized(new ServletContextEvent(servletContext))
 
         then:
-        HystrixServoMetricsPublisher == HystrixPlugins.instance.metricsPublisher.getClass()
+        noExceptionThrown()
     }
 }

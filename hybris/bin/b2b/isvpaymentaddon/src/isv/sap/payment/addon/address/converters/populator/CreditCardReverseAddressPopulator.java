@@ -1,6 +1,6 @@
 package isv.sap.payment.addon.address.converters.populator;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.acceleratorservices.payment.data.CustomerInfoData;
 import de.hybris.platform.commerceservices.customer.CustomerEmailResolutionService;
@@ -11,9 +11,9 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.user.UserService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class CreditCardReverseAddressPopulator implements Populator<CustomerInfoData, AddressModel>
 {

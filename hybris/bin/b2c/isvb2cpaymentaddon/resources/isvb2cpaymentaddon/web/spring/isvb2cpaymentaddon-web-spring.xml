@@ -9,10 +9,16 @@
 
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context.xsd">
-           
-    <context:annotation-config/>
-	<context:component-scan base-package="isv.sap.payment.addon.b2c.controllers" />
 
+	<import resource="isvb2cpaymentaddon-security-spring.xml"/>   
+    <context:annotation-config/>
+		<context:component-scan base-package="isv.sap.payment.addon.b2c.controllers">
+		<context:exclude-filter type="regex" expression="isv\.sap\.payment\.addon\.b2c\.controllers\.pages\.checkout\.steps\.SummaryCheckoutStepController"/>
+		<context:exclude-filter type="regex" expression="isv\.sap\.payment\.addon\.b2c\.controllers\.pages\.IsvCartPageController"/>
+	</context:component-scan>
+
+	<bean id="summaryCheckoutStepController" class="isv.sap.payment.addon.b2c.controllers.pages.checkout.steps.SummaryCheckoutStepController"/>
+	<bean id="cartPageController" class="isv.sap.payment.addon.b2c.controllers.pages.IsvCartPageController"/>
 	<!-- Expose /acceleratoraddon/web/webroot/WEB-INF/messages/base.js.properties  resource bundle as javascript variables -->
 	<bean id="defaultIsvb2cpaymentaddonJavaScriptMessageResourceAccessor" parent="abstractJavaScriptMessageResourceAccessor">
 		<property name="addOnName" value="isvb2cpaymentaddon"/>
@@ -30,9 +36,5 @@
 	<bean id="isvb2cPaymentAddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
 		<property name="add" ref="getIsvb2cpaymentaddonBeforeViewHandler"/>
 	</bean>
-
-	<bean id="paymentMethodCheckoutStepController" class="isv.sap.payment.addon.controllers.pages.checkout.steps.PaymentMethodCheckoutStepController" />
-	<bean id="summaryCheckoutStepController" class="isv.sap.payment.addon.b2c.controllers.pages.checkout.steps.SummaryCheckoutStepController" />
-	<bean id="cartPageController" class="isv.sap.payment.addon.b2c.controllers.pages.IsvCartPageController" />
 
 </beans>

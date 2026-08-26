@@ -1,8 +1,8 @@
 package isv.sap.payment.hystrix;
 
 import com.google.common.base.Supplier;
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommand.Setter;
+import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.Tenant;
 
 import isv.cjl.payment.hystrix.HystrixWrapperExecutor;
 
@@ -19,15 +19,25 @@ public class TenantAwareHystrixWrapperExecutor<R> extends HystrixWrapperExecutor
     }
 
     @Override
-    protected HystrixCommand<R> create(final Setter setter, final Supplier<R> action)
+    public R execute(final String commandKey, final Supplier<R> action)
     {
-        return new AbstractTenantAwareHystrixCommand<R>(setter)
+        final Tenant tenant = Registry.getCurrentTenantNoFallback();
+        return super.execute(commandKey, () ->
         {
-            @Override
-            protected R runCommand()
+            if (Registry.hasCurrentTenant() && Registry.isCurrentTenant(tenant))
             {
                 return action.get();
             }
-        };
+
+            Registry.setCurrentTenant(tenant);
+            try
+            {
+                return action.get();
+            }
+            finally
+            {
+                Registry.unsetCurrentTenant();
+            }
+        });
     }
 }

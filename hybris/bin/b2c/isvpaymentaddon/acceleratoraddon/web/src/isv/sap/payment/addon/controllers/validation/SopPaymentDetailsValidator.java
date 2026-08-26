@@ -14,7 +14,7 @@ import java.util.Calendar;
 
 import de.hybris.platform.acceleratorservices.util.CalendarHelper;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.SopPaymentDetailsForm;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;

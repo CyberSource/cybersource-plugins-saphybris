@@ -9,7 +9,6 @@ import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.warehouse.Warehouse2ProcessAdapter;
 import de.hybris.platform.warehouse.WarehouseConsignmentStatus;
-import org.springframework.beans.factory.annotation.Required;
 
 import isv.sap.payment.fulfilmentprocess.constants.IsvfulfilmentprocessConstants;
 
@@ -43,7 +42,7 @@ public class DefaultWarehouse2ProcessAdapter implements Warehouse2ProcessAdapter
         return statusMap;
     }
 
-    @Required
+    
     public void setStatusMap(final Map<WarehouseConsignmentStatus, WarehouseConsignmentState> statusMap)
     {
         this.statusMap = statusMap;
@@ -54,7 +53,7 @@ public class DefaultWarehouse2ProcessAdapter implements Warehouse2ProcessAdapter
         return modelService;
     }
 
-    @Required
+    
     public void setModelService(final ModelService modelService)
     {
         this.modelService = modelService;
@@ -65,7 +64,7 @@ public class DefaultWarehouse2ProcessAdapter implements Warehouse2ProcessAdapter
         return businessProcessService;
     }
 
-    @Required
+    
     public void setBusinessProcessService(final BusinessProcessService businessProcessService)
     {
         this.businessProcessService = businessProcessService;

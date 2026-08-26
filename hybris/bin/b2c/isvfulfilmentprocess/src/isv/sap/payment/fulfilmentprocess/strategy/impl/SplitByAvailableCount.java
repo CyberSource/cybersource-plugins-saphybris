@@ -4,7 +4,7 @@ import de.hybris.platform.commerceservices.stock.CommerceStockService;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.ordersplitting.strategy.AbstractSplittingStrategy;
-import org.springframework.beans.factory.annotation.Required;
+
 
 public class SplitByAvailableCount extends AbstractSplittingStrategy
 {
@@ -43,7 +43,7 @@ public class SplitByAvailableCount extends AbstractSplittingStrategy
         return commerceStockService;
     }
 
-    @Required
+    
     public void setCommerceStockService(final CommerceStockService commerceStockService)
     {
         this.commerceStockService = commerceStockService;

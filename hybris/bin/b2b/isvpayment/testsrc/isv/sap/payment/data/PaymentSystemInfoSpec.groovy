@@ -1,7 +1,7 @@
 package isv.sap.payment.data
 
 import de.hybris.bootstrap.annotations.UnitTest
-import org.apache.commons.configuration.ConfigurationException
+import org.apache.commons.configuration2.ex.ConfigurationException
 import org.junit.Test
 import spock.lang.Specification
 

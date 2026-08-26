@@ -1,6 +1,6 @@
 package isv.sap.payment.service.transaction;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.enumeration.EnumerationService;
 import de.hybris.platform.payment.enums.PaymentTransactionType;

@@ -8,10 +8,9 @@ import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.processengine.BusinessProcessService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 
 import isv.cjl.payment.model.ConversionReportInfo;
 import isv.sap.payment.dao.PaymentOrderDao;
@@ -79,7 +78,6 @@ public class ProcessConversionReportListener implements ReportListener<Conversio
         businessProcessService.triggerEvent(order.getCode() + "_ReviewDecision");
     }
 
-    @Required
     public void setDecisionStrategies(final List<DecisionChangeStrategy> decisionStrategies)
     {
         this.decisionStrategies = decisionStrategies;

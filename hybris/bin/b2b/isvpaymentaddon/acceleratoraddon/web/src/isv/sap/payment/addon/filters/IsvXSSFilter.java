@@ -2,11 +2,11 @@ package isv.sap.payment.addon.filters;
 
 import java.io.IOException;
 import java.util.Arrays;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 
 import de.hybris.platform.servicelayer.web.XSSFilter;
 import org.apache.catalina.connector.RequestFacade;

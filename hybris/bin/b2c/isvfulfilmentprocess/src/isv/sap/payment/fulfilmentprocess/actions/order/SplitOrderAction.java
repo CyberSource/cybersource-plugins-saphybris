@@ -13,7 +13,7 @@ import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
+
 
 import isv.sap.payment.fulfilmentprocess.constants.IsvfulfilmentprocessConstants;
 
@@ -66,7 +66,7 @@ public class SplitOrderAction extends AbstractProceduralAction<OrderProcessModel
         return orderSplittingService;
     }
 
-    @Required
+    
     public void setOrderSplittingService(final OrderSplittingService orderSplittingService)
     {
         this.orderSplittingService = orderSplittingService;
@@ -77,7 +77,7 @@ public class SplitOrderAction extends AbstractProceduralAction<OrderProcessModel
         return businessProcessService;
     }
 
-    @Required
+    
     public void setBusinessProcessService(final BusinessProcessService businessProcessService)
     {
         this.businessProcessService = businessProcessService;

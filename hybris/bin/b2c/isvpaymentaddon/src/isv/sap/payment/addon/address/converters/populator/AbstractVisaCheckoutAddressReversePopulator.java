@@ -8,7 +8,7 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import org.apache.commons.lang3.StringUtils;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public abstract class AbstractVisaCheckoutAddressReversePopulator<SOURCE, TARGET extends AddressModel> implements Populator<SOURCE, TARGET>
 {

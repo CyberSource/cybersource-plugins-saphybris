@@ -1,7 +1,7 @@
 package isv.sap.payment.addon.order.converters.populator;
 
 import java.util.stream.Collectors;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.commerceservices.customer.CustomerEmailResolutionService;
 import de.hybris.platform.converters.Populator;

@@ -16,7 +16,7 @@ import static isv.cjl.payment.constants.PaymentRequestParamConstants.POSTAL_CODE
 import static isv.cjl.payment.constants.PaymentRequestParamConstants.STATE;
 import static isv.cjl.payment.constants.PaymentRequestParamConstants.STREET1;
 import static isv.cjl.payment.constants.PaymentServiceConstants.Verification.DELIVERY_ADDRESS_VERIFICATION;
-import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * A component that encapsulates conversion logic from {@link PaymentServiceRequest} to

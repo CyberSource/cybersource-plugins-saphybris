@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import isv.sap.payment.enums.PaymentType;
 

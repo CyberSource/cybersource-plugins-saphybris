@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    ISV B2C Payment Addon - Security Configuration
+    Provides security rules for payment processing endpoints, particularly 3D Secure callbacks
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        Exclude 3D Secure callback endpoint from CSRF protection.
+        Cardinal Trust POSTs to /checkout/payment/flex/payerAuthHelper from a cross-origin iframe
+        and cannot provide a CSRF token. Without this exclusion, the CSRF filter returns 405.
+    -->
+    <bean id="isvb2cPaymentCsrfAllowedUrlPatternsMergeDirective" depends-on="csrfAllowedUrlPatternsList" parent="listMergeDirective">
+        <property name="add" value=".*/checkout/payment/flex/payerAuthHelper"/>
+    </bean>
+
+</beans>

@@ -1,14 +1,13 @@
 package isv.sap.payment.injector;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.google.inject.Injector;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.annotation.Required;
 
 import static com.google.inject.Key.get;
 import static com.google.inject.name.Names.named;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class GuiceFactoryBean<T> implements FactoryBean<T>
 {
@@ -46,7 +45,7 @@ public class GuiceFactoryBean<T> implements FactoryBean<T>
         this.singleton = singleton;
     }
 
-    @Required
+    
     public void setBeanClass(final Class<T> beanClass)
     {
         this.beanClass = beanClass;

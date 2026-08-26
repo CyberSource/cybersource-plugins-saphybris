@@ -4,7 +4,7 @@ import de.hybris.bootstrap.annotations.UnitTest
 import de.hybris.platform.core.model.order.AbstractOrderModel
 import de.hybris.platform.payment.enums.PaymentTransactionType
 import de.hybris.platform.servicelayer.config.ConfigurationService
-import org.apache.commons.configuration.Configuration
+import org.apache.commons.configuration2.Configuration
 import org.junit.Test
 import spock.lang.Specification
 import spock.lang.Unroll

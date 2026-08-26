@@ -2,7 +2,7 @@ package isv.sap.payment.addon.b2c.controllers.pages.checkout.payment.flex;
 
 import java.util.Map;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 // import org.apache.commons.lang3.ObjectUtils;
  
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCheckoutController;
@@ -12,7 +12,7 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.Config;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -54,8 +54,6 @@ public class FlexMicroformController extends AbstractCheckoutController
 
     private static final String URL_PAYMENT_FAILED = "/checkout/multi/summary/view/payment/error";
 
-    private static final String FLEX_CAPTURE_CONTEXT_ATTRIBUTE = "captureContext";
-
     @Resource
     private CartService cartService;
 
@@ -70,40 +68,46 @@ public class FlexMicroformController extends AbstractCheckoutController
 
     @GetMapping(value = "/newJwk", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AjaxResponse newJwk(final HttpSession session, final UriComponentsBuilder uriComponentsBuilder)
+    public AjaxResponse newJwk(final HttpServletRequest request, final UriComponentsBuilder uriComponentsBuilder)
     {
         final String targetOrigin = uriComponentsBuilder
-                .replacePath(null).replaceQuery(null).userInfo(null).fragment(null)
-                .build()
-                .toUriString();
-        final Map<String, String> captureContext = flexService.createKey(targetOrigin, creditCardPaymentFacade.getMerchantIdForCaptureContext());
+                    .replacePath(null).replaceQuery(null).userInfo(null).fragment(null)
+                    .build()
+                    .toUriString();
 
-        session.setAttribute(FLEX_CAPTURE_CONTEXT_ATTRIBUTE, captureContext.get("captureContext"));
-        
+        final String sanitizedTargetOrigin = sanitizeExternalData(targetOrigin);
+        checkArgument(StringUtils.isNotBlank(sanitizedTargetOrigin), "Target origin is invalid");
+
+        final Map<String, String> captureContext = flexService.createKey(sanitizedTargetOrigin, creditCardPaymentFacade.getMerchantIdForCaptureContext());
+
+        final String captureContextValue = sanitizeExternalData(captureContext.get("captureContext"));
+        final String clientLibraryValue = sanitizeExternalData(captureContext.get("clientLibrary"));
+        final String clientLibraryIntegrityValue = sanitizeExternalData(captureContext.get("clientLibraryIntegrity"));
+
+        checkArgument(StringUtils.isNotBlank(captureContextValue), "Capture context from CyberSource is empty");
         return AjaxResponse.success()
-                .put("captureContext", StringEscapeUtils.escapeHtml4(captureContext.get("captureContext")))
-                .put("clientLibrary", StringEscapeUtils.escapeHtml4(captureContext.get("clientLibrary")))
-                .put("clientLibraryIntegrity", StringEscapeUtils.escapeHtml4(captureContext.get("clientLibraryIntegrity")));
-
+            .put("captureContext", StringEscapeUtils.escapeHtml4(captureContextValue))
+            .put("clientLibrary", StringEscapeUtils.escapeHtml4(clientLibraryValue))
+            .put("clientLibraryIntegrity", StringEscapeUtils.escapeHtml4(clientLibraryIntegrityValue));
     }
 
     @PostMapping(value = "/verifyToken", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity verifyToken(@RequestBody final String flexToken, final HttpSession session)
+    public ResponseEntity verifyToken(@RequestBody Map<String, String> flexData)
     {
-        final String captureContext = (String) session.getAttribute(FLEX_CAPTURE_CONTEXT_ATTRIBUTE);
+        final String captureContext = StringEscapeUtils.escapeHtml4(flexData.get("captureContext"));
         //OLH: For Reflected XSS fix. I don't think this method is vulnerable to XSS since the flexToken its not a user's input to the response but part of the response from Cybersource.
         // To be extra safe, we can sanitize it before passing to the flexService.verifyAndGet() method below. The method does not seem to perform any validation or sanitization.
-        String sanitizedFlexToken = StringEscapeUtils.escapeHtml4(flexToken);
+        String sanitizedFlexToken = StringEscapeUtils.escapeHtml4(flexData.get("flexToken"));
 
         checkNotNull(captureContext);
 
-        
+
         return flexService.verifyAndGet(sanitizedFlexToken)//OLH: Use sanitize value
                 .map(transientToken -> ResponseEntity.ok(transientToken))
                 .orElse(ResponseEntity.status(UNPROCESSABLE_ENTITY).build());
     }
 
-    @PostMapping(path = "/pay")
+    @PostMapping(value = "/pay")
     public String pay(@RequestParam(name = "card_flexToken") final String flexToken)
     {
         checkArgument(StringUtils.isNotBlank(flexToken), "flexToken is missing");
@@ -128,7 +132,7 @@ public class FlexMicroformController extends AbstractCheckoutController
         return REDIRECT_PREFIX + URL_PAYMENT_FAILED;
     }
     @ResponseBody
-    @PostMapping(path = "/attemptPaymentSetUp", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/attemptPaymentSetUp", produces = MediaType.APPLICATION_JSON_VALUE)
     public AjaxResponse setUp(
             @RequestParam final String transientToken
     )
@@ -152,21 +156,21 @@ public class FlexMicroformController extends AbstractCheckoutController
             }
             else
             {
-                LOG.warn("Cart [{}]: Received invalid setup code [{}]. Payment should not proceed",
-                        cartService.getSessionCart().getCode(), properties.get("decision"));
+                LOG.warn("Cart [{}]: Received invalid setup response. Payment should not proceed",
+                    cartService.getSessionCart().getCode());
             }
         }
         catch (final Exception ex)
         {
             LOG.error("Cart [{}]: Exception when trying to enroll/authorize credit card",
-                    cartService.getSessionCart().getCode(), ex);
+                    cartService.getSessionCart().getCode(), ex.getMessage());
         }
         return AjaxResponse.fail()
                 .put("redirectUrl", URL_PAYMENT_FAILED);
     }
 
     @ResponseBody
-    @PostMapping(path = "/attemptPaymentWithoutValidation", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/attemptPaymentWithoutValidation", produces = MediaType.APPLICATION_JSON_VALUE)
     public AjaxResponse payWithoutValidation(
             @RequestParam final String referenceId,
             @RequestParam final String transientToken,
@@ -216,21 +220,21 @@ public class FlexMicroformController extends AbstractCheckoutController
             }
             else
             {
-                LOG.warn("Cart [{}]: Received invalid enrollment code [{}]. Payment should not proceed",
-                        cartService.getSessionCart().getCode(), responseCode);
+                LOG.warn("Cart [{}]: Received invalid enrollment response. Payment should not proceed",
+                    cartService.getSessionCart().getCode());
             }
         }
         catch (final Exception ex)
         {
             LOG.error("Cart [{}]: Exception when trying to enroll/authorize credit card",
-                    cartService.getSessionCart().getCode(), ex);
+                    cartService.getSessionCart().getCode(), ex.getMessage());
         }
 
         return AjaxResponse.fail()
                 .put("redirectUrl", URL_PAYMENT_FAILED);
     }
 
-    @PostMapping(path = "/payerAuthHelper")
+    @PostMapping(value = "/payerAuthHelper")
     public String payerAuthHelper(@RequestParam(name = "TransactionId") final String transactionId, final Model model)
     {
         String sanitizedTransactionId = StringEscapeUtils.escapeHtml4(transactionId);
@@ -239,7 +243,7 @@ public class FlexMicroformController extends AbstractCheckoutController
     }
 
     @ResponseBody
-    @PostMapping(path = "/payWithValidation", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/payWithValidation", produces = MediaType.APPLICATION_JSON_VALUE)
     public AjaxResponse pay(@RequestParam(name = "transientToken") final String transientToken,
             @RequestParam(name = "transactionId") final String transactionId)
     {
@@ -343,10 +347,21 @@ public class FlexMicroformController extends AbstractCheckoutController
         return getCheckoutCustomerStrategy().isAnonymousCheckout() ? orderData.getGuid() : orderData.getCode();
     }
 
+    private String sanitizeExternalData(final String externalData)
+    {
+        if (externalData == null)
+        {
+            return "";
+        }
+        return externalData
+                .replaceAll("[\\r\\n\\t\\x00-\\x1F\\x7F]", "")
+                .trim();
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public String handleRuntimeException(final Exception exception)
     {
-        LOG.error(exception.getMessage(), exception);
+        LOG.error("Unhandled runtime exception in flex payment flow", exception);
 
         return REDIRECT_PREFIX + URL_PAYMENT_FAILED;
     }

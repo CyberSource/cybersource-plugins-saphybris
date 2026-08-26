@@ -35,7 +35,7 @@ import static isv.cjl.payment.constants.PaymentServiceConstants.AlternativePayme
 import static isv.sap.payment.enums.AlternativePaymentMethod.KLI;
 import static java.lang.String.format;
 import static java.math.BigDecimal.ZERO;
-import static org.apache.commons.lang.StringUtils.abbreviate;
+import static org.apache.commons.lang3.StringUtils.abbreviate;
 
 /**
  * A component that encapsulates conversion logic from {@link PaymentServiceRequest} to

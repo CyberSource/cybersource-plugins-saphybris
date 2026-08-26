@@ -2,9 +2,9 @@ package isv.sap.payment.addon.tags;
 
 import java.util.Objects;
 import java.util.Optional;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.Tag;
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.Tag;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 import de.hybris.platform.acceleratorservices.checkout.pci.impl.ConfiguredCheckoutPciStrategy;
 import de.hybris.platform.acceleratorservices.enums.CheckoutPciOptionEnum;

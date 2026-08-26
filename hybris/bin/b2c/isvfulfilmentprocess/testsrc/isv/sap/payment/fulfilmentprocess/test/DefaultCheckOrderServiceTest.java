@@ -52,7 +52,7 @@ public class DefaultCheckOrderServiceTest
     @Test
     public void testNoEntries()
     {
-        when(order.getEntries()).thenReturn(Collections.EMPTY_LIST);
+        when(order.getEntries()).thenReturn(Collections.emptyList());
         Assertions.assertThat(defaultCheckOrderService.check(order)).isFalse();
     }
 

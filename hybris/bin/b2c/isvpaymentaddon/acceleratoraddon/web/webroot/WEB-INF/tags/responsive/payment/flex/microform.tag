@@ -153,7 +153,10 @@
                 url: MICROFORM.verifyTokenEndpointUrl,
                 cache: false,
                 async: false,
-                data: JSON.stringify(flexToken),
+                data: JSON.stringify({
+                    flexToken: flexToken,
+                    captureContext: MICROFORM.captureContext
+                }),
                 contentType: "application/json",
                 success: function (transientToken) {
                     isValid = true;

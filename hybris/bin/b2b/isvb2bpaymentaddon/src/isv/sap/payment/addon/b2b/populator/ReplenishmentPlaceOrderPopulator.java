@@ -6,7 +6,7 @@ import de.hybris.platform.converters.Populator;
 import isv.sap.payment.addon.b2b.model.ReplenishmentInfoModel;
 
 import static de.hybris.platform.b2bacceleratorfacades.order.data.B2BReplenishmentRecurrenceEnum.valueOf;
-import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class ReplenishmentPlaceOrderPopulator implements Populator<ReplenishmentInfoModel, PlaceOrderData>
 {

@@ -1,7 +1,7 @@
 package isv.sap.payment.modules.common;
 
 import java.util.List;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.google.inject.Key;
 import com.google.inject.Provides;

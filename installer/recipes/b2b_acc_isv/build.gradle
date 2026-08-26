@@ -21,8 +21,8 @@ def platform = platform {
 
         property 'googleApiKey', ''
 
-        property 'build.source', '11.0'
-        property 'build.target', '11.0'
+        property 'build.source', '21'
+        property 'build.target', '21'
 
         property 'website.powertools.http', 'http://powertools.local:9001/yb2bacceleratorstorefront'
         property 'website.powertools.https', 'https://powertools.local:9002/yb2bacceleratorstorefront'
@@ -37,7 +37,7 @@ def platform = platform {
         extName 'b2bcommercebackoffice'
         extName 'solrfacetsearchbackoffice'
 
-        extName 'yacceleratorcockpits'
+        // extName 'yacceleratorcockpits'
         extName 'yacceleratorinitialdata'
         extName 'ycommercewebservices'
         extName 'ycommercewebservicestest'

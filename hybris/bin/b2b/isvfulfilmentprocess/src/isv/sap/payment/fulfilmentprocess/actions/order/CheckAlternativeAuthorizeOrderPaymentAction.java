@@ -3,7 +3,7 @@ package isv.sap.payment.fulfilmentprocess.actions.order;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
@@ -15,7 +15,7 @@ import de.hybris.platform.util.Config;
 import isv.sap.payment.model.IsvPaymentTransactionEntryModel;
 import isv.sap.payment.service.PaymentTransactionService;
 import isv.sap.payment.service.alternativepayment.AlternativePaymentOrderStatusService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import static de.hybris.platform.payment.enums.PaymentTransactionType.AUTHORIZATION;
 import static isv.cjl.payment.constants.PaymentConstants.AlternativePaymentsResponseFields.Sale.PAYMENT_STATUS;

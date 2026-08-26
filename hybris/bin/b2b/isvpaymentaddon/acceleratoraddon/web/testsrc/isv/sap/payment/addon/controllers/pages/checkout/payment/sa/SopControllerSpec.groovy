@@ -15,8 +15,8 @@ import de.hybris.platform.order.CartService
 import de.hybris.platform.servicelayer.config.ConfigurationService
 import de.hybris.platform.servicelayer.i18n.I18NService
 import de.hybris.platform.site.BaseSiteService
-import org.apache.commons.configuration.BaseConfiguration
-import org.apache.commons.configuration.Configuration
+import org.apache.commons.configuration2.BaseConfiguration
+import org.apache.commons.configuration2.Configuration
 import org.junit.Test
 import org.springframework.ui.ModelMap
 import spock.lang.Specification
@@ -31,7 +31,7 @@ import static SopController.POST_URL
 import static SopController.SOP_REQUEST
 import static isv.cjl.payment.enums.MerchantProfileType.SOP
 import static java.util.Locale.UK
-import static org.apache.commons.lang.StringUtils.EMPTY
+import static org.apache.commons.lang3.StringUtils.EMPTY
 
 @UnitTest
 class SopControllerSpec extends Specification

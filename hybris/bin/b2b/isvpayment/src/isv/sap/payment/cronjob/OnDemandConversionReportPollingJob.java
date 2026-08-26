@@ -1,7 +1,7 @@
 package isv.sap.payment.cronjob;
 
 import java.util.Date;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.servicelayer.time.TimeService;
 import org.joda.time.Interval;

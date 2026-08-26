@@ -6,7 +6,6 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
-import org.springframework.beans.factory.annotation.Required;
 
 public class NotifyCustomerAboutFraudAction extends AbstractProceduralAction<OrderProcessModel>
 {
@@ -27,7 +26,7 @@ public class NotifyCustomerAboutFraudAction extends AbstractProceduralAction<Ord
         return eventService;
     }
 
-    @Required
+    
     public void setEventService(final EventService eventService)
     {
         this.eventService = eventService;

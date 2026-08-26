@@ -1,7 +1,7 @@
 package isv.sap.payment.addon.facade.impl;
 
 import java.util.Map;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.core.model.order.CartModel;

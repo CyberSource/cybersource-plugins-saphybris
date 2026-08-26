@@ -5,7 +5,7 @@ import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
+
 
 import static isv.sap.payment.fulfilmentprocess.constants.IsvfulfilmentprocessConstants.CONSIGNMENT_SUBPROCESS_END_EVENT_NAME;
 
@@ -20,7 +20,7 @@ public class SubprocessEndAction extends AbstractProceduralAction<ConsignmentPro
         return businessProcessService;
     }
 
-    @Required
+    
     public void setBusinessProcessService(final BusinessProcessService businessProcessService)
     {
         this.businessProcessService = businessProcessService;
