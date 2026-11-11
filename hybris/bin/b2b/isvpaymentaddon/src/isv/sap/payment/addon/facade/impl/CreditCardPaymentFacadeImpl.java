@@ -223,7 +223,13 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
     public boolean authorizeFlexCreditCardPayment(final CartModel cart, final String flexToken,
             final IsvPaymentTransactionEntryModel enrollmentTransaction)
     {
-        checkEnrollReply(enrollmentTransaction, enrollmentTransaction.getProperties());
+        final boolean requiresPayerAuthValidation = ENROLLED_CODE
+                .equals(enrollmentTransaction.getProperties().get("payerAuthEnrollReplyReasonCode"));
+
+        if (requiresPayerAuthValidation)
+        {
+            throw new PaymentException("Transaction requires validation.");
+        }
 
         //Authorize transaction was bundled with enrollment, no need to perform it again
         return paymentTransactionService
@@ -249,16 +255,6 @@ public class CreditCardPaymentFacadeImpl extends AbstractPaymentFacade implement
         return false;
     }
 
-
-    private void checkEnrollReply(final IsvPaymentTransactionEntryModel enrollmentTransactionEntry,
-            final Map<String, String> properties)
-    {
-        if (ENROLLED_CODE.equals(properties.get("payerAuthEnrollReplyReasonCode")))
-        {
-            throw new PaymentException(
-                    String.format("Transaction requires validation.", enrollmentTransactionEntry.getCode()));
-        }
-    }
 
     private IsvPaymentTransactionEntryModel doFlexCreditCardAuthorizationWithValidation(final CartModel cart,
             final String flexToken, final String authTransactionId)
