@@ -2,8 +2,8 @@
 
 ## CJL - Core Java Library <!-- omit in toc -->
 
-**Version 26.1.0**
-August 2026
+**Version 26.1.1**
+November 2026
 
 ## Contents <!-- omit in toc -->
 
@@ -130,6 +130,7 @@ August 2026
 | February 2024 | - Upgraded cybersource-rest-client-java to version 0.0.58 and okhttp to 4.12.0 |
 | April 2026    | - Support for new Cardinal Commerce URLs <br> - Upgraded cybersource-rest-client-java to version 0.0.87 and AuthenticationSdk 0.0.42 |
 | August 2026   | - Compatibility support for SAP Commerce 2211 with Java 21 |
+| November 2026  | - Added Response Message Level Encryption support <br> - Upgraded Cybersource REST Client SDK to version 0.0.94 and AuthenticationSdk to 0.0.45 |
 ## About This Guide
 
 ### Audience and Purpose
@@ -2443,7 +2444,7 @@ CJL consumes HTTP REST APIs using [Java SDK](https://github.com/CyberSource/cybe
 Java SDK is included in CJL as a dependency:
 
 ```text
- compile 'com.cybersource:cybersource-rest-client-java:0.0.87'
+ compile 'com.cybersource:cybersource-rest-client-java:0.0.94'
 ```
 
 The dependency above brings in transitively two supporting libraries:
@@ -2474,26 +2475,27 @@ isv.cjl.payment.api.restHttpClient
 
 ### Authentication
 
-REST API supports two methods of authentication:
-
-- [JSON Web Token authentication](https://developer.cybersource.com/api/developer-guides/dita-gettingstarted/authentication/createCert.html) - P12 certificate
-- [HTTP Signature authentication](https://developer.cybersource.com/api/developer-guides/dita-gettingstarted/authentication/createSharedKey.html) - shared secret key
+- [P12 Certification Generation for JSON Web Token authentication](https://developer.cybersource.com/api/developer-guides/dita-gettingstarted/authentication/createCert.html) - P12 certificate
+- [Shared Secret Key creation](https://developer.cybersource.com/api/developer-guides/dita-gettingstarted/authentication/createSharedKey.html) - shared secret key
 
 Merchant is responsible for generating required security keys in the Business Center and also choosing the preferred authentication method.
 
-#### HTTP signature authentication <!-- omit in toc -->
 
-In order to configure the HTTP signature authentication method provide the following configuration:
+ Provide the following configuration for REST API support:
 
 ```text
-isv.payment.api.rest.authenticationType=http_signatureisv.payment.api.rest.merchantKeyId=<key_id>
+isv.payment.api.rest.authenticationType=jwt
+isv.payment.api.rest.jwtKeyType=SHARED_SECRET
+isv.payment.api.rest.merchantKeyId=<key_id>
 isv.payment.api.rest.merchantsecretKey=<secret>
 ```
 
 Each property listed above can be MID specific, for a given MID properties would become the following:
 
 ```text
-isv.payment.api.rest.<MERCHANT_ID>.authenticationType=http_signatureisv.payment.api.rest.<MERCHANT_ID>.merchantKeyId=<key_id>
+isv.payment.api.rest.<MERCHANT_ID>.authenticationType=jwt
+isv.payment.api.rest.<MERCHANT_ID>.jwtKeyType=SHARED_SECRET
+isv.payment.api.rest.<MERCHANT_ID>.merchantKeyId=<key_id>
 isv.payment.api.rest.<MERCHANT_ID>.merchantsecretKey=<secret>
 ```
 
@@ -2501,7 +2503,6 @@ This way each merchant account can be configured with its desired authentication
 
 > ![Note](images/note.jpg) Please refer to the [Configuration](#_iv2mfa3za2fw) section to learn how custom configuration properties can be supplied
 
-#### JSON Web Token authentication <!-- omit in toc -->
 
 The configuration below will enable the authentication method based on P12 certificate:
 

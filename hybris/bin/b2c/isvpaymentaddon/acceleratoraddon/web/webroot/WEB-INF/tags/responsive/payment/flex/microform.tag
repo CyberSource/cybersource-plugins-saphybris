@@ -42,9 +42,11 @@
                 MICROFORM.getTokenizationOptions(),
                 function (err, response) {
                     if (err) {
-                        MICROFORM.reportError(
-                            'Failed to create Flex Microform token: ' + err.details.responseStatus.message,
-                            err, MICROFORM.canRetryTokenizationRequest(err));
+                        var message = 'Failed to create Flex Microform token';
+                        if (err.details && err.details.length > 0 && err.details[0].location && err.details[0].location.indexOf('expiration') > -1) {
+                            message = 'Please enter a valid expiry date.';
+                        }
+                        MICROFORM.reportError(message, err, MICROFORM.canRetryTokenizationRequest(err));
                     } else {
                         if (MICROFORM.verifyFlexToken(response)) {
                             if (MICROFORM.onTokenCreated) {
@@ -173,7 +175,7 @@
         },
  
         canRetryTokenizationRequest: function (err) {
-            return err.details.responseStatus.reason == 'VALIDATION_ERROR' || err.details.responseStatus.reason == 'TOKENIZATION_ERROR';
+            return err.reason == 'VALIDATION_ERROR' || err.reason == 'TOKENIZATION_ERROR';
         },
  
         getStyles: function () {

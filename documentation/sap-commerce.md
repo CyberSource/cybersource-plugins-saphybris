@@ -3,8 +3,8 @@
 
 ## SAP Commerce <!-- omit in toc -->
 
-**Version 26.1.0**
-August 2026
+**Version 26.1.1**
+November 2026
 
 ## Contents <!-- omit in toc -->
 <!-- TOC -->
@@ -170,6 +170,7 @@ August 2026
 | August 2025   | 25.4.1                       | - Multi Mid support via p12 |
 | April 2026    | 25.4.2                       | - Support for new Cardinal Commerce URLs <br> - Upgraded cybersource-rest-client-java to version 0.0.87 and AuthenticationSdk 0.0.42 |
 | August 2026   | 26.1.0                       | - Compatibility support for SAP Commerce 2211 with Java 21 |
+| November 2026  | 26.1.1                       | - Added Response Message Level Encryption support <br> - Upgraded Cybersource REST Client SDK to version 0.0.94 and AuthenticationSdk to 0.0.45 |
 ### Audience and Purpose
 
 This document is intended for merchants who want to use Payment and Value Added Business services. This document provides an overview for integrating ISV services into SAP Commerce ecommerce platform.
@@ -257,7 +258,7 @@ More details on SAP Commerce accelerators: <https://help.sap.com/viewer/4c33bf18
 
 As part of reference functionality, the following features are supported:
 
-| Feature                                     | CJL 4.0.0 | SAP B2C | SAP B2B | Description                                         |
+| Feature                                     | CJL 5.0.0 | SAP B2C | SAP B2B | Description                                         |
 |---------------------------------------------|-----------|---------|---------|-----------------------------------------------------|
 | SA SOP                                      | Y         | Y       | Y       | Secure Acceptance Silent Order Post                 |
 | Microform v2                                | Y         | Y       | N       | Secure field - PCI compliant                        |
@@ -319,7 +320,7 @@ All technical installation concepts in this document are initial draft provided 
 The following components are required:
 
 1. SAP Commerce platform release v2211
-2. sap-commerce-payment-plugin-26.1.0.zip
+2. sap-commerce-payment-plugin-26.1.1.zip
 3. Java 21
 4. Required Dependencies installed in maven repository
 
@@ -329,12 +330,12 @@ The following components are required:
 
 #### Description <!-- omit in toc -->
 
-The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-4.0.0.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
+The following dependency at the moment cannot be retrieved using Maven dependency resolution mechanism "hybris/bin/isvpayment/lib/isv-payment-api-5.0.0.jar". Rest of dependencies can be managed by Maven as those are external and available in Maven central
 
 Following errors will be thrown during SAP Commerce build:
 
 ```text
-[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:4.0.0: Could not find artifact isv.payment.cjl:isv-payment-api:jar:4.0.0 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
+[artifact:mvn] [main] ERROR org.apache.maven.cli.MavenCli - Failed to execute goal on project isvpayment: Could not resolve dependencies for project isv.sap.payment:isvpayment:jar:5.0.0: Could not find artifact isv.payment.cjl:isv-payment-api:jar:5.0.0 in central.mirror (https://repo.maven.apache.org/maven2) -> [Help 1]
 ```
 
 #### Solution <!-- omit in toc -->
@@ -344,10 +345,10 @@ The "isvpayment" extension comes with all the library binaries included in "hybr
 As a quick local build solution the dependency can be installed in local maven repository and retrieved as a cached dependency as per <https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html>.
 
 ```text
-$mvn install:install-file -Dfile=isv-payment-api-4.0.0.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=4.0.0 -Dpackaging=jar
+$mvn install:install-file -Dfile=isv-payment-api-5.0.0.jar -DgroupId=isv.payment.cjl -DartifactId=isv-payment-api -Dversion=5.0.0 -Dpackaging=jar
 ```
 
-Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-4.0.0.jar".
+Another quick and rather non-conventional solution would also be just removing or renaming the following file: "hybris/bin/isvpayment/external-dependencies.xml". Another option would be creating "hybris/bin/isvpayment/unmanaged-dependencies.txt" file which can be used to list those JARs (dependencies) which should be ignored by Maven. You might want to ignore "isv-payment-api-5.0.0.jar".
 
 > ![Note](images/note.jpg) According to SAP documentation:  The ant updateMavenDependencies task deletes all *.jar files from the lib folder by default. Only libraries listed in unmanaged-dependencies.txt files are not deleted.
 
@@ -394,15 +395,9 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     # For PROD environment use "api.cybersource.com"
     isv.payment.api.rest.runEnvironment=apitest.cybersource.com
 
-    # HTTP_Signature = http_signature and JWT = jwt
-    isv.payment.api.rest.authenticationType = http_signature
-
-    # HTTP Parameters
-    # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=http_signature"
     isv.payment.api.rest.<merchant_id>.merchantKeyId = <merchantKeyId>
     isv.payment.api.rest.<merchant_id>.merchantsecretKey = <merchantsecretKey>
 
-    # JWT Parameters
     # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=jwt"
     isv.payment.api.rest.<merchant_id>.keyAlias = <merchant_id>
     isv.payment.api.rest.<merchant_id>.keyPass = <merchant_id>
@@ -410,14 +405,20 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     # P12 key path. Enter the folder path where the .p12 file is located.
     isv.payment.api.rest.<merchant_id>.keysDirectory = isvpayment/keys
 
+    isv.payment.api.rest.<merchant_id>.jwtKeyType=SHARED_SECRET
+    isv.payment.api.rest.<merchant_id>.enableResponseMleGlobally = false
+    # Response mle p12 path for example isvpayment/certificates/cert.p12
+    isv.payment.api.rest.<merchant_id>.responseMlePrivateKeyFilePath = <file path>
+    isv.payment.api.rest.<merchant_id>.responseMlePrivateKeyFilePassword =<file pasword>
+
     # P12 Parameters
     # The credentials below MUST be provided for P12 Configuration
-    isv.payment.p12.<merchantID>.merchantId= <merchantID>
-    isv.payment.p12.<merchantID>.libVersion= < Lib Version>
-    isv.payment.p12.<merchantID>.keyAlias= <Key Alias>
-    isv.payment.p12.<merchantID>.keyFile= <p12 File>
-    isv.payment.p12.<merchantID>.keyPass=<p12 File Passward>
-    isv.payment.p12.<merchantID>.keysDirectory= <key Directory>
+    isv.payment.p12.<merchant_id>.merchantId= <merchant_id>
+    isv.payment.p12.<merchant_id>.libVersion= < Lib Version>
+    isv.payment.p12.<merchant_id>.keyAlias= <Key Alias>
+    isv.payment.p12.<merchant_id>.keyFile= <p12 File>
+    isv.payment.p12.<merchant_id>.keyPass=<p12 File Passward>
+    isv.payment.p12.<merchant_id>.keysDirectory= <key Directory>
     ```
 
     > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `api.cybersource.com` on production environments.
@@ -579,15 +580,9 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     # For PROD environment use "api.cybersource.com"
     isv.payment.api.rest.runEnvironment=apitest.cybersource.com
 
-    # HTTP_Signature = http_signature and JWT = jwt
-    isv.payment.api.rest.authenticationType = http_signature
-
-    # HTTP Parameters
-    # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=http_signature"
     isv.payment.api.rest.<merchant_id>.merchantKeyId = <merchantKeyId>
     isv.payment.api.rest.<merchant_id>.merchantsecretKey = <merchantsecretKey>
 
-    # JWT Parameters
     # The credentials below MUST be provided in case "isv.payment.api.rest.authenticationType=jwt"
     isv.payment.api.rest.<merchant_id>.keyAlias = <merchant_id>
     isv.payment.api.rest.<merchant_id>.keyPass = <merchant_id>
@@ -595,6 +590,11 @@ SAP Commerce payment extension installation process is based on OOTB build appro
     # P12 key path. Enter the folder path where the .p12 file is located.
     isv.payment.api.rest.<merchant_id>.keysDirectory = isvpayment/keys
 
+    isv.payment.api.rest.<merchant_id>.jwtKeyType=SHARED_SECRET
+    isv.payment.api.rest.<merchant_id>.enableResponseMleGlobally = false
+    # Response mle p12 path for example isvpayment/certificates/cert.p12
+    isv.payment.api.rest.<merchant_id>.responseMlePrivateKeyFilePath = <file path>
+    isv.payment.api.rest.<merchant_id>.responseMlePrivateKeyFilePassword =<file pasword>
     ```
 
     > ![Note](images/note.jpg) REST API credentials are required by [Reporting](#_ab1pt3jarpgv) functionality. You should consider changing the `isv.payment.api.rest.runEnvironment` property to `api.cybersource.com` on production environments.
@@ -1966,6 +1966,15 @@ Message-Level Encryption (MLE) enables you to store information or communicate w
 | **Configuration property** | **Description** |
 | --- | --- |
 | `isv.payment.mle.enabled` | Possible values true/false. Disabled by default |
+
+Message Level Encryption(Response) for the REST API is configured per merchant alongside JWT authentication. MLE flow helps merchants to encrypt outbound API payloads and decrypt inbound responses. Response MLE is optional and supported only for REST APIs. For more details on key generation refer [REST Response MLE](
+https://developer.cybersource.com/docs/cybs/en-us/security-keys/user/all/ada/security-keys/keys-manage/keys-rest-mle-intro/keys-mle-response-task.html)
+
+| **Configuration property** | **Description** |
+| --- | --- |
+| `isv.payment.api.rest.<merchantId>.enableResponseMleGlobally` | Possible values true/false. Disabled by default |
+| `responseMlePrivateKeyFilePath` | Response MLE P12 File Path |
+| `responseMlePrivateKeyFilePassword` | Password for the P12 file |
 
 # Business Services
 
